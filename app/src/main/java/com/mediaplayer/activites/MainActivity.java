@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, PlayFile.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("fileName", fileName); // value for another activities
+                bundle.putString("videoFileName", FileList.get(position));
                 intent.putExtras(bundle); // bundle saved as extras
                 startActivity(intent);
             }
