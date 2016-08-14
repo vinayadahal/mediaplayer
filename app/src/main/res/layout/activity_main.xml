@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#aaaaaa"
-    tools:context=".activites.MainActivity">
+    tools:context="com.mediaplayer.activites.MainActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -17,12 +17,6 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/colorBackground"
         android:orientation="vertical" />
-    <!---->
-    <!--<ListView-->
-        <!--android:id="@+id/android:list"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:layout_marginTop="?attr/actionBarSize" />-->
-    <!---->
+
 
 </RelativeLayout>
