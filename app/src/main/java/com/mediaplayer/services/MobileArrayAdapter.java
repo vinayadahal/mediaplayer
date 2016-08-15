@@ -36,15 +36,6 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.th_text_view);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         textView.setText(values.get(position));
-
-//        imageView.setImageResource(android.R.drawable.ic_menu_gallery);
-//        System.out.println("thumbnail::::  " + thumb.get(position));
-
-
-//        imageView.setImageBitmap(thumb.get(position));
-//        imageView.setImageBitmap(thumb.get(position));
-
-        System.out.println("size------> " + thumb.size());
         Bitmap bitmap = null;
         File f = new File(thumb.get(position));
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -54,23 +45,7 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         imageView.setImageBitmap(bitmap);
-        // Change icon based on name
-        String s = values.get(position);
-
-        System.out.println("Sdata:::::" + s);
-
-//        if (s.equals("WindowsMobile")) {
-//            imageView.setImageResource(R.drawable.windowsmobile_logo);
-//        } else if (s.equals("iOS")) {
-//            imageView.setImageResource(R.drawable.ios_logo);
-//        } else if (s.equals("Blackberry")) {
-//            imageView.setImageResource(R.drawable.blackberry_logo);
-//        } else {
-//            imageView.setImageResource(R.drawable.android_logo);
-//        }
-
         return rowView;
     }
 }

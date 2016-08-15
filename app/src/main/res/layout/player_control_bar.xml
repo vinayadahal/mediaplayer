@@ -1,47 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="70dp"
     android:layout_alignParentBottom="true"
     android:background="#80000000"
     android:orientation="horizontal">
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-
-        <!--<ProgressBar-->
-            <!--android:id="@+id/vid_progressbar"-->
-            <!--style="@android:style/Widget.ProgressBar.Horizontal"-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="10dp"-->
-            <!--android:background="@color/colorAccent"-->
-            <!--android:indeterminate="false" />-->
-    <!--</RelativeLayout>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Start Time"-->
+    <!--android:textColor="#fff"-->
+    <!--android:layout_alignParentLeft="true"/>-->
 
 
-    <ImageButton
-        android:id="@+id/previous_btn"
-        android:layout_width="60dp"
+    <ProgressBar
+        android:id="@+id/vid_progressbar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentTop="true"
+        android:indeterminate="false" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:background="#80000000"
-        android:src="@drawable/previous_btn" />
+        android:layout_alignParentBottom="true">
 
-    <ImageButton
-        android:id="@+id/play_btn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:background="#80000000"
-        android:src="@drawable/play_btn" />
+        <ImageButton
+            android:id="@+id/previous_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="#80000000"
+            android:src="@drawable/previous_btn" />
 
-    <ImageButton
-        android:id="@+id/next_btn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:background="#80000000"
-        android:src="@drawable/next_btn" />
+        <ImageButton
+            android:id="@+id/play_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="#80000000"
+            android:onClick="pauseVid"
+            android:src="@drawable/play_btn" />
 
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/next_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="#80000000"
+            android:src="@drawable/next_btn" />
+    </LinearLayout>
+
+</RelativeLayout>
