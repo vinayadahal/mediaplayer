@@ -42,8 +42,17 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:background="#80000000"
-            android:onClick="pauseVid"
+            android:onClick="playVideo"
             android:src="@drawable/play_btn" />
+
+        <ImageButton
+            android:id="@+id/pause_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="#80000000"
+            android:onClick="pauseVideo"
+            android:src="@drawable/pause_btn" />
 
         <ImageButton
             android:id="@+id/next_btn"

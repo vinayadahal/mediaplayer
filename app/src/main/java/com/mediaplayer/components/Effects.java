@@ -1,4 +1,4 @@
-package com.mediaplayer;
+package com.mediaplayer.components;
 
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;

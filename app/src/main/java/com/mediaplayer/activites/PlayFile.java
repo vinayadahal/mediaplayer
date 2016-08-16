@@ -1,32 +1,35 @@
 package com.mediaplayer.activites;
 
 import android.media.MediaPlayer;
-import android.media.effect.Effect;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.mediaplayer.Effects;
 import com.mediaplayer.R;
+import com.mediaplayer.components.Effects;
 
-import org.w3c.dom.Text;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlayFile extends AppCompatActivity {
 
     private RelativeLayout title_control;
-    private int duration;
-    private Thread lTimer;
+    private long duration;
+    private Thread progressUpdate;
     private MediaPlayer mediaPlayer;
+    private VideoView videoView;
+    private ImageButton playBtn;
+    private ImageButton pauseBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,27 +44,31 @@ public class PlayFile extends AppCompatActivity {
             videoFileName = b.getString("videoFileName");
         }
         playFile(filePath, videoFileName);
-        progressBarUpdate();
-    }
+        playBtn = (ImageButton) findViewById(R.id.play_btn);
+        pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
+        playBtn.setVisibility(View.GONE);
+        pauseBtn.setVisibility(View.VISIBLE);
 
-    @Override
-    protected void onDestroy() { //activity destroy event
-        System.out.println("activity destroyed>>>>> ");
-        lTimer.isInterrupted();
-        lTimer.interrupt();
-        super.onDestroy();
     }
-
 
     public void playFile(String filename, String videoFileName) {
         title_control = (RelativeLayout) findViewById(R.id.title_control);
         title_control.setVisibility(View.INVISIBLE);
         TextView vidTitle = (TextView) findViewById(R.id.vid_title);
         vidTitle.setText("Now Playing: " + videoFileName);
-        VideoView vv = (VideoView) findViewById(R.id.videoView);
-        vv.setVideoURI(Uri.parse(filename));
-        vv.start();
-        vv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        videoView = (VideoView) findViewById(R.id.videoView);
+        videoView.setVideoURI(Uri.parse(filename));
+        videoView.start();
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                duration = videoView.getDuration();
+                mediaPlayer = mp; // used to pause video
+                progressBarUpdate();
+            }
+        });
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 finish();
@@ -79,40 +86,46 @@ public class PlayFile extends AppCompatActivity {
         }, 3000);
     }
 
+
     public void progressBarUpdate() {
-        lTimer = new Thread() {
+        progressUpdate = new Thread() {
             public void run() {
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.vid_progressbar);
                 progressBar.setProgress(0);
                 progressBar.setMax(100);
-                final VideoView videoView = (VideoView) findViewById(R.id.videoView);
-                videoView.start();
-                videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        duration = videoView.getDuration();
-                        mediaPlayer = mp; // used to pause video
-
-                    }
-                });
-                do {
-                    int current = videoView.getCurrentPosition();
-                    System.out.println("duration - " + duration + " current- " + current);
-                    try {
-                        progressBar.setProgress((current * 100 / duration));
-                        if (progressBar.getProgress() >= 100) {
+                int i = 0;
+                while (progressBar.getProgress() <= 100) {
+                    long current = videoView.getCurrentPosition();
+//                    System.out.println("duration - " + duration + " current- " + current);
+//                    System.out.println("Progress::::::: " + current * 100 / duration);
+//                    System.out.println("minutes " + ((duration / 1000) / 60));
+                    int currentTimeInSec = (int) (current / 1000);
+                    progressBar.setProgress(currentTimeInSec);
+                    if (current == 0) {
+                        System.out.println("current is 0 for:::::: " + i++);
+                        if (i >= 15000) {
+                            i = 0;
                             break;
                         }
-                    } catch (Exception e) {
                     }
-                } while (progressBar.getProgress() <= 100);
+                    if (progressBar.getProgress() >= 100) {
+                        break;
+                    }
+                }
             }
         };
-        lTimer.start();
+        progressUpdate.start();
     }
 
-    public void pauseVid(View view) {
+    public void pauseVideo(View view) {
+        playBtn.setVisibility(View.VISIBLE);
+        pauseBtn.setVisibility(View.GONE);
         mediaPlayer.pause();
     }
 
+    public void playVideo(View view) {
+        playBtn.setVisibility(View.GONE);
+        pauseBtn.setVisibility(View.VISIBLE);
+        mediaPlayer.start();
+    }
 }
