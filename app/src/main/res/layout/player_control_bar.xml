@@ -1,104 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_alignParentBottom="true"
     android:background="#80000000"
     android:orientation="horizontal">
 
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Start Time"-->
-    <!--android:textColor="#fff"-->
-    <!--android:layout_alignParentLeft="true"/>-->
 
-
-    <ProgressBar
-        android:id="@+id/vid_progressbar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/relativePercentage"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_alignParentTop="true"
-        android:indeterminate="false" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="#fff" />
+
+        <ProgressBar
+            android:id="@+id/vid_progressbar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="false"
+            app:layout_widthPercent="70%" />
+
+        <!--<SeekBar-->
+        <!--android:id="@+id/seekbar"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="10dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:indeterminate="false"-->
+        <!--app:layout_widthPercent="70%"-->
+        <!--/>-->
+
+        <TextView
+            android:id="@+id/total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="#fff" />
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+    </android.support.percent.PercentRelativeLayout>
 
-        <ImageButton
-            android:id="@+id/previous_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:src="@drawable/previous_btn" />
 
-        <ImageButton
-            android:id="@+id/rewind_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:onClick="rewind"
-            android:src="@drawable/rewind_btn" />
-
-        <ImageButton
-            android:id="@+id/play_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:onClick="playVideo"
-            android:src="@drawable/play_btn" />
-
-        <ImageButton
-            android:id="@+id/pause_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:onClick="pauseVideo"
-            android:src="@drawable/pause_btn" />
-
-        <ImageButton
-            android:id="@+id/forward_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:onClick="forward"
-            android:src="@drawable/forward_btn" />
-
-        <ImageButton
-            android:id="@+id/next_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:src="@drawable/next_btn" />
-
-        <ImageButton
-            android:id="@+id/fullscreen_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:onClick="fullScreenSize"
-            android:src="@drawable/fullscreen" />
-
-        <ImageButton
-            android:id="@+id/original_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/btn_styler_playback"
-            android:onClick="originalSize"
-            android:src="@drawable/original_size" />
-
-    </LinearLayout>
+    <include layout="@layout/player_control_btns" />
 
 </RelativeLayout>

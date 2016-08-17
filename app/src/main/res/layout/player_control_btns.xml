@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true">
+
+    <ImageButton
+        android:id="@+id/previous_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="previous"
+        android:src="@drawable/previous_btn" />
+
+    <ImageButton
+        android:id="@+id/rewind_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="rewind"
+        android:src="@drawable/rewind_btn" />
+
+    <ImageButton
+        android:id="@+id/play_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="playVideo"
+        android:src="@drawable/play_btn" />
+
+    <ImageButton
+        android:id="@+id/pause_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="pauseVideo"
+        android:src="@drawable/pause_btn" />
+
+    <ImageButton
+        android:id="@+id/forward_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="forward"
+        android:src="@drawable/forward_btn" />
+
+    <ImageButton
+        android:id="@+id/next_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="next"
+        android:src="@drawable/next_btn" />
+
+    <ImageButton
+        android:id="@+id/fullscreen_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="fullScreenSize"
+        android:src="@drawable/fullscreen" />
+
+    <ImageButton
+        android:id="@+id/original_btn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="originalSize"
+        android:src="@drawable/original_size" />
+
+
+</LinearLayout>

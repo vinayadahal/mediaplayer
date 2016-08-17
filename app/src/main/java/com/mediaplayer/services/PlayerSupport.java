@@ -1,6 +1,7 @@
 package com.mediaplayer.services;
 
 
+import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -56,6 +57,7 @@ public class PlayerSupport {
                     if (progressBar.getProgress() >= 100) {
                         break;
                     }
+
                 }
             }
         };

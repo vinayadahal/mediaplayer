@@ -14,6 +14,7 @@ import com.mediaplayer.services.FileSearch;
 import com.mediaplayer.services.MobileArrayAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("fileName", fileName); // value for another activities
                     bundle.putString("videoFileName", FileList.get(position));
+                    bundle.putStringArrayList("allVideoPath", (ArrayList<String>) video_path);
+                    bundle.putStringArrayList("allFileList", (ArrayList<String>) FileList);
                     intent.putExtras(bundle); // bundle saved as extras
                     startActivity(intent);
                 }

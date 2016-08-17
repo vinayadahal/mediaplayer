@@ -9,11 +9,15 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.services.PlayerSupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayFile extends AppCompatActivity {
 
@@ -27,6 +31,13 @@ public class PlayFile extends AppCompatActivity {
     private ImageButton fullscreenBtn;
     private TextView notification_txt;
     private RelativeLayout.LayoutParams layoutParams;
+    //player stuff
+    List<String> allVideoPath = null;
+    List<String> allFileList = null;
+    String filePath = null; // or other values
+    String videoFileName = null;
+    ArrayList<String> allFilesPath = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +45,19 @@ public class PlayFile extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hides notification bar
         setContentView(R.layout.activity_play_file);
         Bundle bundle = getIntent().getExtras();
-        String filePath = null; // or other values
-        String videoFileName = null;
+
+
         if (bundle != null) {
             filePath = bundle.getString("fileName");
             videoFileName = bundle.getString("videoFileName");
+            allVideoPath = bundle.getStringArrayList("allVideoPath");
+            allFileList = bundle.getStringArrayList("allFileList");
         }
         playFile(filePath, videoFileName);
+
+        for (int i = 0; i < allVideoPath.size(); i++) {
+            allFilesPath.add(allVideoPath.get(i) + allFileList.get(i));
+        }
         playBtn = (ImageButton) findViewById(R.id.play_btn);
         pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
         originalBtn = (ImageButton) findViewById(R.id.original_btn);
@@ -80,6 +97,10 @@ public class PlayFile extends AppCompatActivity {
 
     public void progressBarUpdate() {
         new PlayerSupport().updateProgressBar((ProgressBar) findViewById(R.id.vid_progressbar), videoView, duration);
+        int minutes = (int) (duration / 1000) / 60;
+        int seconds = (int) (duration / 1000) % 60;
+        TextView totalTime = (TextView) findViewById(R.id.total_time);
+        totalTime.setText(minutes + ":" + seconds);
     }
 
     public void pauseVideo(View view) {
@@ -105,6 +126,29 @@ public class PlayFile extends AppCompatActivity {
     public void forward(View view) {
         int forward_to = (videoView.getCurrentPosition() + 10000);
         mediaPlayer.seekTo(forward_to);
+    }
+
+    public void previous(View view) {
+        System.out.println("current filePath:::: " + filePath);
+        System.out.println("INDEX of:::::::::::::::::::: " + allFilesPath.indexOf(filePath));
+        int nextFile = allFilesPath.indexOf(filePath) - 1; //current file - 1
+        if (nextFile < 0) {
+            nextFile = allFileList.size() - 1; // setting final value as next file so that player support  backward loop
+        }
+        playFile(allFilesPath.get(nextFile), allFileList.get(nextFile)); // playing new file
+        filePath = allFilesPath.get(nextFile); // recording current playing file for future use
+    }
+
+
+    public void next(View view) {
+        System.out.println("current filePath:::: " + filePath);
+        System.out.println("INDEX of:::::::::::::::::::: " + allFilesPath.indexOf(filePath));
+        int nextFile = allFilesPath.indexOf(filePath) + 1; //current file + 1
+        if (nextFile > (allFilesPath.size() - 1)) {
+            nextFile = 0; // setting 0 as next file so that player support forward loop
+        }
+        playFile(allFilesPath.get(nextFile), allFileList.get(nextFile)); // playing new file
+        filePath = allFilesPath.get(nextFile); // recording current playing file for future use
     }
 
     public void originalSize(View view) {
