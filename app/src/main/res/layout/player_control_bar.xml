@@ -43,6 +43,7 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:background="@drawable/btn_styler_playback"
+            android:onClick="rewind"
             android:src="@drawable/rewind_btn" />
 
         <ImageButton
@@ -69,6 +70,7 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:background="@drawable/btn_styler_playback"
+            android:onClick="forward"
             android:src="@drawable/forward_btn" />
 
         <ImageButton

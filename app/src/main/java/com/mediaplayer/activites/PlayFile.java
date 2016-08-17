@@ -19,7 +19,6 @@ public class PlayFile extends AppCompatActivity {
 
     private RelativeLayout title_control;
     private long duration;
-
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
     private ImageButton playBtn;
@@ -93,6 +92,19 @@ public class PlayFile extends AppCompatActivity {
         playBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.VISIBLE);
         mediaPlayer.start();
+    }
+
+    public void rewind(View view) {
+        int rewind_to = (videoView.getCurrentPosition() - 10000);
+        if (rewind_to < 0) {
+            rewind_to = 0;
+        }
+        mediaPlayer.seekTo(rewind_to);
+    }
+
+    public void forward(View view) {
+        int forward_to = (videoView.getCurrentPosition() + 10000);
+        mediaPlayer.seekTo(forward_to);
     }
 
     public void originalSize(View view) {
