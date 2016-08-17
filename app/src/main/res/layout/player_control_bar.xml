@@ -34,7 +34,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:src="@drawable/previous_btn" />
 
         <ImageButton
@@ -42,7 +42,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:src="@drawable/rewind_btn" />
 
         <ImageButton
@@ -50,7 +50,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:onClick="playVideo"
             android:src="@drawable/play_btn" />
 
@@ -59,7 +59,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:onClick="pauseVideo"
             android:src="@drawable/pause_btn" />
 
@@ -68,7 +68,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:src="@drawable/forward_btn" />
 
         <ImageButton
@@ -76,7 +76,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:src="@drawable/next_btn" />
 
         <ImageButton
@@ -84,7 +84,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:onClick="fullScreenSize"
             android:src="@drawable/fullscreen" />
 
@@ -93,7 +93,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#00000000"
+            android:background="@drawable/btn_styler_playback"
             android:onClick="originalSize"
             android:src="@drawable/original_size" />
 

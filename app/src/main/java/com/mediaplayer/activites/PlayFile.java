@@ -4,7 +4,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -14,13 +13,13 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
-import com.mediaplayer.components.Effects;
+import com.mediaplayer.services.PlayerSupport;
 
 public class PlayFile extends AppCompatActivity {
 
     private RelativeLayout title_control;
     private long duration;
-    private Thread progressUpdate;
+
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
     private ImageButton playBtn;
@@ -28,6 +27,7 @@ public class PlayFile extends AppCompatActivity {
     private ImageButton originalBtn;
     private ImageButton fullscreenBtn;
     private TextView notification_txt;
+    private RelativeLayout.LayoutParams layoutParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,32 +47,12 @@ public class PlayFile extends AppCompatActivity {
         originalBtn = (ImageButton) findViewById(R.id.original_btn);
         fullscreenBtn = (ImageButton) findViewById(R.id.fullscreen_btn);
         notification_txt = (TextView) findViewById(R.id.notification_txt);
+        layoutParams = (RelativeLayout.LayoutParams) videoView.getLayoutParams();
         playBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.VISIBLE);
         originalBtn.setVisibility(View.VISIBLE);
         fullscreenBtn.setVisibility(View.GONE);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
-        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        title_control.setVisibility(View.VISIBLE);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        removeNotificateText();
-                        title_control.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                new Effects().fadeOut(title_control);
-                                removeNotificateText();
-                            }
-                        }, 3000);
-                        break;
-                }
-                return true;
-            }
-        });
+        new PlayerSupport().playerScreenTouch((RelativeLayout) findViewById(R.id.play_file_relative_layout), title_control, notification_txt);
     }
 
     public void playFile(String filename, String videoFileName) {
@@ -100,29 +80,7 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void progressBarUpdate() {
-        progressUpdate = new Thread() {
-            public void run() {
-                ProgressBar progressBar = (ProgressBar) findViewById(R.id.vid_progressbar);
-                progressBar.setProgress(0);
-                progressBar.setMax(100);
-                int i = 0;
-                while (progressBar.getProgress() <= 100) {
-                    long current = videoView.getCurrentPosition();
-                    int currentTimeInSec = (int) (current * 100 / duration);
-                    progressBar.setProgress(currentTimeInSec);
-                    if (current == 0) {
-                        if (i >= 15000) {
-                            i = 0;
-                            break;
-                        }
-                    }
-                    if (progressBar.getProgress() >= 100) {
-                        break;
-                    }
-                }
-            }
-        };
-        progressUpdate.start();
+        new PlayerSupport().updateProgressBar((ProgressBar) findViewById(R.id.vid_progressbar), videoView, duration);
     }
 
     public void pauseVideo(View view) {
@@ -138,32 +96,10 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void originalSize(View view) {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoView.getLayoutParams();
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        videoView.setLayoutParams(layoutParams);
-        fullscreenBtn.setVisibility(View.VISIBLE);
-        originalBtn.setVisibility(View.GONE);
-        notification_txt.setText("Original Size");
+        new PlayerSupport().setOriginalSize(layoutParams, videoView, fullscreenBtn, originalBtn, notification_txt);
     }
 
     public void fullScreenSize(View view) {
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoView.getLayoutParams();
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 1);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
-        videoView.setLayoutParams(layoutParams);
-        originalBtn.setVisibility(View.VISIBLE);
-        fullscreenBtn.setVisibility(View.GONE);
-        notification_txt.setText("Fullscreen");
-    }
-
-    public void removeNotificateText() {
-        if (!notification_txt.getText().equals("")) {
-            notification_txt.setText("");
-        }
+        new PlayerSupport().setFullscreen(layoutParams, videoView, fullscreenBtn, originalBtn, notification_txt);
     }
 }

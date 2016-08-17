@@ -6,4 +6,6 @@
     <color name="colorText">#000</color>
     <color name="colorBackground">#fff</color>
     <color name="colorDivider">#ccc</color>
+    <color name="colorPlayBackNormal">#00000000</color>
+    <color name="colorPlayBackPressed">#70cccccc</color>
 </resources>

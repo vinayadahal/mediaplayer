@@ -1,13 +1,11 @@
 package com.mediaplayer.activites;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -15,11 +13,7 @@ import com.mediaplayer.R;
 import com.mediaplayer.services.FileSearch;
 import com.mediaplayer.services.MobileArrayAdapter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
         String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
         System.out.println("External Storage::::: " + rawExternalStorage);
         SearchFile(new File(rawExternalStorage));
+        ImageButton backImgBtn = (ImageButton) findViewById(R.id.back_btn);
+        backImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 
