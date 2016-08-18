@@ -14,6 +14,8 @@ import com.mediaplayer.components.Effects;
 
 public class PlayerSupport {
 
+    long current = 0;
+
     public void playerScreenTouch(RelativeLayout play_file_rl, final RelativeLayout title_control,
                                   final TextView notification_txt, final ProgressBar progressBar,
                                   final VideoView videoView, final long duration, final TextView currentTimeTxt) {
@@ -52,7 +54,7 @@ public class PlayerSupport {
                     long current = videoView.getCurrentPosition();
                     int currentTimeInSec = (int) (current * 100 / duration);
                     progressBar.setProgress(currentTimeInSec);
-                    if (current == 0 || sleepingFor == 6 || progressBar.getProgress() >= 100) {
+                    if (!videoView.isPlaying() || sleepingFor == 6) {
                         break;
                     }
                     if (title_control.getVisibility() == View.VISIBLE) {
@@ -79,12 +81,10 @@ public class PlayerSupport {
         Thread th = new Thread() {
             @Override
             public void run() {
-                System.out.println("inside thread");
-                long current = 0;
                 int sleepingFor = 0;
                 while (current != duration) {
                     current = videoView.getCurrentPosition();
-                    if (sleepingFor == 6 || current == duration) {
+                    if (!videoView.isPlaying() || sleepingFor == 6) {
                         break;
                     }
                     if (title_control.getVisibility() == View.VISIBLE) {
@@ -99,47 +99,16 @@ public class PlayerSupport {
                             System.out.println("InterruptedException ::: " + ex);
                         }
                     }
-                    final int minutes = (int) (current / 1000) / 60;
-                    final int seconds = (int) (current / 1000) % 60;
-                    System.out.println("TIME::: " + minutes + ":" + seconds);
                     handler.post(new Runnable() {
                         public void run() {
-                            currentTimeTxt.setText(minutes + ":" + seconds);
+                            currentTimeTxt.setText(timeFormatter(current));
                         }
                     });
-                    System.out.println("Sleeping for ---------> " + sleepingFor);
                 }
             }
         };
         th.start();
-
-
-//        final Handler handler = new Handler();
-//        Runnable runnable = new Runnable() {
-//            public void run() {
-//                System.out.println("inside thread");
-//                long current = 0;
-//                int sleepingFor = 0;
-//                while (current != duration) {
-//                    current = videoView.getCurrentPosition();
-//                    if (sleepingFor == 6 || current == duration) {
-//                        break;
-//                    }
-//                    final int minutes = (int) (current / 1000) / 60;
-//                    final int seconds = (int) (current / 1000) % 60;
-//                    System.out.println("TIME::: " + minutes + ":" + seconds);
-//                    handler.post(new Runnable() {
-//                        public void run() {
-//                            currentTimeTxt.setText(minutes + ":" + seconds);
-//                        }
-//                    });
-//                    System.out.println("Sleeping for ---------> " + sleepingFor++);
-//                }
-//            }
-//        };
-//        new Thread(runnable).start();
     }
-
 
     public void setOriginalSize(RelativeLayout.LayoutParams layoutParams, VideoView vv, ImageButton fullBtn, ImageButton oriBtn, TextView txtView) {
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
@@ -167,6 +136,13 @@ public class PlayerSupport {
         if (!notification_txt.getText().equals("")) {
             notification_txt.setText("");
         }
+    }
+
+    public String timeFormatter(long duration) {
+        long second = (duration / 1000) % 60;
+        long minute = (duration / (1000 * 60)) % 60;
+        long hour = (duration / (1000 * 60 * 60)) % 24;
+        return String.format("%02d:%02d:%02d", hour, minute, second);
     }
 
 }

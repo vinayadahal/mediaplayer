@@ -3,21 +3,22 @@ package com.mediaplayer.activites;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.services.PlayerSupport;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PlayFile extends AppCompatActivity {
@@ -82,8 +83,6 @@ public class PlayFile extends AppCompatActivity {
                 duration = videoView.getDuration();
                 mediaPlayer = mp; // used to pause video
                 progressBarUpdate();
-//                timeUpdate();
-//                new PlayerSupport().timeUpdate(duration, (TextView) findViewById(R.id.current_time), videoView, title_control);
             }
         });
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -98,39 +97,9 @@ public class PlayFile extends AppCompatActivity {
         new PlayerSupport().playerScreenTouch((RelativeLayout) findViewById(R.id.play_file_relative_layout),
                 title_control, notification_txt, (ProgressBar) findViewById(R.id.vid_progressbar), videoView,
                 duration, (TextView) findViewById(R.id.current_time));
-        int minutes = (int) (duration / 1000) / 60;
-        int seconds = (int) (duration / 1000) % 60;
         TextView totalTime = (TextView) findViewById(R.id.total_time);
-        totalTime.setText(minutes + ":" + seconds);
+        totalTime.setText(new PlayerSupport().timeFormatter(duration));
     }
-
-//    public void timeUpdate() {
-//        final TextView currentTimeTxt = (TextView) findViewById(R.id.current_time);
-//        final Handler handler = new Handler();
-//        Runnable runnable = new Runnable() {
-//            public void run() {
-//                System.out.println("inside thread");
-//                long current = 0;
-//                int sleepingFor = 0;
-//                while (current != duration) {
-//                    current = videoView.getCurrentPosition();
-//                    if (sleepingFor == 6 || current == duration || title_control.getVisibility() != View.VISIBLE) {
-//                        break;
-//                    }
-//                    final int minutes = (int) (current / 1000) / 60;
-//                    final int seconds = (int) (current / 1000) % 60;
-//                    System.out.println("TIME::: " + minutes + ":" + seconds);
-//                    handler.post(new Runnable() {
-//                        public void run() {
-//                            currentTimeTxt.setText(minutes + ":" + seconds);
-//                        }
-//                    });
-//                    System.out.println("Sleeping for ---------> " + sleepingFor);
-//                }
-//            }
-//        };
-//        new Thread(runnable).start();
-//    }
 
     public void pauseVideo(View view) {
         playBtn.setVisibility(View.VISIBLE);
@@ -182,5 +151,11 @@ public class PlayFile extends AppCompatActivity {
 
     public void fullScreenSize(View view) {
         new PlayerSupport().setFullscreen(layoutParams, videoView, fullscreenBtn, originalBtn, notification_txt);
+    }
+
+    public void pb_click(View view) {
+        ProgressBar pb = (ProgressBar) findViewById(R.id.vid_progressbar);
+//        System.out.println("touch test::::::: " + pb.getTouchDelegate());
+
     }
 }
