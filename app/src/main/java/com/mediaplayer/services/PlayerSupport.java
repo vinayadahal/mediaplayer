@@ -16,10 +16,10 @@ import com.mediaplayer.components.Effects;
 public class PlayerSupport {
 
     long current = 0;
+    int sleepingForTimer = 0, sleepingForProgress = 0;
 
-    public void playerScreenTouch(RelativeLayout play_file_rl, final RelativeLayout title_control,
-                                  final TextView notification_txt, final SeekBar seekBar,
-                                  final VideoView videoView, final long duration, final TextView currentTimeTxt) {
+    public void playerScreenTouch(RelativeLayout play_file_rl, final RelativeLayout title_control, final TextView notification_txt,
+                                  final SeekBar seekBar, final VideoView videoView, final long duration, final TextView currentTimeTxt) {
         play_file_rl.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -53,56 +53,33 @@ public class PlayerSupport {
             public void run() {
                 seekBar.setProgress(0);
                 seekBar.setMax(100);
-                int sleepingFor = 0;
                 while (seekBar.getProgress() <= 100) {
                     long current = videoView.getCurrentPosition();
                     int currentTimeInSec = (int) (current * 100 / duration);
                     seekBar.setProgress(currentTimeInSec);
-                    if (!videoView.isPlaying() || sleepingFor == 6) {
+                    if (!videoView.isPlaying() || sleepingForProgress == 2) {
+                        sleepingForTimer = 0;
                         break;
                     }
-                    if (title_control.getVisibility() == View.VISIBLE) {
-                        if (this.getState() == State.TIMED_WAITING) {
-                            notify();
-                        }
-                    } else {
-                        try {
-                            sleep(1000);
-                            sleepingFor++;
-                        } catch (InterruptedException ex) {
-                            System.out.println("InterruptedException ::: " + ex);
-                        }
-                    }
+                    threadSleep(title_control, this);
                 }
             }
         };
         progressUpdate.start();
     }
 
-
     public void timeUpdate(final long duration, final TextView currentTimeTxt, final VideoView videoView, final RelativeLayout title_control) {
         final Handler handler = new Handler();
         Thread th = new Thread() {
             @Override
             public void run() {
-                int sleepingFor = 0;
                 while (current != duration) {
                     current = videoView.getCurrentPosition();
-                    if (!videoView.isPlaying() || sleepingFor == 6) {
+                    if (!videoView.isPlaying() || sleepingForTimer == 2) {
+                        sleepingForTimer = 0;
                         break;
                     }
-                    if (title_control.getVisibility() == View.VISIBLE) {
-                        if (this.getState() == State.TIMED_WAITING) {
-                            notify();
-                        }
-                    } else {
-                        try {
-                            sleep(1000);
-                            sleepingFor++;
-                        } catch (InterruptedException ex) {
-                            System.out.println("InterruptedException ::: " + ex);
-                        }
-                    }
+                    threadSleep(title_control, this);
                     handler.post(new Runnable() {
                         public void run() {
                             currentTimeTxt.setText(timeFormatter(current));
@@ -112,6 +89,22 @@ public class PlayerSupport {
             }
         };
         th.start();
+    }
+
+    public void threadSleep(RelativeLayout title_control, Thread thread) {
+        if (title_control.getVisibility() == View.VISIBLE) {
+            if (thread.getState() == Thread.State.TIMED_WAITING) {
+                thread.notify();
+            }
+        } else {
+            try {
+                thread.sleep(1000);
+                sleepingForTimer++;
+                sleepingForProgress++;
+            } catch (InterruptedException ex) {
+                System.out.println("InterruptedException ::: " + ex);
+            }
+        }
     }
 
     public void setOriginalSize(RelativeLayout.LayoutParams layoutParams, VideoView vv, ImageButton fullBtn, ImageButton oriBtn, TextView txtView) {
@@ -165,6 +158,5 @@ public class PlayerSupport {
                 mediaPlayer.seekTo((int) videoTime);
             }
         });
-
     }
 }

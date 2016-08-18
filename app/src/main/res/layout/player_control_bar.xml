@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:contextClickable="true"
-            android:progressDrawable="@drawable/progress_bar_styler"
+            android:progressDrawable="@drawable/seek_bar_styler"
             android:thumb="@color/colorText"
             android:thumbTint="@color/colorPlayBackNormal"
             app:layout_widthPercent="70%"

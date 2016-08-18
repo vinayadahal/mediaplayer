@@ -21,12 +21,14 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final List<String> values;
     private final List<String> thumb;
+    private final List<Long> time;
 
-    public MobileArrayAdapter(Context context, List<String> values, List<String> thumb) {
+    public MobileArrayAdapter(Context context, List<String> values, List<String> thumb, List<Long> time) {
         super(context, R.layout.thumb_list, values);
         this.context = context;
         this.values = values;
         this.thumb = thumb;
+        this.time = time;
     }
 
     @Override
@@ -35,7 +37,9 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.thumb_list, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.th_text_view);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+        TextView time_text = (TextView) rowView.findViewById(R.id.time_text);
         textView.setText(values.get(position));
+        time_text.setText(new PlayerSupport().timeFormatter(time.get(position)));
         Bitmap bitmap = null;
         File f = new File(thumb.get(position));
         BitmapFactory.Options options = new BitmapFactory.Options();

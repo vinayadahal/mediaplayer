@@ -1,6 +1,11 @@
 package com.mediaplayer.activites;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +17,7 @@ import android.widget.ListView;
 import com.mediaplayer.R;
 import com.mediaplayer.services.FileSearch;
 import com.mediaplayer.services.MobileArrayAdapter;
+import com.mediaplayer.services.PlayerSupport;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     public void SearchFile(File dir) {
@@ -45,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
         final List<String> FileList = objFileSearch.FileList;
         final List<String> video_path = objFileSearch.video_path;
         if (thumb.size() != 0) {
+            List<Long> duration = getVideoDuration(video_path, FileList);
             ListView listView = new ListView(this);
-            listView.setAdapter(new MobileArrayAdapter(this, FileList, thumb));
+
+            listView.setAdapter(new MobileArrayAdapter(this, FileList, thumb, duration));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -65,4 +72,21 @@ public class MainActivity extends AppCompatActivity {
             lnrlayout.addView(listView);
         }
     }
+
+
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
+    public List<Long> getVideoDuration(List<String> videoPath, List<String> FileList) {
+        List<Long> timeDuration = new ArrayList<>();
+        for (int i = 0; i < videoPath.size(); i++) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(videoPath.get(i) + FileList.get(i).toString());
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//            MediaPlayer mp = MediaPlayer.create(this, Uri.parse(videoPath.get(i) + FileList.get(i).toString()));
+//            int duration = mp.getDuration();
+//            System.out.println("File duration::::: " + );
+            timeDuration.add(Long.valueOf(Integer.parseInt(time)));
+        }
+        return timeDuration;
+    }
+
 }
