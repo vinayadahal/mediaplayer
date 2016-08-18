@@ -7,18 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.services.PlayerSupport;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class PlayFile extends AppCompatActivity {
@@ -83,6 +80,7 @@ public class PlayFile extends AppCompatActivity {
                 duration = videoView.getDuration();
                 mediaPlayer = mp; // used to pause video
                 progressBarUpdate();
+                new PlayerSupport().seekToBar((SeekBar) findViewById(R.id.vid_seekbar), mediaPlayer, duration);
             }
         });
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -95,7 +93,7 @@ public class PlayFile extends AppCompatActivity {
 
     public void progressBarUpdate() {
         new PlayerSupport().playerScreenTouch((RelativeLayout) findViewById(R.id.play_file_relative_layout),
-                title_control, notification_txt, (ProgressBar) findViewById(R.id.vid_progressbar), videoView,
+                title_control, notification_txt, (SeekBar) findViewById(R.id.vid_seekbar), videoView,
                 duration, (TextView) findViewById(R.id.current_time));
         TextView totalTime = (TextView) findViewById(R.id.total_time);
         totalTime.setText(new PlayerSupport().timeFormatter(duration));
@@ -151,11 +149,5 @@ public class PlayFile extends AppCompatActivity {
 
     public void fullScreenSize(View view) {
         new PlayerSupport().setFullscreen(layoutParams, videoView, fullscreenBtn, originalBtn, notification_txt);
-    }
-
-    public void pb_click(View view) {
-        ProgressBar pb = (ProgressBar) findViewById(R.id.vid_progressbar);
-//        System.out.println("touch test::::::: " + pb.getTouchDelegate());
-
     }
 }

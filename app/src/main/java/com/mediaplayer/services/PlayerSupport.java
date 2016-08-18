@@ -1,12 +1,13 @@
 package com.mediaplayer.services;
 
 
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -17,14 +18,14 @@ public class PlayerSupport {
     long current = 0;
 
     public void playerScreenTouch(RelativeLayout play_file_rl, final RelativeLayout title_control,
-                                  final TextView notification_txt, final ProgressBar progressBar,
+                                  final TextView notification_txt, final SeekBar seekBar,
                                   final VideoView videoView, final long duration, final TextView currentTimeTxt) {
         play_file_rl.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        updateProgressBar(progressBar, videoView, duration, title_control);
+                        updateProgressBar(seekBar, videoView, duration, title_control);
                         timeUpdate(duration, currentTimeTxt, videoView, title_control);
                         title_control.setVisibility(View.VISIBLE);
                         break;
@@ -36,7 +37,10 @@ public class PlayerSupport {
                                 new Effects().fadeOut(title_control);
                                 new PlayerSupport().removeNotificationText(notification_txt);
                             }
-                        }, 3000);
+                        }, 5000);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        title_control.setVisibility(View.VISIBLE);
                         break;
                 }
                 return true;
@@ -44,16 +48,16 @@ public class PlayerSupport {
         });
     }
 
-    public void updateProgressBar(final ProgressBar progressBar, final VideoView videoView, final long duration, final RelativeLayout title_control) {
+    public void updateProgressBar(final SeekBar seekBar, final VideoView videoView, final long duration, final RelativeLayout title_control) {
         Thread progressUpdate = new Thread() {
             public void run() {
-                progressBar.setProgress(0);
-                progressBar.setMax(100);
+                seekBar.setProgress(0);
+                seekBar.setMax(100);
                 int sleepingFor = 0;
-                while (progressBar.getProgress() <= 100) {
+                while (seekBar.getProgress() <= 100) {
                     long current = videoView.getCurrentPosition();
                     int currentTimeInSec = (int) (current * 100 / duration);
-                    progressBar.setProgress(currentTimeInSec);
+                    seekBar.setProgress(currentTimeInSec);
                     if (!videoView.isPlaying() || sleepingFor == 6) {
                         break;
                     }
@@ -145,4 +149,22 @@ public class PlayerSupport {
         return String.format("%02d:%02d:%02d", hour, minute, second);
     }
 
+    public void seekToBar(SeekBar seekBar, final MediaPlayer mediaPlayer, final long totalTime) {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                long videoTime = (seekBar.getProgress() * totalTime) / 100;
+                mediaPlayer.seekTo((int) videoTime);
+            }
+        });
+
+    }
 }

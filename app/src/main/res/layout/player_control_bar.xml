@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="95dp"
     android:layout_alignParentBottom="true"
     android:background="#80000000"
     android:orientation="horizontal"
@@ -19,21 +19,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:text="kill"
             android:textAlignment="center"
             android:textColor="#fff"
             app:layout_widthPercent="15%" />
 
-        <ProgressBar
-            android:id="@+id/vid_progressbar"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="wrap_content"
+        <SeekBar
+            android:id="@+id/vid_seekbar"
+            android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:indeterminate="false"
-            android:onClick="pb_click"
+            android:clickable="true"
+            android:contextClickable="true"
             android:progressDrawable="@drawable/progress_bar_styler"
-            app:layout_widthPercent="70%" />
+            android:thumb="@color/colorText"
+            android:thumbTint="@color/colorPlayBackNormal"
+            app:layout_widthPercent="70%"
+            />
 
         <TextView
             android:id="@+id/total_time"
