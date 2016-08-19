@@ -9,38 +9,35 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.mediaplayer.components.Effects;
+import com.mediaplayer.variables.ArgsPlayerSupport;
 
 public class PlayerSupport {
 
-    long current = 0;
-    int sleepingForTimer = 0, sleepingForProgress = 0;
+    int sleepingForProgress = 0;
 
-    public void playerScreenTouch(RelativeLayout play_file_rl, final RelativeLayout title_control, final TextView notification_txt,
-                                  final SeekBar seekBar, final VideoView videoView, final long duration, final TextView currentTimeTxt) {
-        play_file_rl.setOnTouchListener(new View.OnTouchListener() {
+    public void playerScreenTouch() {
+        ArgsPlayerSupport.rl_play_file.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        updateProgressBar(seekBar, videoView, duration, title_control);
-                        timeUpdate(duration, currentTimeTxt, videoView, title_control);
-                        title_control.setVisibility(View.VISIBLE);
+                        updateProgressBar();
+                        ArgsPlayerSupport.title_control.setVisibility(View.VISIBLE);
                         break;
                     case MotionEvent.ACTION_UP:
-                        new PlayerSupport().removeNotificationText(notification_txt);
-                        title_control.postDelayed(new Runnable() {
+                        new PlayerSupport().removeNotificationText(ArgsPlayerSupport.notification_txt);
+                        ArgsPlayerSupport.title_control.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                new Effects().fadeOut(title_control);
-                                new PlayerSupport().removeNotificationText(notification_txt);
+                                new Effects().fadeOut(ArgsPlayerSupport.title_control);
+                                new PlayerSupport().removeNotificationText(ArgsPlayerSupport.notification_txt);
                             }
                         }, 5000);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        title_control.setVisibility(View.VISIBLE);
+                        ArgsPlayerSupport.title_control.setVisibility(View.VISIBLE);
                         break;
                 }
                 return true;
@@ -48,58 +45,40 @@ public class PlayerSupport {
         });
     }
 
-    public void updateProgressBar(final SeekBar seekBar, final VideoView videoView, final long duration, final RelativeLayout title_control) {
+    public void updateProgressBar() {
+        final Handler handler = new Handler();
         Thread progressUpdate = new Thread() {
             public void run() {
-                seekBar.setProgress(0);
-                seekBar.setMax(100);
-                while (seekBar.getProgress() <= 100) {
-                    long current = videoView.getCurrentPosition();
-                    int currentTimeInSec = (int) (current * 100 / duration);
-                    seekBar.setProgress(currentTimeInSec);
-                    if (!videoView.isPlaying() || sleepingForProgress == 2) {
-                        sleepingForTimer = 0;
+                ArgsPlayerSupport.seekBar.setProgress(0);
+                ArgsPlayerSupport.seekBar.setMax(100);
+                while (ArgsPlayerSupport.seekBar.getProgress() <= 100) {
+                    final long current = ArgsPlayerSupport.videoView.getCurrentPosition();
+                    int currentTimeInSec = (int) (current * 100 / ArgsPlayerSupport.duration);
+                    ArgsPlayerSupport.seekBar.setProgress(currentTimeInSec);
+                    if (!ArgsPlayerSupport.videoView.isPlaying() || sleepingForProgress == 2) {
+                        sleepingForProgress = 0;
                         break;
                     }
-                    threadSleep(title_control, this);
+                    handler.post(new Runnable() {
+                        public void run() {
+                            ArgsPlayerSupport.currentTimeTxt.setText(timeFormatter(current));
+                        }
+                    });
+                    threadSleep(this);
                 }
             }
         };
         progressUpdate.start();
     }
 
-    public void timeUpdate(final long duration, final TextView currentTimeTxt, final VideoView videoView, final RelativeLayout title_control) {
-        final Handler handler = new Handler();
-        Thread th = new Thread() {
-            @Override
-            public void run() {
-                while (current != duration) {
-                    current = videoView.getCurrentPosition();
-                    if (!videoView.isPlaying() || sleepingForTimer == 2) {
-                        sleepingForTimer = 0;
-                        break;
-                    }
-                    threadSleep(title_control, this);
-                    handler.post(new Runnable() {
-                        public void run() {
-                            currentTimeTxt.setText(timeFormatter(current));
-                        }
-                    });
-                }
-            }
-        };
-        th.start();
-    }
-
-    public void threadSleep(RelativeLayout title_control, Thread thread) {
-        if (title_control.getVisibility() == View.VISIBLE) {
+    public void threadSleep(Thread thread) {
+        if (ArgsPlayerSupport.title_control.getVisibility() == View.VISIBLE) {
             if (thread.getState() == Thread.State.TIMED_WAITING) {
                 thread.notify();
             }
         } else {
             try {
                 thread.sleep(1000);
-                sleepingForTimer++;
                 sleepingForProgress++;
             } catch (InterruptedException ex) {
                 System.out.println("InterruptedException ::: " + ex);
@@ -107,26 +86,28 @@ public class PlayerSupport {
         }
     }
 
-    public void setOriginalSize(RelativeLayout.LayoutParams layoutParams, VideoView vv, ImageButton fullBtn, ImageButton oriBtn, TextView txtView) {
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        vv.setLayoutParams(layoutParams);
+    public void setOriginalSize(ImageButton fullBtn, ImageButton oriBtn) {
+        RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) ArgsPlayerSupport.videoView.getLayoutParams();
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        ArgsPlayerSupport.videoView.setLayoutParams(videoViewLayoutParams);
         fullBtn.setVisibility(View.VISIBLE);
         oriBtn.setVisibility(View.GONE);
-        txtView.setText("ORIGINAL");
+        ArgsPlayerSupport.notification_txt.setText("ORIGINAL");
     }
 
-    public void setFullscreen(RelativeLayout.LayoutParams layoutParams, VideoView vv, ImageButton fullBtn, ImageButton oriBtn, TextView txtView) {
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 1);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
-        vv.setLayoutParams(layoutParams);
+    public void setFullscreen(ImageButton fullBtn, ImageButton oriBtn) {
+        RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) ArgsPlayerSupport.videoView.getLayoutParams();
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 1);
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
+        videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 1);
+        ArgsPlayerSupport.videoView.setLayoutParams(videoViewLayoutParams);
         oriBtn.setVisibility(View.VISIBLE);
         fullBtn.setVisibility(View.GONE);
-        txtView.setText("FULLSCREEN");
+        ArgsPlayerSupport.notification_txt.setText("FULLSCREEN");
     }
 
     public void removeNotificationText(TextView notification_txt) {

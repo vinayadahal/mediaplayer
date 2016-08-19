@@ -14,21 +14,18 @@ import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.services.PlayerSupport;
+import com.mediaplayer.variables.ArgsPlayerSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayFile extends AppCompatActivity {
 
-    private RelativeLayout title_control;
-    private long duration;
     private MediaPlayer mediaPlayer;
-    private VideoView videoView;
     private ImageButton playBtn;
     private ImageButton pauseBtn;
     private ImageButton originalBtn;
     private ImageButton fullscreenBtn;
-    private TextView notification_txt;
     private RelativeLayout.LayoutParams layoutParams;
     //player stuff
     List<String> allVideoPath = null;
@@ -58,8 +55,8 @@ public class PlayFile extends AppCompatActivity {
         pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
         originalBtn = (ImageButton) findViewById(R.id.original_btn);
         fullscreenBtn = (ImageButton) findViewById(R.id.fullscreen_btn);
-        notification_txt = (TextView) findViewById(R.id.notification_txt);
-        layoutParams = (RelativeLayout.LayoutParams) videoView.getLayoutParams();
+        ArgsPlayerSupport.notification_txt = (TextView) findViewById(R.id.notification_txt);
+        layoutParams = (RelativeLayout.LayoutParams) ArgsPlayerSupport.videoView.getLayoutParams();
         playBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.VISIBLE);
         originalBtn.setVisibility(View.VISIBLE);
@@ -67,23 +64,23 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void playFile(String filename, String videoFileName) {
-        title_control = (RelativeLayout) findViewById(R.id.title_control);
-        title_control.setVisibility(View.INVISIBLE);
+        ArgsPlayerSupport.title_control = (RelativeLayout) findViewById(R.id.title_control);
+        ArgsPlayerSupport.title_control.setVisibility(View.INVISIBLE);
         TextView vidTitle = (TextView) findViewById(R.id.vid_title);
         vidTitle.setText("Now Playing: " + videoFileName);
-        videoView = (VideoView) findViewById(R.id.videoView);
-        videoView.setVideoURI(Uri.parse(filename));
-        videoView.start();
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        ArgsPlayerSupport.videoView = (VideoView) findViewById(R.id.videoView);
+        ArgsPlayerSupport.videoView.setVideoURI(Uri.parse(filename));
+        ArgsPlayerSupport.videoView.start();
+        ArgsPlayerSupport.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                duration = videoView.getDuration();
+                ArgsPlayerSupport.duration = ArgsPlayerSupport.videoView.getDuration();
                 mediaPlayer = mp; // used to pause video
                 progressBarUpdate();
-                new PlayerSupport().seekToBar((SeekBar) findViewById(R.id.vid_seekbar), mediaPlayer, duration);
+                new PlayerSupport().seekToBar((SeekBar) findViewById(R.id.vid_seekbar), mediaPlayer, ArgsPlayerSupport.duration);
             }
         });
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        ArgsPlayerSupport.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 finish();
@@ -92,11 +89,12 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void progressBarUpdate() {
-        new PlayerSupport().playerScreenTouch((RelativeLayout) findViewById(R.id.play_file_relative_layout),
-                title_control, notification_txt, (SeekBar) findViewById(R.id.vid_seekbar), videoView,
-                duration, (TextView) findViewById(R.id.current_time));
+        ArgsPlayerSupport.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
+        ArgsPlayerSupport.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
+        ArgsPlayerSupport.currentTimeTxt = (TextView) findViewById(R.id.current_time);
+        new PlayerSupport().playerScreenTouch();
         TextView totalTime = (TextView) findViewById(R.id.total_time);
-        totalTime.setText(new PlayerSupport().timeFormatter(duration));
+        totalTime.setText(new PlayerSupport().timeFormatter(ArgsPlayerSupport.duration));
     }
 
     public void pauseVideo(View view) {
@@ -112,7 +110,7 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void rewind(View view) {
-        int rewind_to = (videoView.getCurrentPosition() - 10000);
+        int rewind_to = (ArgsPlayerSupport.videoView.getCurrentPosition() - 10000);
         if (rewind_to < 0) {
             rewind_to = 0;
         }
@@ -120,7 +118,7 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void forward(View view) {
-        int forward_to = (videoView.getCurrentPosition() + 10000);
+        int forward_to = (ArgsPlayerSupport.videoView.getCurrentPosition() + 10000);
         mediaPlayer.seekTo(forward_to);
     }
 
@@ -144,10 +142,11 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void originalSize(View view) {
-        new PlayerSupport().setOriginalSize(layoutParams, videoView, fullscreenBtn, originalBtn, notification_txt);
+        new PlayerSupport().setOriginalSize(fullscreenBtn, originalBtn);
     }
 
     public void fullScreenSize(View view) {
-        new PlayerSupport().setFullscreen(layoutParams, videoView, fullscreenBtn, originalBtn, notification_txt);
+        new PlayerSupport().setFullscreen(fullscreenBtn, originalBtn);
     }
+    
 }
