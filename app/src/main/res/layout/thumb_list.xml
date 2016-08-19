@@ -7,28 +7,29 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_height="60dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
         android:src="@android:drawable/ic_menu_gallery" />
-
-    <!--<TextView-->
-    <!--android:id="@+id/th_text_view"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:textSize="16dp" />-->
 
     <TextView
         android:id="@+id/th_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="70dp"
+        android:layout_toRightOf="@+id/icon"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="title"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/text_file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/icon"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="title2"
         android:textSize="16dp" />
 
     <TextView

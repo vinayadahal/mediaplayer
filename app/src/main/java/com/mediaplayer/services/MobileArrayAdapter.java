@@ -3,6 +3,7 @@ package com.mediaplayer.services;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,15 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
     private final List<String> values;
     private final List<String> thumb;
     private final List<Long> time;
+    private final List<Long> filesize;
 
-    public MobileArrayAdapter(Context context, List<String> values, List<String> thumb, List<Long> time) {
+    public MobileArrayAdapter(Context context, List<String> values, List<String> thumb, List<Long> time, List<Long> filesize) {
         super(context, R.layout.thumb_list, values);
         this.context = context;
         this.values = values;
         this.thumb = thumb;
         this.time = time;
+        this.filesize = filesize;
     }
 
     @Override
@@ -38,8 +41,10 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
         TextView textView = (TextView) rowView.findViewById(R.id.th_text_view);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         TextView time_text = (TextView) rowView.findViewById(R.id.time_text);
+        TextView text_file_size = (TextView) rowView.findViewById(R.id.text_file_size);
         textView.setText(values.get(position));
         time_text.setText(new PlayerSupport().timeFormatter(time.get(position)));
+        text_file_size.setText(new FileSearch().convertFileSize(filesize.get(position)));
         Bitmap bitmap = null;
         File f = new File(thumb.get(position));
         BitmapFactory.Options options = new BitmapFactory.Options();

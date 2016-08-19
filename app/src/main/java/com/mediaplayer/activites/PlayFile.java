@@ -148,5 +148,5 @@ public class PlayFile extends AppCompatActivity {
     public void fullScreenSize(View view) {
         new PlayerSupport().setFullscreen(fullscreenBtn, originalBtn);
     }
-    
+
 }

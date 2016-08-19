@@ -45,6 +45,7 @@ public class PlayerSupport {
         });
     }
 
+
     public void updateProgressBar() {
         final Handler handler = new Handler();
         Thread progressUpdate = new Thread() {

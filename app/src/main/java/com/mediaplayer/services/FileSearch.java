@@ -60,8 +60,10 @@ public class FileSearch {
             return null;
         }
         if (!new File(thumb_location + "/" + full_filename).exists()) {
+            System.out.println("Creating thumbnail ----->");
             return makeThumb(folder_name + "/" + filename, thumb_location + "/" + full_filename);
         }
+
         return thumb_location + "/" + full_filename;
     }
 
@@ -90,5 +92,21 @@ public class FileSearch {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String convertFileSize(long bytes) {
+        double kilobytes = (double) Math.round((bytes / 1024) * 100) / 100;
+        double megabytes = (double) Math.round((kilobytes / 1024) * 100) / 100;
+        double gigabytes = (double) Math.round((megabytes / 1024) * 100) / 100;
+        if (kilobytes < 1024) {
+            return kilobytes + " KB";
+        }
+        if (megabytes < 1024) {
+            return megabytes + " MB";
+        }
+        if (gigabytes < 1024) {
+            return gigabytes + " GB";
+        }
+        return bytes + " Bytes";
     }
 }
