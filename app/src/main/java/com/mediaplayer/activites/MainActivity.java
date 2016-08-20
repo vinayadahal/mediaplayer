@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         String[] columns = {MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns._ID,
                 MediaStore.MediaColumns.SIZE};
-        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, null);
+        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, MediaStore.MediaColumns.TITLE);
         List<String> videoFileList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {
@@ -61,19 +61,14 @@ public class MainActivity extends AppCompatActivity {
         for (final String filepath : getVideoFiles()) {
             final IconService objIconService = new IconService();
             objIconService.ctx = this;
-//            Thread th = new Thread() {
-//                public void run() {
             thumbLocation.add(objIconService.checkThumb(filepath));
-//                }
-//            };
-//            th.start();
         }
         return thumbLocation;
     }
 
     public List<Long> getVideoDuration() {
         String[] columns = {MediaStore.Video.VideoColumns.DURATION};
-        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, null);
+        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, MediaStore.MediaColumns.TITLE);
         List<Long> videoDuration = new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {

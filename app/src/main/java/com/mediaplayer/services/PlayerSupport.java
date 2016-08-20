@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.mediaplayer.components.Effects;
 import com.mediaplayer.variables.CommonArgs;
@@ -17,12 +18,13 @@ public class PlayerSupport {
     private Runnable runnable;
     private Handler handler = new Handler();
 
-    public void setVideoViewListeners(final Context ctx) {
+    public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 CommonArgs.duration = CommonArgs.videoView.getDuration();
                 CommonArgs.mediaPlayer = mp; // used to pause video
+                totalTime.setText(new MathService().timeFormatter(CommonArgs.duration));
                 seekToBar(mp);
             }
         });

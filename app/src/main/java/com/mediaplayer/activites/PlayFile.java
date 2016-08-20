@@ -23,7 +23,7 @@ import java.util.List;
 
 public class PlayFile extends AppCompatActivity {
 
-    private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, fitToScreen;
+    private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn;
     private PlayerSupport objPlayerSupport = new PlayerSupport();
     List<String> allVideoPath = null;
     String filePath = null; // or other values
@@ -60,6 +60,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
         CommonArgs.videoView = (VideoView) findViewById(R.id.videoView);
+
     }
 
     public void initLocalVariable() {
@@ -79,13 +80,11 @@ public class PlayFile extends AppCompatActivity {
     public void playFile(String filename) {
         TextView vidTitle = (TextView) findViewById(R.id.vid_title);
         vidTitle.setText("Now Playing: " + new File(filename).getName());
-        TextView totalTime = (TextView) findViewById(R.id.total_time);
-        totalTime.setText(new MathService().timeFormatter(CommonArgs.duration));
         CommonArgs.title_control.setVisibility(View.INVISIBLE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
         CommonArgs.videoView.start();
         objPlayerSupport.playerScreenTouch();
-        objPlayerSupport.setVideoViewListeners(this);
+        objPlayerSupport.setVideoViewListeners(this, (TextView) findViewById(R.id.total_time));
     }
 
     public void pauseVideo(View view) {
