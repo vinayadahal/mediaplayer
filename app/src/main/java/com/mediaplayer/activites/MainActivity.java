@@ -1,10 +1,10 @@
 package com.mediaplayer.activites;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
-import android.os.Build;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,24 +13,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mediaplayer.R;
-import com.mediaplayer.services.FileSearch;
+import com.mediaplayer.services.IconService;
 import com.mediaplayer.services.MobileArrayAdapter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<Long> FileSize = new ArrayList<>();
+    Uri uri;
+    List<Long> fileSize = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
-        System.out.println("External Storage::::: " + rawExternalStorage);
-        SearchFile(new File(rawExternalStorage));
         ImageButton backImgBtn = (ImageButton) findViewById(R.id.back_btn);
         backImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,54 +35,75 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        createVideoList(getVideoFiles(), getVideoThumbnail(), getVideoDuration(), fileSize);
     }
 
-    public void SearchFile(File dir) {
-        FileSearch objFileSearch = new FileSearch();
-        objFileSearch.ctx = this;
-        objFileSearch.searchVideoFile(dir);
-        List<String> thumb = objFileSearch.thumb;
-        final List<String> FileList = objFileSearch.FileList;
-        final List<String> video_path = objFileSearch.video_path;
-        if (thumb.size() != 0) {
-            List<Long> duration = getVideoDuration(video_path, FileList);
-            ListView listView = new ListView(this);
-            listView.setAdapter(new MobileArrayAdapter(this, FileList, thumb, duration, FileSize));
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String fileName = video_path.get(position) + FileList.get(position).toString();
-                    Intent intent = new Intent(MainActivity.this, PlayFile.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("fileName", fileName); // value for another activities
-                    bundle.putString("videoFileName", FileList.get(position));
-                    bundle.putStringArrayList("allVideoPath", (ArrayList<String>) video_path);
-                    bundle.putStringArrayList("allFileList", (ArrayList<String>) FileList);
-                    intent.putExtras(bundle); // bundle saved as extras
-                    startActivity(intent);
-                }
-            });
-            LinearLayout lnrlayout = (LinearLayout) findViewById(R.id.lnrLayout);
-            lnrlayout.addView(listView);
+    public List<String> getVideoFiles() {
+        String[] columns = {MediaStore.MediaColumns.DATA,
+                MediaStore.MediaColumns._ID,
+                MediaStore.MediaColumns.SIZE};
+        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, null);
+        List<String> videoFileList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (cursor.isAfterLast() == false) {
+                videoFileList.add(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)));
+                fileSize.add(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE)));
+                cursor.moveToNext();
+            }
         }
+        cursor.close();
+        return videoFileList;
     }
 
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
-    public List<Long> getVideoDuration(List<String> videoPath, List<String> FileList) {
-        List<Long> timeDuration = new ArrayList<>();
-        for (int i = 0; i < videoPath.size(); i++) {
-            File file = new File(videoPath.get(i) + FileList.get(i).toString());
-            FileSize.add(file.length());
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(videoPath.get(i) + FileList.get(i).toString());
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-//            MediaPlayer mp = MediaPlayer.create(this, Uri.parse(videoPath.get(i) + FileList.get(i).toString()));
-//            int duration = mp.getDuration();
-//            System.out.println("File duration::::: " + );
-            timeDuration.add(Long.valueOf(Integer.parseInt(time)));
+    public List<String> getVideoThumbnail() {
+        final List<String> thumbLocation = new ArrayList<>();
+        for (final String filepath : getVideoFiles()) {
+            final IconService objIconService = new IconService();
+            objIconService.ctx = this;
+//            Thread th = new Thread() {
+//                public void run() {
+            thumbLocation.add(objIconService.checkThumb(filepath));
+//                }
+//            };
+//            th.start();
         }
-        return timeDuration;
+        return thumbLocation;
+    }
+
+    public List<Long> getVideoDuration() {
+        String[] columns = {MediaStore.Video.VideoColumns.DURATION};
+        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, null);
+        List<Long> videoDuration = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (cursor.isAfterLast() == false) {
+                String strDuration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+                long duration = Long.parseLong(strDuration);
+                videoDuration.add(duration);
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        return videoDuration;
+    }
+
+    public void createVideoList(final List<String> videoFiles, List<String> videoThumbnail, List<Long> duration, List<Long> FileSize) {
+        ListView listView = new ListView(this);
+        listView.setAdapter(new MobileArrayAdapter(this, videoFiles, videoThumbnail, duration, FileSize));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String fileName = videoFiles.get(position);
+                Intent intent = new Intent(MainActivity.this, PlayFile.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("fileName", fileName); // value for another activities
+                bundle.putStringArrayList("allVideoPath", (ArrayList<String>) videoFiles);
+                intent.putExtras(bundle); // bundle saved as extras
+                startActivity(intent);
+            }
+        });
+        LinearLayout lnrlayout = (LinearLayout) findViewById(R.id.lnrLayout);
+        lnrlayout.addView(listView);
     }
 
 }

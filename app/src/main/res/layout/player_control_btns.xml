@@ -77,5 +77,4 @@
         android:onClick="originalSize"
         android:src="@drawable/original_size" />
 
-
 </LinearLayout>

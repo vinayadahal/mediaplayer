@@ -4,22 +4,18 @@
     android:layout_height="match_parent">
 
     <item>
-        <shape android:shape="rectangle">
-            <corners android:radius="0dp" />
-            <gradient
-                android:angle="270"
-                android:endColor="#6c6e6a"
-                android:startColor="#61635f" />
+        <shape android:shape="line">
+            <stroke
+                android:width="2dp"
+                android:color="#d8d8d8" />
         </shape>
     </item>
     <item>
         <clip>
-            <shape android:shape="rectangle">
-                <corners android:radius="0dp" />
-                <gradient
-                    android:angle="270"
-                    android:endColor="#990800"
-                    android:startColor="#d14900" />
+            <shape android:shape="line">
+                <stroke
+                    android:width="2dp"
+                    android:color="#990800" />
             </shape>
         </clip>
     </item>
