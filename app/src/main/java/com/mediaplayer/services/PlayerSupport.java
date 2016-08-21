@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mediaplayer.components.Effects;
 import com.mediaplayer.variables.CommonArgs;
@@ -59,7 +60,8 @@ public class PlayerSupport {
                         }, 3000);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        CommonArgs.title_control.setVisibility(View.VISIBLE);
+//                        CommonArgs.title_control.setVisibility(View.VISIBLE);
+                        System.out.println("some thing is moving");
                         break;
                 }
                 return true;
@@ -82,12 +84,15 @@ public class PlayerSupport {
                             CommonArgs.currentTimeTxt.setText(new MathService().timeFormatter(current));
                         }
                     });
+
+                    if (checkTitleControlVisibilty()) {
+                        System.out.println("ending the world");
+                        handler.removeCallbacks(runnable);// stops running runnable
+                    }
+
                 }
                 handler.postDelayed(this, 1000);
-                if (checkTitleControlVisibilty()) {
-                    System.out.println("ending the world");
-                    handler.removeCallbacks(runnable);// stops running runnable
-                }
+
             }
         };
         handler.postDelayed(runnable, 10);
@@ -116,5 +121,9 @@ public class PlayerSupport {
                 mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
+    }
+
+    public void screenSwipe() {
+
     }
 }

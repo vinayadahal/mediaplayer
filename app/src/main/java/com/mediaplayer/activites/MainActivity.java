@@ -2,7 +2,6 @@ package com.mediaplayer.activites;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +20,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Uri uri;
     List<Long> fileSize = new ArrayList<>();
 
     @Override
@@ -35,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         createVideoList(getVideoFiles(), getVideoThumbnail(), getVideoDuration(), fileSize);
     }
 
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         String[] columns = {MediaStore.MediaColumns.DATA,
                 MediaStore.MediaColumns._ID,
                 MediaStore.MediaColumns.SIZE};
-        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, MediaStore.MediaColumns.TITLE);
+        Cursor cursor = this.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null, null, MediaStore.MediaColumns.TITLE);
         List<String> videoFileList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     public List<Long> getVideoDuration() {
         String[] columns = {MediaStore.Video.VideoColumns.DURATION};
-        Cursor cursor = this.getContentResolver().query(uri, columns, null, null, MediaStore.MediaColumns.TITLE);
+        Cursor cursor = this.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null, null, MediaStore.MediaColumns.TITLE);
         List<Long> videoDuration = new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (cursor.isAfterLast() == false) {

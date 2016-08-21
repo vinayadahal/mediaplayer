@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
-import com.mediaplayer.services.MathService;
 import com.mediaplayer.services.MediaControl;
 import com.mediaplayer.services.PlayerSupport;
 import com.mediaplayer.variables.CommonArgs;
@@ -113,7 +112,7 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void previous(View view) {
-        int nextFile = new MediaControl().nextBtnAction(allVideoPath, filePath);
+        int nextFile = new MediaControl().previousBtnAction(allVideoPath, filePath);
         playFile(allVideoPath.get(nextFile)); // playing new file
         filePath = allVideoPath.get(nextFile); // recording current playing file for future use
     }
