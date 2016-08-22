@@ -1,8 +1,12 @@
 package com.mediaplayer.services;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.media.AudioManager;
+import android.os.Build;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,7 +17,8 @@ import java.util.List;
 
 public class MediaControl {
 
-    int currentVolume;
+    static int measuredWidth = 0;
+    static int measuredHeight = 0;
 
     public int nextBtnAction(List<String> allVideoPath, String filePath) {
         int nextFile = allVideoPath.indexOf(filePath) + 1; //current file + 1
@@ -33,18 +38,21 @@ public class MediaControl {
         return nextFile;
     }
 
-    public void setMute(ImageButton mute_btn, ImageButton vol_up_btn) {
-        mute_btn.setVisibility(View.GONE);
-        vol_up_btn.setVisibility(View.VISIBLE);
-        currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        System.out.println("current volume: " + currentVolume);
-        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_SHOW_UI);
+    public void setVoluemDown() {
+        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
     }
 
-    public void setVolumeUp(ImageButton mute_btn, ImageButton vol_up_btn) {
-        mute_btn.setVisibility(View.VISIBLE);
-        vol_up_btn.setVisibility(View.GONE);
-        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
+    public void setVolumeUp() {
+        System.out.println("max volume::::: " + CommonArgs.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        System.out.println("screen height: " + measuredHeight);
+
+//        int scrollAmt = (int) (sumy / measuredHeight) * 15;
+        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//        int total_volume = scrollAmt + currentVolume;
+
+//        if (total_volume <= 15) {
+            CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+//        }
     }
 
     public void setOriginalSize(ImageButton fitBtn, ImageButton oriBtn) {
@@ -74,6 +82,20 @@ public class MediaControl {
     public void removeNotificationText(TextView notification_txt) {
         if (!notification_txt.getText().equals("")) {
             notification_txt.setText("");
+        }
+    }
+
+    public void setScreenSize(Context ctx) {
+        WindowManager w = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            Point size = new Point();
+            w.getDefaultDisplay().getSize(size);
+            measuredWidth = size.x;
+            measuredHeight = size.y;
+        } else {
+            Display d = w.getDefaultDisplay();
+            measuredWidth = d.getWidth();
+            measuredHeight = d.getHeight();
         }
     }
 

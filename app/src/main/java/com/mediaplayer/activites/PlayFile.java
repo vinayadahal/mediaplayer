@@ -6,15 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
@@ -78,6 +75,7 @@ public class PlayFile extends AppCompatActivity {
         pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
         originalBtn = (ImageButton) findViewById(R.id.original_btn);
         fullscreenBtn = (ImageButton) findViewById(R.id.fullscreen_btn);
+        new MediaControl().setScreenSize(this);
     }
 
     public void setInitPlayerView() {

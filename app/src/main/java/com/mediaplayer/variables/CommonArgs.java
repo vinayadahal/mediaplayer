@@ -18,7 +18,6 @@ public class CommonArgs {
     public static TextView currentTimeTxt;
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
-//    public static Boolean isVideoViewOn;
 
 
 }

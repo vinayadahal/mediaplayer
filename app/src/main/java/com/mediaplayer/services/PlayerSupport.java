@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v4.view.GestureDetectorCompat;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mediaplayer.components.Effects;
 import com.mediaplayer.variables.CommonArgs;
@@ -23,6 +20,8 @@ public class PlayerSupport {
     float startx, starty;
     float endx, endy;
     float sumx, sumy;
+    int sleepFor = 0;
+    int countVol = 0;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -51,7 +50,6 @@ public class PlayerSupport {
                         if (checkTitleControlVisibilty()) {
                             updateProgressBar();
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
-
                         }
                         startx = event.getX();
                         starty = event.getY();
@@ -66,6 +64,8 @@ public class PlayerSupport {
                                 handler.removeCallbacks(runnable); // stops running runnable
                             }
                         }, 3000);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
                         endx = event.getX();
                         endy = event.getY();
                         getSiwpeArea();
@@ -82,7 +82,7 @@ public class PlayerSupport {
                 System.out.println("Hello World");
                 CommonArgs.seekBar.setProgress(0);
                 CommonArgs.seekBar.setMax((int) CommonArgs.duration);
-                if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration) {
+                if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration && !checkTitleControlVisibilty()) {
                     final long current = CommonArgs.videoView.getCurrentPosition();
                     int currentTimeInSec = (int) current;
                     CommonArgs.seekBar.setProgress(currentTimeInSec);
@@ -91,15 +91,15 @@ public class PlayerSupport {
                             CommonArgs.currentTimeTxt.setText(new MathService().timeFormatter(current));
                         }
                     });
-
                     if (checkTitleControlVisibilty()) {
                         System.out.println("ending the world");
                         handler.removeCallbacks(runnable);// stops running runnable
+                        System.out.println("call back should be removed");
+                        handler.removeCallbacksAndMessages(null);
+                        return;
                     }
-
                 }
                 handler.postDelayed(this, 1000);
-
             }
         };
         handler.postDelayed(runnable, 10);
@@ -134,38 +134,33 @@ public class PlayerSupport {
         if (startx < endx) {
             sumx = startx - endx;
         }
-
         if (startx > endx) {
             sumx = startx - endx;
         }
-
         if (starty < endy) {
             sumy = starty - endy;
         }
-
         if (starty > endy) {
             sumy = starty - endy;
         }
-
-        if (sumy >= 50 && sumx < sumy) {
+        if (sumy >= 100 && sumx < sumy) {
             System.out.println("You may have swiped bottom to top");
+            System.out.println("distance " + (int) sumy / 48);
+            new MediaControl().setVolumeUp();
+            countVol++;
         }
-
-        if (sumx >= 50 && sumy < sumx) {
+        if (sumx >= 100 && sumy < sumx) {
             System.out.println("You may have swiped right to left");
         }
-
-        if (sumx <= -50 && sumy > sumx) {
+        if (sumx <= -100 && sumy > sumx) {
             System.out.println("You may have swiped left to right");
         }
-
-        if (sumy <= -50 && sumx > sumy) {
+        if (sumy <= -100 && sumx > sumy) {
             System.out.println("You may have swiped top to bottom");
+            new MediaControl().setVoluemDown();
         }
-
         System.out.println("sumx " + sumx);
         System.out.println("sumy " + sumy);
-
     }
 
 }
