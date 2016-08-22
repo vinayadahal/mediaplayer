@@ -1,5 +1,7 @@
 package com.mediaplayer.services;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -10,6 +12,8 @@ import com.mediaplayer.variables.CommonArgs;
 import java.util.List;
 
 public class MediaControl {
+
+    int currentVolume;
 
     public int nextBtnAction(List<String> allVideoPath, String filePath) {
         int nextFile = allVideoPath.indexOf(filePath) + 1; //current file + 1
@@ -27,6 +31,20 @@ public class MediaControl {
         }
         CommonArgs.mediaPlayer.stop(); // stopping before next video play
         return nextFile;
+    }
+
+    public void setMute(ImageButton mute_btn, ImageButton vol_up_btn) {
+        mute_btn.setVisibility(View.GONE);
+        vol_up_btn.setVisibility(View.VISIBLE);
+        currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        System.out.println("current volume: " + currentVolume);
+        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_SHOW_UI);
+    }
+
+    public void setVolumeUp(ImageButton mute_btn, ImageButton vol_up_btn) {
+        mute_btn.setVisibility(View.VISIBLE);
+        vol_up_btn.setVisibility(View.GONE);
+        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
     }
 
     public void setOriginalSize(ImageButton fitBtn, ImageButton oriBtn) {

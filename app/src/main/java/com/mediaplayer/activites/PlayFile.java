@@ -1,15 +1,20 @@
 package com.mediaplayer.activites;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
@@ -46,10 +51,16 @@ public class PlayFile extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            CommonArgs.mediaPlayer.stop();
+            CommonArgs.mediaPlayer.stop(); // stops video playback
             finish();
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onDestroy() {
+        CommonArgs.mediaPlayer.release(); // releases associated resources
+        super.onDestroy();
     }
 
     public void initGlobalVariable() {
@@ -59,7 +70,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
         CommonArgs.videoView = (VideoView) findViewById(R.id.videoView);
-
+        CommonArgs.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
     }
 
     public void initLocalVariable() {

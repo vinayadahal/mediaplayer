@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -18,6 +20,9 @@ public class PlayerSupport {
 
     private Runnable runnable;
     private Handler handler = new Handler();
+    float startx, starty;
+    float endx, endy;
+    float sumx, sumy;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -46,7 +51,10 @@ public class PlayerSupport {
                         if (checkTitleControlVisibilty()) {
                             updateProgressBar();
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
+
                         }
+                        startx = event.getX();
+                        starty = event.getY();
                         break;
                     case MotionEvent.ACTION_UP:
                         CommonArgs.title_control.postDelayed(new Runnable() {
@@ -58,10 +66,9 @@ public class PlayerSupport {
                                 handler.removeCallbacks(runnable); // stops running runnable
                             }
                         }, 3000);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-//                        CommonArgs.title_control.setVisibility(View.VISIBLE);
-                        System.out.println("some thing is moving");
+                        endx = event.getX();
+                        endy = event.getY();
+                        getSiwpeArea();
                         break;
                 }
                 return true;
@@ -123,7 +130,42 @@ public class PlayerSupport {
         });
     }
 
-    public void screenSwipe() {
+    public void getSiwpeArea() {
+        if (startx < endx) {
+            sumx = startx - endx;
+        }
+
+        if (startx > endx) {
+            sumx = startx - endx;
+        }
+
+        if (starty < endy) {
+            sumy = starty - endy;
+        }
+
+        if (starty > endy) {
+            sumy = starty - endy;
+        }
+
+        if (sumy >= 50 && sumx < sumy) {
+            System.out.println("You may have swiped bottom to top");
+        }
+
+        if (sumx >= 50 && sumy < sumx) {
+            System.out.println("You may have swiped right to left");
+        }
+
+        if (sumx <= -50 && sumy > sumx) {
+            System.out.println("You may have swiped left to right");
+        }
+
+        if (sumy <= -50 && sumx > sumy) {
+            System.out.println("You may have swiped top to bottom");
+        }
+
+        System.out.println("sumx " + sumx);
+        System.out.println("sumy " + sumy);
 
     }
+
 }

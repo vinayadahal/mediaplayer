@@ -1,6 +1,7 @@
 package com.mediaplayer.variables;
 
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -16,6 +17,7 @@ public class CommonArgs {
     public static long duration;
     public static TextView currentTimeTxt;
     public static MediaPlayer mediaPlayer;
+    public static AudioManager audioManager;
 //    public static Boolean isVideoViewOn;
 
 
