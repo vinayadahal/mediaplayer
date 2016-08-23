@@ -20,8 +20,8 @@ public class PlayerSupport {
     float startx, starty;
     float endx, endy;
     float sumx, sumy;
-    int sleepFor = 0;
     int countVol = 0;
+    Boolean isViewOn = false;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -47,23 +47,35 @@ public class PlayerSupport {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (checkTitleControlVisibilty()) {
-                            updateProgressBar();
+                        if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
+                            System.out.println("view is on is setting");
+                            isViewOn = true;
                         }
                         startx = event.getX();
                         starty = event.getY();
                         break;
                     case MotionEvent.ACTION_UP:
+                        if (checkTitleControlVisibility()) {
+                            updateProgressBar();
+                            CommonArgs.title_control.setVisibility(View.VISIBLE);
+                        }
                         CommonArgs.title_control.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                new Effects().fadeOut(CommonArgs.title_control);
-                                new MediaControl().removeNotificationText(CommonArgs.notification_txt);
-                                System.out.println("ending from ACTION_UP");
-                                handler.removeCallbacks(runnable); // stops running runnable
+                                if (!isViewOn) {
+                                    System.out.println("called if view is false");
+                                    new Effects().fadeOut(CommonArgs.title_control);
+                                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
+                                    System.out.println("ending from ACTION_UP");
+                                    handler.removeCallbacks(runnable); // stops running runnable
+                                } else {
+                                    isViewOn = false;
+                                }
                             }
                         }, 3000);
+                        System.out.println("up event------------------->");
+
                         break;
                     case MotionEvent.ACTION_MOVE:
                         endx = event.getX();
@@ -82,7 +94,7 @@ public class PlayerSupport {
                 System.out.println("Hello World");
                 CommonArgs.seekBar.setProgress(0);
                 CommonArgs.seekBar.setMax((int) CommonArgs.duration);
-                if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration && !checkTitleControlVisibilty()) {
+                if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration && !checkTitleControlVisibility()) {
                     final long current = CommonArgs.videoView.getCurrentPosition();
                     int currentTimeInSec = (int) current;
                     CommonArgs.seekBar.setProgress(currentTimeInSec);
@@ -91,7 +103,7 @@ public class PlayerSupport {
                             CommonArgs.currentTimeTxt.setText(new MathService().timeFormatter(current));
                         }
                     });
-                    if (checkTitleControlVisibilty()) {
+                    if (checkTitleControlVisibility()) {
                         System.out.println("ending the world");
                         handler.removeCallbacks(runnable);// stops running runnable
                         System.out.println("call back should be removed");
@@ -105,7 +117,7 @@ public class PlayerSupport {
         handler.postDelayed(runnable, 10);
     }
 
-    public Boolean checkTitleControlVisibilty() {
+    public Boolean checkTitleControlVisibility() {
         if (CommonArgs.title_control.getVisibility() != View.VISIBLE) {
             return true;
         } else {
