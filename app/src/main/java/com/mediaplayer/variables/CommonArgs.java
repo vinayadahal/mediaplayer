@@ -1,6 +1,7 @@
 package com.mediaplayer.variables;
 
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ public class CommonArgs {
     public static TextView currentTimeTxt;
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
+    public static Context playFileCtx;
 
 
 }

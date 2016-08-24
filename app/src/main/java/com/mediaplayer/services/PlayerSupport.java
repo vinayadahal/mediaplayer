@@ -7,6 +7,8 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -50,7 +52,7 @@ public class PlayerSupport {
                     case MotionEvent.ACTION_DOWN:
                         if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
-                            System.out.println("view is on is setting");
+                            System.out.println("view on is setting");
                             isViewOn = true;
                         }
                         startx = event.getX();
@@ -168,7 +170,8 @@ public class PlayerSupport {
             @Override
             public void run() {
                 if (!isViewOn) {
-                    new Effects().fadeOut(CommonArgs.title_control);
+//                    new Effects().fadeOut(CommonArgs.title_control);
+                    CommonArgs.title_control.setVisibility(View.GONE);
                     new MediaControl().removeNotificationText(CommonArgs.notification_txt);
                     System.out.println("runnable is running ");
                     handler.removeCallbacks(runnable); // stops running runnable

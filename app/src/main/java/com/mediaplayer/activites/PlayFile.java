@@ -61,6 +61,11 @@ public class PlayFile extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public void closeActivity(View view) {
+        CommonArgs.mediaPlayer.stop();
+        finish();
+    }
+
     public void initGlobalVariable() {
         CommonArgs.title_control = (RelativeLayout) findViewById(R.id.title_control);
         CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
@@ -69,6 +74,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
         CommonArgs.videoView = (VideoView) findViewById(R.id.videoView);
         CommonArgs.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        CommonArgs.playFileCtx = this;
     }
 
     public void initLocalVariable() {

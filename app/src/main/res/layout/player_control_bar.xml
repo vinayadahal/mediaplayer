@@ -17,13 +17,12 @@
 
         <TextView
             android:id="@+id/current_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="kill"
             android:textColor="#fff"
-            app:layout_widthPercent="15%" />
+            app:layout_widthPercent="18%" />
 
         <SeekBar
             android:id="@+id/vid_seekbar"
@@ -33,18 +32,17 @@
             android:layout_centerVertical="true"
             android:progressDrawable="@drawable/seek_bar_styler"
             android:thumb="@drawable/seek_bar_thumb_style"
-            app:layout_widthPercent="70%" />
+            app:layout_widthPercent="64%" />
 
         <TextView
             android:id="@+id/total_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="right"
-            android:text="Total"
             android:textColor="#fff"
-            app:layout_widthPercent="15%" />
+            app:layout_widthPercent="18%" />
 
 
     </android.support.percent.PercentRelativeLayout>
