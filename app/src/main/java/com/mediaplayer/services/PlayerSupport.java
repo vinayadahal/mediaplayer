@@ -15,13 +15,14 @@ import com.mediaplayer.variables.CommonArgs;
 
 public class PlayerSupport {
 
-    private Runnable runnable;
+    private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler();
+    private Handler title_control_handler = new Handler();
     float startx, starty;
     float endx, endy;
     float sumx, sumy;
     int countVol = 0;
-    public Boolean isViewOn = false;
+    Boolean isViewOn = false;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -118,14 +119,13 @@ public class PlayerSupport {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                isViewOn = true;
+                title_control_handler.removeCallbacks(title_control_runnable);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(seekBar.getProgress());
-                isViewOn = false;
-                hideTitleControl();
+                title_control_handler.postDelayed(title_control_runnable, 3000);
             }
         });
     }
@@ -164,20 +164,20 @@ public class PlayerSupport {
     }
 
     public void hideTitleControl() {
-        CommonArgs.title_control.postDelayed(new Runnable() {
+        title_control_runnable = new Runnable() {
             @Override
             public void run() {
                 if (!isViewOn) {
-                    System.out.println("called if view is false");
                     new Effects().fadeOut(CommonArgs.title_control);
                     new MediaControl().removeNotificationText(CommonArgs.notification_txt);
-                    System.out.println("ending from ACTION_UP");
+                    System.out.println("runnable is running ");
                     handler.removeCallbacks(runnable); // stops running runnable
                 } else {
                     isViewOn = false;
                 }
             }
-        }, 3000);
+        };
+        title_control_handler.postDelayed(title_control_runnable, 3000);
     }
 
 }
