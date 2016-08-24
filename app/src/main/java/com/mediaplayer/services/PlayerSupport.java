@@ -21,7 +21,7 @@ public class PlayerSupport {
     float endx, endy;
     float sumx, sumy;
     int countVol = 0;
-    Boolean isViewOn = false;
+    public Boolean isViewOn = false;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -60,22 +60,8 @@ public class PlayerSupport {
                             updateProgressBar();
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                         }
-                        CommonArgs.title_control.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!isViewOn) {
-                                    System.out.println("called if view is false");
-                                    new Effects().fadeOut(CommonArgs.title_control);
-                                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
-                                    System.out.println("ending from ACTION_UP");
-                                    handler.removeCallbacks(runnable); // stops running runnable
-                                } else {
-                                    isViewOn = false;
-                                }
-                            }
-                        }, 3000);
+                        hideTitleControl();
                         System.out.println("up event------------------->");
-
                         break;
                     case MotionEvent.ACTION_MOVE:
                         endx = event.getX();
@@ -91,7 +77,7 @@ public class PlayerSupport {
     public void updateProgressBar() {
         runnable = new Runnable() {
             public void run() {
-                System.out.println("Hello World");
+                System.out.println("Seekbar runnable running");
                 CommonArgs.seekBar.setProgress(0);
                 CommonArgs.seekBar.setMax((int) CommonArgs.duration);
                 if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration && !checkTitleControlVisibility()) {
@@ -103,13 +89,12 @@ public class PlayerSupport {
                             CommonArgs.currentTimeTxt.setText(new MathService().timeFormatter(current));
                         }
                     });
-                    if (checkTitleControlVisibility()) {
-                        System.out.println("ending the world");
-                        handler.removeCallbacks(runnable);// stops running runnable
-                        System.out.println("call back should be removed");
-                        handler.removeCallbacksAndMessages(null);
-                        return;
-                    }
+                }
+                if (checkTitleControlVisibility()) {
+                    handler.removeCallbacks(this);// stops running runnable
+                    handler.removeCallbacksAndMessages(null);
+                    System.out.println("Seekbar runnable should be stopped");
+                    return;
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -133,11 +118,14 @@ public class PlayerSupport {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                isViewOn = true;
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(seekBar.getProgress());
+                isViewOn = false;
+                hideTitleControl();
             }
         });
     }
@@ -173,6 +161,23 @@ public class PlayerSupport {
         }
         System.out.println("sumx " + sumx);
         System.out.println("sumy " + sumy);
+    }
+
+    public void hideTitleControl() {
+        CommonArgs.title_control.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isViewOn) {
+                    System.out.println("called if view is false");
+                    new Effects().fadeOut(CommonArgs.title_control);
+                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
+                    System.out.println("ending from ACTION_UP");
+                    handler.removeCallbacks(runnable); // stops running runnable
+                } else {
+                    isViewOn = false;
+                }
+            }
+        }, 3000);
     }
 
 }
