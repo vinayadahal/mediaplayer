@@ -1,6 +1,7 @@
 package com.mediaplayer.activites;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class PlayFile extends AppCompatActivity {
 
-    private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn;
+    private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, portraitBtn, landscapeBtn;
     private PlayerSupport objPlayerSupport = new PlayerSupport();
     List<String> allVideoPath = null;
     String filePath = null; // or other values
@@ -75,14 +76,15 @@ public class PlayFile extends AppCompatActivity {
         pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
         originalBtn = (ImageButton) findViewById(R.id.original_btn);
         fullscreenBtn = (ImageButton) findViewById(R.id.fullscreen_btn);
+        portraitBtn = (ImageButton) findViewById(R.id.portrait_btn);
+        landscapeBtn = (ImageButton) findViewById(R.id.landscape_btn);
         new MediaControl().setScreenSize(this);
     }
 
     public void setInitPlayerView() {
         playBtn.setVisibility(View.GONE);
-        pauseBtn.setVisibility(View.VISIBLE);
-        originalBtn.setVisibility(View.VISIBLE);
         fullscreenBtn.setVisibility(View.GONE);
+        landscapeBtn.setVisibility(View.GONE);
     }
 
     public void playFile(String filename) {
@@ -138,6 +140,18 @@ public class PlayFile extends AppCompatActivity {
 
     public void fullScreenSize(View view) {
         new MediaControl().setFullscreen(fullscreenBtn, originalBtn);
+    }
+
+    public void changeOrientationPortrait(View view) {
+        portraitBtn.setVisibility(View.GONE);
+        landscapeBtn.setVisibility(View.VISIBLE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    public void changeOrientationLandscape(View view) {
+        landscapeBtn.setVisibility(View.GONE);
+        portraitBtn.setVisibility(View.VISIBLE);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
 }

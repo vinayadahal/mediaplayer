@@ -22,8 +22,11 @@
         <!-- <activity android:name=".MainActivity"></activity> -->
         <activity
             android:name=".activites.PlayFile"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="landscape"></activity>
-        <activity android:name=".activites.MainActivity"></activity>
+        <activity
+            android:name=".activites.MainActivity"
+            android:configChanges="orientation|screenSize"></activity>
     </application>
 
 </manifest>
