@@ -45,14 +45,8 @@ public class MediaControl {
     public void setVolumeUp() {
         System.out.println("max volume::::: " + CommonArgs.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         System.out.println("screen height: " + measuredHeight);
-
-//        int scrollAmt = (int) (sumy / measuredHeight) * 15;
         int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//        int total_volume = scrollAmt + currentVolume;
-
-//        if (total_volume <= 15) {
-            CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
-//        }
+        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
     }
 
     public void setOriginalSize(ImageButton fitBtn, ImageButton oriBtn) {

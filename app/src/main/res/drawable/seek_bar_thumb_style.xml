@@ -4,13 +4,10 @@
     android:layout_height="match_parent">
 
     <item>
-
-        <shape>
-
+        <shape android:shape="oval">
             <size
-                android:width="40dp"
-                android:height="40dp" />
-
+                android:width="20dp"
+                android:height="20dp" />
             <solid android:color="@android:color/transparent" />
         </shape>
     </item>

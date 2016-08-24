@@ -32,8 +32,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:progressDrawable="@drawable/seek_bar_styler"
-            android:thumb="@null"
-            android:thumbTint="@color/colorPlayBackNormal"
+            android:thumb="@drawable/seek_bar_thumb_style"
             app:layout_widthPercent="70%" />
 
         <TextView
