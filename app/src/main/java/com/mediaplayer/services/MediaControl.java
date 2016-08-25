@@ -38,7 +38,7 @@ public class MediaControl {
         return nextFile;
     }
 
-    public void setVoluemDown() {
+    public void setVolumeDown() {
         CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
     }
 

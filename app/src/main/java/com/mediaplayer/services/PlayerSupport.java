@@ -15,13 +15,11 @@ import com.mediaplayer.variables.CommonArgs;
 public class PlayerSupport {
 
     private Runnable runnable, title_control_runnable;
-    private Handler handler = new Handler();
-    private Handler title_control_handler = new Handler();
+    private Handler handler = new Handler(), title_control_handler = new Handler();
     float startx, starty;
-    float endx, endy;
-    float sumx, sumy;
-    int countVol = 0;
-    Boolean isViewOn = false;
+    float endx, endy, sumx, sumy;
+    private Boolean isViewOn = false, flag = false;
+    int oldNum = 0;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -47,21 +45,21 @@ public class PlayerSupport {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        startx = event.getX();
+                        starty = event.getY();
                         if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                             System.out.println("view on is setting");
                             isViewOn = true;
                         }
-                        startx = event.getX();
-                        starty = event.getY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (checkTitleControlVisibility()) {
+                        if (checkTitleControlVisibility() && !isViewOn) {
                             updateProgressBar();
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                         }
-                        hideTitleControl();
                         System.out.println("up event------------------->");
+                        hideTitleControl();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         endx = event.getX();
@@ -124,9 +122,26 @@ public class PlayerSupport {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mediaPlayer.seekTo(seekBar.getProgress());
-                title_control_handler.postDelayed(title_control_runnable, 3000);
+                hideTitleControl();
             }
         });
+    }
+
+    public void hideTitleControl() {
+        title_control_runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!isViewOn) {
+                    CommonArgs.title_control.setVisibility(View.GONE);
+                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
+                    System.out.println("runnable is running ");
+                    handler.removeCallbacks(runnable); // stops running runnable
+                } else {
+                    isViewOn = false;
+                }
+            }
+        };
+        title_control_handler.postDelayed(title_control_runnable, 3000);
     }
 
     public void getSiwpeArea() {
@@ -144,9 +159,11 @@ public class PlayerSupport {
         }
         if (sumy >= 100 && sumx < sumy) {
             System.out.println("You may have swiped bottom to top");
-            System.out.println("distance " + (int) sumy / 48);
-            new MediaControl().setVolumeUp();
-            countVol++;
+            System.out.println("distance " + (int) sumy / 8);
+            if (!flag && oldNum != (int) sumy / 8) {
+                new MediaControl().setVolumeUp();
+                oldNum = (int) sumy / 8;
+            }
         }
         if (sumx >= 100 && sumy < sumx) {
             System.out.println("You may have swiped right to left");
@@ -156,28 +173,13 @@ public class PlayerSupport {
         }
         if (sumy <= -100 && sumx > sumy) {
             System.out.println("You may have swiped top to bottom");
-            new MediaControl().setVoluemDown();
+            if (!flag && oldNum != (int) sumy / 8) {
+                new MediaControl().setVolumeDown();
+                oldNum = (int) sumy / 8;
+            }
         }
         System.out.println("sumx " + sumx);
         System.out.println("sumy " + sumy);
-    }
-
-    public void hideTitleControl() {
-        title_control_runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!isViewOn) {
-//                    new Effects().fadeOut(CommonArgs.title_control);
-                    CommonArgs.title_control.setVisibility(View.GONE);
-                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
-                    System.out.println("runnable is running ");
-                    handler.removeCallbacks(runnable); // stops running runnable
-                } else {
-                    isViewOn = false;
-                }
-            }
-        };
-        title_control_handler.postDelayed(title_control_runnable, 3000);
     }
 
 }

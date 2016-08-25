@@ -1,9 +1,8 @@
 package com.mediaplayer.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MathService {
+
+    private float sumx, sumy;
 
     public String convertFileSize(long bytes) {
         double kilobytes = (double) Math.round((bytes / 1024) * 100) / 100;
@@ -31,22 +30,39 @@ public class MathService {
         return String.format("%02d:%02d:%02d", hour, minute, second);
     }
 
-    public List<Float> getSwipeArea(float startx, float starty, float endx, float endy) {
-        System.out.println("start x: " + startx + "end x: " + endx);
-        float sumx = 0, sumy = 0;
-        List<Float> sums = new ArrayList<>();
+    public String getSwipeArea(float startx, float starty, float endx, float endy) {
+        System.out.println("start x: " + startx + " end x: " + endx);
+        System.out.println("start y: " + starty + " end y: " + endy);
+
+        String actionToDo = null;
         if (startx < endx) {
             sumx = startx - endx;
         } else if (startx > endx) {
             sumx = startx - endx;
         } else if (starty < endy) {
+            System.out.println("endy is big-----");
             sumy = starty - endy;
         } else if (starty > endy) {
+            System.out.println("starty is big---");
             sumy = starty - endy;
         }
-        sums.add(sumx);
-        sums.add(sumy);
-
-        return sums;
+        if (sumy >= 100 && sumx < sumy) {
+            System.out.println("You may have swiped bottom to top");
+            System.out.println("distance " + (int) sumy / 48);
+            actionToDo = "volumeUP";
+        }
+        if (sumx >= 100 && sumy < sumx) {
+            System.out.println("You may have swiped right to left");
+        }
+        if (sumx <= -100 && sumy > sumx) {
+            System.out.println("You may have swiped left to right");
+        }
+        if (sumy <= -100 && sumx > sumy) {
+            System.out.println("You may have swiped top to bottom");
+            actionToDo = "volumeDown";
+        }
+        System.out.println("sumx " + sumx);
+        System.out.println("sumy " + sumy);
+        return actionToDo;
     }
 }
