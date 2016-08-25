@@ -115,19 +115,6 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.mediaPlayer.start();
     }
 
-    public void rewind(View view) {
-        int rewind_to = (CommonArgs.videoView.getCurrentPosition() - (int) (0.01 * CommonArgs.duration)); // rewind by 1%
-        if (rewind_to < 0) {
-            rewind_to = 0;
-        }
-        CommonArgs.mediaPlayer.seekTo(rewind_to);
-    }
-
-    public void forward(View view) {
-        int forward_to = (CommonArgs.videoView.getCurrentPosition() + (int) (0.01 * CommonArgs.duration)); // forward by 1%
-        CommonArgs.mediaPlayer.seekTo(forward_to);
-    }
-
     public void previous(View view) {
         int nextFile = new MediaControl().previousBtnAction(allVideoPath, filePath);
         playFile(allVideoPath.get(nextFile)); // playing new file

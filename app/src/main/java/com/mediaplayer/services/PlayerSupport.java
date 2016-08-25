@@ -7,12 +7,9 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.mediaplayer.components.Effects;
 import com.mediaplayer.variables.CommonArgs;
 
 public class PlayerSupport {

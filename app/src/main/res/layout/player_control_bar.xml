@@ -1,52 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/player_control_bar"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
+    android:layout_height="100dp"
     android:layout_alignParentBottom="true"
     android:background="#80000000"
     android:orientation="horizontal">
 
 
-    <android.support.percent.PercentRelativeLayout
+    <LinearLayout
         android:id="@+id/relativePercentage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp">
 
         <TextView
             android:id="@+id/current_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:textColor="#fff"
-            app:layout_widthPercent="18%" />
+            android:layout_weight=".20"
+            android:textColor="#fff" />
 
         <SeekBar
             android:id="@+id/vid_seekbar"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_weight=".60"
             android:progressDrawable="@drawable/seek_bar_styler"
-            android:thumb="@drawable/seek_bar_thumb_style"
-            app:layout_widthPercent="64%" />
+            android:thumb="@drawable/seek_bar_thumb_style" />
 
         <TextView
             android:id="@+id/total_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_weight=".20"
             android:gravity="right"
-            android:textColor="#fff"
-            app:layout_widthPercent="18%" />
+            android:textColor="#fff" />
 
-
-    </android.support.percent.PercentRelativeLayout>
-
+    </LinearLayout>
 
     <include layout="@layout/player_control_btns" />
 
