@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -17,7 +18,7 @@ public class PlayerSupport {
     private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler(), title_control_handler = new Handler();
     float startx, starty;
-    float endx, endy, sumx, sumy;
+    float endx, endy, sumx, sumy, maxY = 0;
     private Boolean isViewOn = false, flag = false;
     int oldNum = 0;
 
@@ -39,14 +40,14 @@ public class PlayerSupport {
         });
     }
 
-    public void playerScreenTouch() {
+    public void playerScreenTouch(final Context ctx) {
+        final GestureDetectorCompat mDetector = new GestureDetectorCompat(ctx, new GestureService());
         CommonArgs.rl_play_file.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        startx = event.getX();
-                        starty = event.getY();
                         if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                             System.out.println("view on is setting");
@@ -62,9 +63,6 @@ public class PlayerSupport {
                         hideTitleControl();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        endx = event.getX();
-                        endy = event.getY();
-                        getSiwpeArea();
                         break;
                 }
                 return true;
@@ -142,44 +140,6 @@ public class PlayerSupport {
             }
         };
         title_control_handler.postDelayed(title_control_runnable, 3000);
-    }
-
-    public void getSiwpeArea() {
-        if (startx < endx) {
-            sumx = startx - endx;
-        }
-        if (startx > endx) {
-            sumx = startx - endx;
-        }
-        if (starty < endy) {
-            sumy = starty - endy;
-        }
-        if (starty > endy) {
-            sumy = starty - endy;
-        }
-        if (sumy >= 100 && sumx < sumy) {
-            System.out.println("You may have swiped bottom to top");
-            System.out.println("distance " + (int) sumy / 8);
-            if (!flag && oldNum != (int) sumy / 8) {
-                new MediaControl().setVolumeUp();
-                oldNum = (int) sumy / 8;
-            }
-        }
-        if (sumx >= 100 && sumy < sumx) {
-            System.out.println("You may have swiped right to left");
-        }
-        if (sumx <= -100 && sumy > sumx) {
-            System.out.println("You may have swiped left to right");
-        }
-        if (sumy <= -100 && sumx > sumy) {
-            System.out.println("You may have swiped top to bottom");
-            if (!flag && oldNum != (int) sumy / 8) {
-                new MediaControl().setVolumeDown();
-                oldNum = (int) sumy / 8;
-            }
-        }
-        System.out.println("sumx " + sumx);
-        System.out.println("sumy " + sumy);
     }
 
 }
