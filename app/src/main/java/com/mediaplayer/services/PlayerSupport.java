@@ -17,10 +17,8 @@ public class PlayerSupport {
 
     private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler(), title_control_handler = new Handler();
-    float startx, starty;
-    float endx, endy, sumx, sumy, maxY = 0;
-    private Boolean isViewOn = false, flag = false;
-    int oldNum = 0;
+    private Boolean isViewOn = false;
+    private float xAxis, yAxis, oldVal;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -41,11 +39,9 @@ public class PlayerSupport {
     }
 
     public void playerScreenTouch(final Context ctx) {
-        final GestureDetectorCompat mDetector = new GestureDetectorCompat(ctx, new GestureService());
         CommonArgs.rl_play_file.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mDetector.onTouchEvent(event);
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (!checkTitleControlVisibility()) {
@@ -63,6 +59,9 @@ public class PlayerSupport {
                         hideTitleControl();
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        xAxis = event.getX();
+                        yAxis = event.getY();
+                        onSwipeAction();
                         break;
                 }
                 return true;
@@ -140,6 +139,17 @@ public class PlayerSupport {
             }
         };
         title_control_handler.postDelayed(title_control_runnable, 3000);
+    }
+
+    public void onSwipeAction() {
+        if (((int) yAxis % 12) == 0) {
+            if (yAxis > oldVal) {
+                new MediaControl().setVolumeDown();
+            } else if (yAxis < oldVal) {
+                new MediaControl().setVolumeUp();
+            }
+        }
+        oldVal = yAxis;
     }
 
 }
