@@ -3,6 +3,7 @@ package com.mediaplayer.services;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
@@ -142,14 +143,38 @@ public class PlayerSupport {
     }
 
     public void onSwipeAction() {
+        CommonArgs.volumeSeekBar.setMax(15);
+        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         if (((int) yAxis % 12) == 0) {
             if (yAxis > oldVal) {
                 new MediaControl().setVolumeDown();
+                CommonArgs.volumeSeekBar.setProgress(currentVolume - 1);
             } else if (yAxis < oldVal) {
                 new MediaControl().setVolumeUp();
+                CommonArgs.volumeSeekBar.setProgress(currentVolume + 1);
             }
         }
         oldVal = yAxis;
     }
+
+//    public void volumeSeekClick() {
+//        CommonArgs.volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                title_control_handler.removeCallbacks(title_control_runnable);
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                int currProg = seekBar.getProgress();
+//                int newVolume=
+//                hideTitleControl();
+//            }
+//        });
+//    }
 
 }

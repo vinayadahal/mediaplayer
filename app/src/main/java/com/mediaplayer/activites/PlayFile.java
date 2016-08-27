@@ -69,6 +69,7 @@ public class PlayFile extends AppCompatActivity {
     public void initGlobalVariable() {
         CommonArgs.title_control = (RelativeLayout) findViewById(R.id.title_control);
         CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
+        CommonArgs.volumeSeekBar = (SeekBar) findViewById(R.id.volume_seekbar);
         CommonArgs.currentTimeTxt = (TextView) findViewById(R.id.current_time);
         CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);

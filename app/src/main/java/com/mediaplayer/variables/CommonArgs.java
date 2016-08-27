@@ -13,13 +13,12 @@ public class CommonArgs {
 
     public static RelativeLayout rl_play_file, title_control;
     public static TextView notification_txt;
-    public static SeekBar seekBar;
+    public static SeekBar seekBar, volumeSeekBar;
     public static VideoView videoView;
     public static long duration;
     public static TextView currentTimeTxt;
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
     public static Context playFileCtx;
-
 
 }
