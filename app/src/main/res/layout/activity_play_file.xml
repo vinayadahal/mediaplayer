@@ -26,7 +26,7 @@
 
         <include layout="@layout/player_title_bar" />
 
-        <include layout="@layout/volume_seek_bar" />
+        <!--<include layout="@layout/volume_seek_bar" />-->
 
         <TextView
             android:id="@+id/notification_txt"
