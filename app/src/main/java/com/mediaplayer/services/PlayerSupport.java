@@ -19,7 +19,7 @@ public class PlayerSupport {
     private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler(), title_control_handler = new Handler();
     private Boolean isViewOn = false;
-    private float xAxis, yAxis, oldVal;
+    private float xAxis, yAxisStart, yAxisEnd, oldVal;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -45,6 +45,7 @@ public class PlayerSupport {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        yAxisStart = event.getY();
                         if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                             System.out.println("view on is setting");
@@ -58,10 +59,11 @@ public class PlayerSupport {
                         }
                         System.out.println("up event------------------->");
                         hideTitleControl();
+                        isViewOn = false;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         xAxis = event.getX();
-                        yAxis = event.getY();
+                        yAxisEnd = event.getY();
                         onSwipeAction();
                         break;
                 }
@@ -143,15 +145,24 @@ public class PlayerSupport {
     }
 
     public void onSwipeAction() {
-        if (((int) yAxis % 8) == 0) {
-            if (yAxis > oldVal) {
-                new MediaControl().setVolumeDown();
-            } else if (yAxis < oldVal) {
-                new MediaControl().setVolumeUp();
-            }
-        }
-        oldVal = yAxis;
-    }
+        int travelAmount, yAxisSum, pixelToMove, screenSize;
+        travelAmount = 10;
+        screenSize = (int) (0.7 * 720); // get screen size and replace 720
+        pixelToMove = screenSize / 15; //get max volume and replace 15
 
+        if (yAxisEnd < yAxisStart) {
+            yAxisSum = (int) (yAxisStart - yAxisEnd);
+        } else {
+            yAxisSum = (int) (yAxisEnd - yAxisStart);
+        }
+
+        if (yAxisSum > travelAmount) {
+            int volume = (int) (yAxisEnd / pixelToMove);
+            new MediaControl().setVolumeUp(volume);
+            isViewOn = true;
+        } else {
+            isViewOn = false;
+        }
+    }
 
 }

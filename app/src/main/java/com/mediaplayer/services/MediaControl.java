@@ -42,13 +42,14 @@ public class MediaControl {
         CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
     }
 
-    public void setVolumeUp() {
+    public void setVolumeUp(int volume) {
         System.out.println("max volume::::: " + CommonArgs.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         System.out.println("screen height: " + measuredHeight);
-//        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (volume == currentVolume + 1 || volume == currentVolume - 1) {
+            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
+        }
     }
-
 
     public void setOriginalSize(ImageButton fitBtn, ImageButton oriBtn) {
         RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) CommonArgs.videoView.getLayoutParams();
