@@ -38,18 +38,38 @@ public class MediaControl {
         return nextFile;
     }
 
+    public void setVolumeUp() {
+        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (currentVolume != 0 || currentVolume != 15) {
+            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (currentVolume + 1), AudioManager.FLAG_SHOW_UI);
+        } else {
+            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
+        }
+        showCurrentVolume();
+    }
+
     public void setVolumeDown() {
-        CommonArgs.audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (currentVolume != 0 || currentVolume != 15) {
+            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (currentVolume - 1), AudioManager.FLAG_SHOW_UI);
+        } else {
+            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
+        }
+        showCurrentVolume();
     }
 
     public void setVolumeUp(int volume) {
-        System.out.println("max volume::::: " + CommonArgs.audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        System.out.println("screen height: " + measuredHeight);
         int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (volume == currentVolume + 1 || volume == currentVolume - 1) {
-            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
-        }
+        CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
+        showCurrentVolume();
     }
+
+    public void setVolumeDown(int volume) {
+        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
+        showCurrentVolume();
+    }
+
 
     public void setOriginalSize(ImageButton fitBtn, ImageButton oriBtn) {
         RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) CommonArgs.videoView.getLayoutParams();
@@ -73,6 +93,13 @@ public class MediaControl {
         oriBtn.setVisibility(View.VISIBLE);
         fullBtn.setVisibility(View.GONE);
         CommonArgs.notification_txt.setText("FULLSCREEN");
+    }
+
+    public void showCurrentVolume() {
+        int volumeText = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+//        System.out.println(Integer.toString(volumeText));
+        CommonArgs.show_volume.setVisibility(View.VISIBLE);
+        CommonArgs.show_volume.setText(Integer.toString(volumeText));
     }
 
     public void removeNotificationText(TextView notification_txt) {

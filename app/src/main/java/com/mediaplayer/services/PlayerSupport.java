@@ -3,10 +3,8 @@ package com.mediaplayer.services;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.support.v4.view.GestureDetectorCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
@@ -18,8 +16,9 @@ public class PlayerSupport {
 
     private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler(), title_control_handler = new Handler();
-    private Boolean isViewOn = false;
-    private float xAxis, yAxisStart, yAxisEnd, oldVal;
+    private Boolean isViewOn = false, yAxisStartUpdate = false;
+    private float xAxis, yAxisStart, yAxisMove, oldVal = 720;
+
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -58,12 +57,14 @@ public class PlayerSupport {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                         }
                         System.out.println("up event------------------->");
+//                        CommonArgs.show_volume.setVisibility(View.GONE);
                         hideTitleControl();
+                        System.out.println("setting isViewOn = false");
                         isViewOn = false;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         xAxis = event.getX();
-                        yAxisEnd = event.getY();
+                        yAxisMove = event.getY();
                         onSwipeAction();
                         break;
                 }
@@ -133,6 +134,7 @@ public class PlayerSupport {
             public void run() {
                 if (!isViewOn) {
                     CommonArgs.title_control.setVisibility(View.GONE);
+                    CommonArgs.show_volume.setVisibility(View.GONE);
                     new MediaControl().removeNotificationText(CommonArgs.notification_txt);
                     System.out.println("runnable is running ");
                     handler.removeCallbacks(runnable); // stops running runnable
@@ -145,24 +147,32 @@ public class PlayerSupport {
     }
 
     public void onSwipeAction() {
-        int travelAmount, yAxisSum, pixelToMove, screenSize;
-        travelAmount = 10;
-        screenSize = (int) (0.7 * 720); // get screen size and replace 720
-        pixelToMove = screenSize / 15; //get max volume and replace 15
-
-        if (yAxisEnd < yAxisStart) {
-            yAxisSum = (int) (yAxisStart - yAxisEnd);
-        } else {
-            yAxisSum = (int) (yAxisEnd - yAxisStart);
+        System.out.println("yAxisStart: " + yAxisStart);
+        System.out.println("yAxisMove: " + yAxisMove);
+//        System.out.println("MOD:::: " + (int) yAxisMove % 18);
+        if ((int) yAxisMove % 18 == 0) {
+            if (yAxisMove < yAxisStart) {
+                new MediaControl().setVolumeUp();
+            } else {
+//                System.out.println("-volume:: " + (yAxisMove / 24));
+                new MediaControl().setVolumeDown();
+            }
         }
-
-        if (yAxisSum > travelAmount) {
-            int volume = (int) (yAxisEnd / pixelToMove);
-            new MediaControl().setVolumeUp(volume);
-            isViewOn = true;
-        } else {
-            isViewOn = false;
+        if (oldVal > yAxisMove) {
+            if (yAxisStart < oldVal) {
+                yAxisStart = oldVal;
+//                return;
+            } else {
+                oldVal = yAxisMove;
+            }
+        } else if (oldVal < yAxisMove) {
+            if (yAxisStart > oldVal) {
+                yAxisStart = oldVal;
+//                return;
+            } else {
+                oldVal = yAxisMove;
+            }
+//            yAxisStartUpdate = false;
         }
     }
-
 }

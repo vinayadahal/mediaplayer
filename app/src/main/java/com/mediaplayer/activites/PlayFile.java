@@ -72,6 +72,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
         CommonArgs.currentTimeTxt = (TextView) findViewById(R.id.current_time);
         CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
+        CommonArgs.show_volume = (TextView) findViewById(R.id.show_volume);
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
         CommonArgs.videoView = (VideoView) findViewById(R.id.videoView);
         CommonArgs.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -92,6 +93,7 @@ public class PlayFile extends AppCompatActivity {
         playBtn.setVisibility(View.GONE);
         fullscreenBtn.setVisibility(View.GONE);
         landscapeBtn.setVisibility(View.GONE);
+        CommonArgs.show_volume.setVisibility(View.GONE);
     }
 
     public void playFile(String filename) {
