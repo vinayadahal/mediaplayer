@@ -102,7 +102,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.title_control.setVisibility(View.INVISIBLE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
         CommonArgs.videoView.start();
-        objPlayerSupport.playerScreenTouch(this);
+        objPlayerSupport.playerScreenTouch();
         objPlayerSupport.setVideoViewListeners(this, (TextView) findViewById(R.id.total_time));
     }
 

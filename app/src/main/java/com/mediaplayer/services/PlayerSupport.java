@@ -17,7 +17,8 @@ public class PlayerSupport {
     private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler(), title_control_handler = new Handler();
     private Boolean isViewOn = false, yAxisStartUpdate = false;
-    private float xAxis, yAxisStart, yAxisMove, oldVal = 720;
+    private float xAxis, yAxisMove, oldVal = 720;
+    private static float yAxisStart;
 
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
@@ -38,7 +39,7 @@ public class PlayerSupport {
         });
     }
 
-    public void playerScreenTouch(final Context ctx) {
+    public void playerScreenTouch() {
         CommonArgs.rl_play_file.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -47,7 +48,7 @@ public class PlayerSupport {
                         yAxisStart = event.getY();
                         if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
-                            System.out.println("view on is setting");
+//                            System.out.println("view on is setting");
                             isViewOn = true;
                         }
                         break;
@@ -57,7 +58,6 @@ public class PlayerSupport {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                         }
                         System.out.println("up event------------------->");
-//                        CommonArgs.show_volume.setVisibility(View.GONE);
                         hideTitleControl();
                         System.out.println("setting isViewOn = false");
                         isViewOn = false;
@@ -147,32 +147,26 @@ public class PlayerSupport {
     }
 
     public void onSwipeAction() {
-        System.out.println("yAxisStart: " + yAxisStart);
-        System.out.println("yAxisMove: " + yAxisMove);
-//        System.out.println("MOD:::: " + (int) yAxisMove % 18);
-        if ((int) yAxisMove % 18 == 0) {
+        System.out.println("volume::::: " + (int) yAxisMove / 12);
+        if ((int) yAxisMove % 8 == 0) {
             if (yAxisMove < yAxisStart) {
                 new MediaControl().setVolumeUp();
             } else {
-//                System.out.println("-volume:: " + (yAxisMove / 24));
                 new MediaControl().setVolumeDown();
             }
         }
         if (oldVal > yAxisMove) {
             if (yAxisStart < oldVal) {
                 yAxisStart = oldVal;
-//                return;
             } else {
                 oldVal = yAxisMove;
             }
         } else if (oldVal < yAxisMove) {
             if (yAxisStart > oldVal) {
                 yAxisStart = oldVal;
-//                return;
             } else {
                 oldVal = yAxisMove;
             }
-//            yAxisStartUpdate = false;
         }
     }
 }
