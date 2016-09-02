@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_volume_seekbar"
+    android:id="@+id/rl_brightness_seekbar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
@@ -13,10 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="@drawable/max_volume" />
+        android:background="@drawable/brightness_medium_btn" />
 
     <SeekBar
-        android:id="@+id/volume_seekbar"
+        android:id="@+id/brightness_seekbar"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"

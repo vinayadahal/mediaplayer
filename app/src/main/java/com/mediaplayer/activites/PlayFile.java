@@ -10,24 +10,27 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.components.Effects;
+import com.mediaplayer.services.BrightnessVolumeService;
 import com.mediaplayer.services.MediaControl;
-import com.mediaplayer.services.PlayerSupport;
+import com.mediaplayer.services.VideoViewService;
 import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
 import java.util.List;
 
+
 public class PlayFile extends AppCompatActivity {
 
     private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, portraitBtn, landscapeBtn;
-    private PlayerSupport objPlayerSupport = new PlayerSupport();
+    private VideoViewService objVideoViewService = new VideoViewService();
+    private BrightnessVolumeService objBrightnessVolumeService = new BrightnessVolumeService();
     List<String> allVideoPath = null;
     String filePath = null; // or other values
 
@@ -62,6 +65,14 @@ public class PlayFile extends AppCompatActivity {
         super.onDestroy();
     }
 
+//    @Override
+//    public void onPause() {
+//        CommonArgs.mediaPlayer.pause();
+//        playBtn.setVisibility(View.VISIBLE);
+//        pauseBtn.setVisibility(View.GONE);
+//        super.onPause();
+//    }
+
     public void closeActivity(View view) {
         CommonArgs.mediaPlayer.stop();
         finish();
@@ -72,10 +83,15 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
         CommonArgs.currentTimeTxt = (TextView) findViewById(R.id.current_time);
         CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
-        CommonArgs.show_volume = (TextView) findViewById(R.id.show_volume);
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
         CommonArgs.videoView = (VideoView) findViewById(R.id.videoView);
         CommonArgs.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        CommonArgs.rl_volume_seekbar = (RelativeLayout) findViewById(R.id.rl_volume_seekbar);
+        CommonArgs.volumeSeekBar = (SeekBar) findViewById(R.id.volume_seekbar);
+        CommonArgs.volumeSeekBar.setMax(15);
+        CommonArgs.rl_brightness_seekbar = (RelativeLayout) findViewById(R.id.rl_brightness_seekbar);
+        CommonArgs.brightnessSeekBar = (SeekBar) findViewById(R.id.brightness_seekbar);
+        CommonArgs.brightnessSeekBar.setMax(10);
         CommonArgs.playFileCtx = this;
     }
 
@@ -86,14 +102,12 @@ public class PlayFile extends AppCompatActivity {
         fullscreenBtn = (ImageButton) findViewById(R.id.fullscreen_btn);
         portraitBtn = (ImageButton) findViewById(R.id.portrait_btn);
         landscapeBtn = (ImageButton) findViewById(R.id.landscape_btn);
-        new MediaControl().setScreenSize(this);
     }
 
     public void setInitPlayerView() {
         playBtn.setVisibility(View.GONE);
         fullscreenBtn.setVisibility(View.GONE);
         landscapeBtn.setVisibility(View.GONE);
-        CommonArgs.show_volume.setVisibility(View.GONE);
     }
 
     public void playFile(String filename) {
@@ -102,8 +116,10 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.title_control.setVisibility(View.INVISIBLE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
         CommonArgs.videoView.start();
-        objPlayerSupport.playerScreenTouch();
-        objPlayerSupport.setVideoViewListeners(this, (TextView) findViewById(R.id.total_time));
+        CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
+        CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
+        objVideoViewService.playerScreenTouch();
+        objVideoViewService.setVideoViewListeners(this, (TextView) findViewById(R.id.total_time));
     }
 
     public void pauseVideo(View view) {
@@ -138,6 +154,18 @@ public class PlayFile extends AppCompatActivity {
         new MediaControl().setFullscreen(fullscreenBtn, originalBtn);
     }
 
+    public void showVolumeSeekbar(View view) {
+        if (CommonArgs.rl_volume_seekbar.getVisibility() == View.GONE) {
+            CommonArgs.rl_volume_seekbar.setVisibility(View.VISIBLE);
+            objBrightnessVolumeService.volumeSeekBarChange();
+        } else if (CommonArgs.rl_volume_seekbar.getVisibility() == View.VISIBLE) {
+//            CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
+            new Effects().fadeOut(CommonArgs.rl_volume_seekbar);
+        }
+        objBrightnessVolumeService.isViewOn = true;
+        objBrightnessVolumeService.autoFade(CommonArgs.rl_volume_seekbar);
+    }
+
     public void changeOrientationPortrait(View view) {
         portraitBtn.setVisibility(View.GONE);
         landscapeBtn.setVisibility(View.VISIBLE);
@@ -148,6 +176,18 @@ public class PlayFile extends AppCompatActivity {
         landscapeBtn.setVisibility(View.GONE);
         portraitBtn.setVisibility(View.VISIBLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+
+    public void setBrightness(View view) {
+        if (CommonArgs.rl_brightness_seekbar.getVisibility() == View.GONE) {
+            CommonArgs.rl_brightness_seekbar.setVisibility(View.VISIBLE);
+            objBrightnessVolumeService.setBrightness(this);
+        } else if (CommonArgs.rl_brightness_seekbar.getVisibility() == View.VISIBLE) {
+           new Effects().fadeOut(CommonArgs.rl_brightness_seekbar);
+//            CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
+        }
+        objBrightnessVolumeService.isViewOn = true;
+        objBrightnessVolumeService.autoFade(CommonArgs.rl_brightness_seekbar);
     }
 
 }

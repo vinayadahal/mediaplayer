@@ -12,14 +12,11 @@ import android.widget.TextView;
 
 import com.mediaplayer.variables.CommonArgs;
 
-public class PlayerSupport {
+public class VideoViewService {
 
     private Runnable runnable, title_control_runnable;
     private Handler handler = new Handler(), title_control_handler = new Handler();
-    private Boolean isViewOn = false, yAxisStartUpdate = false;
-    private float xAxis, yAxisMove, oldVal = 720;
-    private static float yAxisStart;
-
+    private Boolean isViewOn = false;
 
     public void setVideoViewListeners(final Context ctx, final TextView totalTime) {
         CommonArgs.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -28,7 +25,7 @@ public class PlayerSupport {
                 CommonArgs.duration = CommonArgs.videoView.getDuration();
                 CommonArgs.mediaPlayer = mp; // used to pause video
                 totalTime.setText(new MathService().timeFormatter(CommonArgs.duration));
-                seekToBar(mp);
+                videoSeekBar(mp);
             }
         });
         CommonArgs.videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -45,10 +42,8 @@ public class PlayerSupport {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        yAxisStart = event.getY();
                         if (!checkTitleControlVisibility()) {
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
-//                            System.out.println("view on is setting");
                             isViewOn = true;
                         }
                         break;
@@ -57,15 +52,8 @@ public class PlayerSupport {
                             updateProgressBar();
                             CommonArgs.title_control.setVisibility(View.VISIBLE);
                         }
-                        System.out.println("up event------------------->");
                         hideTitleControl();
-                        System.out.println("setting isViewOn = false");
                         isViewOn = false;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        xAxis = event.getX();
-                        yAxisMove = event.getY();
-                        onSwipeAction();
                         break;
                 }
                 return true;
@@ -109,7 +97,7 @@ public class PlayerSupport {
         }
     }
 
-    public void seekToBar(final MediaPlayer mediaPlayer) {
+    public void videoSeekBar(final MediaPlayer mediaPlayer) {
         CommonArgs.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -134,7 +122,6 @@ public class PlayerSupport {
             public void run() {
                 if (!isViewOn) {
                     CommonArgs.title_control.setVisibility(View.GONE);
-                    CommonArgs.show_volume.setVisibility(View.GONE);
                     new MediaControl().removeNotificationText(CommonArgs.notification_txt);
                     System.out.println("runnable is running ");
                     handler.removeCallbacks(runnable); // stops running runnable
@@ -146,27 +133,4 @@ public class PlayerSupport {
         title_control_handler.postDelayed(title_control_runnable, 3000);
     }
 
-    public void onSwipeAction() {
-        System.out.println("volume::::: " + (int) yAxisMove / 12);
-        if ((int) yAxisMove % 8 == 0) {
-            if (yAxisMove < yAxisStart) {
-                new MediaControl().setVolumeUp();
-            } else {
-                new MediaControl().setVolumeDown();
-            }
-        }
-        if (oldVal > yAxisMove) {
-            if (yAxisStart < oldVal) {
-                yAxisStart = oldVal;
-            } else {
-                oldVal = yAxisMove;
-            }
-        } else if (oldVal < yAxisMove) {
-            if (yAxisStart > oldVal) {
-                yAxisStart = oldVal;
-            } else {
-                oldVal = yAxisMove;
-            }
-        }
-    }
 }

@@ -1,11 +1,11 @@
 package com.mediaplayer.services;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.media.AudioManager;
-import android.os.Build;
-import android.view.Display;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -16,9 +16,6 @@ import com.mediaplayer.variables.CommonArgs;
 import java.util.List;
 
 public class MediaControl {
-
-    static int measuredWidth = 0;
-    static int measuredHeight = 0;
 
     public int nextBtnAction(List<String> allVideoPath, String filePath) {
         int nextFile = allVideoPath.indexOf(filePath) + 1; //current file + 1
@@ -38,37 +35,10 @@ public class MediaControl {
         return nextFile;
     }
 
-    public void setVolumeUp() {
-        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (currentVolume != 0 || currentVolume != 15) {
-            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (currentVolume + 1), AudioManager.FLAG_SHOW_UI);
-        } else {
-            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
-        }
-        showCurrentVolume();
+    public void setVolume(int volume) {
+        CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
     }
 
-    public void setVolumeDown() {
-        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (currentVolume != 0 || currentVolume != 15) {
-            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (currentVolume - 1), AudioManager.FLAG_SHOW_UI);
-        } else {
-            CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_SHOW_UI);
-        }
-        showCurrentVolume();
-    }
-
-    public void setVolumeUp(int volume) {
-        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
-        showCurrentVolume();
-    }
-
-    public void setVolumeDown(int volume) {
-        int currentVolume = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        CommonArgs.audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, AudioManager.FLAG_SHOW_UI);
-        showCurrentVolume();
-    }
 
 
     public void setOriginalSize(ImageButton fitBtn, ImageButton oriBtn) {
@@ -95,31 +65,9 @@ public class MediaControl {
         CommonArgs.notification_txt.setText("FULLSCREEN");
     }
 
-    public void showCurrentVolume() {
-        int volumeText = CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-//        System.out.println(Integer.toString(volumeText));
-        CommonArgs.show_volume.setVisibility(View.VISIBLE);
-        CommonArgs.show_volume.setText(Integer.toString(volumeText));
-    }
-
     public void removeNotificationText(TextView notification_txt) {
         if (!notification_txt.getText().equals("")) {
             notification_txt.setText("");
         }
     }
-
-    public void setScreenSize(Context ctx) {
-        WindowManager w = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Point size = new Point();
-            w.getDefaultDisplay().getSize(size);
-            measuredWidth = size.x;
-            measuredHeight = size.y;
-        } else {
-            Display d = w.getDefaultDisplay();
-            measuredWidth = d.getWidth();
-            measuredHeight = d.getHeight();
-        }
-    }
-
 }

@@ -12,9 +12,9 @@ import android.widget.VideoView;
 
 public class CommonArgs {
 
-    public static RelativeLayout rl_play_file, title_control;
-    public static TextView notification_txt,show_volume;
-    public static SeekBar seekBar;
+    public static RelativeLayout rl_play_file, title_control, rl_volume_seekbar,rl_brightness_seekbar;
+    public static TextView notification_txt;
+    public static SeekBar seekBar, volumeSeekBar,brightnessSeekBar;
     public static VideoView videoView;
     public static long duration;
     public static TextView currentTimeTxt;

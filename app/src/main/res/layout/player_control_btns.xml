@@ -29,6 +29,17 @@
         android:src="@drawable/landscape_btn" />
 
     <ImageButton
+        android:id="@+id/brightness"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/landscape_btn"
+        android:layout_weight=".20"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="setBrightness"
+        android:src="@drawable/brightness_medium_btn" />
+
+    <ImageButton
         android:id="@+id/previous_btn"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
@@ -68,6 +79,16 @@
         android:background="@drawable/btn_styler_playback"
         android:onClick="next"
         android:src="@drawable/next_btn" />
+
+    <ImageButton
+        android:id="@+id/volume_btn"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        android:layout_weight=".20"
+        android:background="@drawable/btn_styler_playback"
+        android:onClick="showVolumeSeekbar"
+        android:src="@drawable/max_volume" />
 
     <ImageButton
         android:id="@+id/fullscreen_btn"
