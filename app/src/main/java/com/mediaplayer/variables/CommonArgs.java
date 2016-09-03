@@ -4,21 +4,44 @@ package com.mediaplayer.variables;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.widget.ImageView;
+import android.os.Handler;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.mediaplayer.services.MediaControl;
+
 public class CommonArgs {
 
-    public static RelativeLayout rl_play_file, title_control, rl_volume_seekbar,rl_brightness_seekbar;
+    public static RelativeLayout rl_play_file, title_control, rl_volume_seekbar, rl_brightness_seekbar;
     public static TextView notification_txt;
-    public static SeekBar seekBar, volumeSeekBar,brightnessSeekBar;
+    public static SeekBar seekBar, volumeSeekBar, brightnessSeekBar;
     public static VideoView videoView;
     public static long duration;
     public static TextView currentTimeTxt;
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
     public static Context playFileCtx;
+    public static Runnable title_control_runnable, runnable;
+    public static Boolean isViewOn = false;
+    public static Handler handler = new Handler(), title_control_handler = new Handler();
+
+    public static void hideTitleControl() {
+        title_control_runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!isViewOn) {
+                    CommonArgs.title_control.setVisibility(View.GONE);
+                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
+                    System.out.println("runnable is running ");
+                    handler.removeCallbacks(runnable); // stops running runnable
+                } else {
+                    isViewOn = false;
+                }
+            }
+        };
+        title_control_handler.postDelayed(title_control_runnable, 3000);
+    }
 }

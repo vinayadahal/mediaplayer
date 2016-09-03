@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         return videoDuration;
     }
 
-    public void createVideoList(final List<String> videoFiles, List<String> videoThumbnail, List<Long> duration, List<Long> FileSize) {
+    public void createVideoList(final List<String> videoFiles, final List<String> videoThumbnail, final List<Long> duration, final List<Long> FileSize) {
         ListView listView = new ListView(this);
         listView.setAdapter(new MobileArrayAdapter(this, videoFiles, videoThumbnail, duration, FileSize));
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

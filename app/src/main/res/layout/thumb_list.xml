@@ -9,7 +9,9 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginRight="5dp"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:background="@android:color/black"
+        android:src="@drawable/play_circle_outline"
+        android:scaleType="fitCenter"/>
 
     <TextView
         android:id="@+id/th_text_view"

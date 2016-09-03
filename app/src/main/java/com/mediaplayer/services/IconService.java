@@ -17,11 +17,12 @@ import java.io.IOException;
 public class IconService {
 
     public Context ctx;
+    private Bitmap bmp_thumb;
 
-    public String checkThumb(String videoFile) {
+    public String checkThumb(final String videoFile) {
         File fileFolder = new File(videoFile);
-        String thumbDir = Config.baseThumbPath + "/.dthumb";
-        String imageFile = fileFolder.getName() + ".bmp";
+        final String thumbDir = Config.baseThumbPath + "/.dthumb";
+        final String imageFile = fileFolder.getName() + ".bmp";
         File folder = new File(thumbDir);
         if (!folder.exists()) {
             if (!folder.mkdir()) {
@@ -31,13 +32,20 @@ public class IconService {
         }
         if (!new File(thumbDir + "/" + imageFile).exists()) {
             System.out.println("Creating thumbnail ----->");
-            return makeThumb(videoFile, thumbDir + "/" + imageFile);
+            Thread th = new Thread() {
+                @Override
+                public void run() {
+                    makeThumb(videoFile, thumbDir + "/" + imageFile);
+                }
+            };
+            th.start();
         }
         return thumbDir + "/" + imageFile;
     }
 
-    public String makeThumb(String videoFile, String thumbnailFile) {
-        final Bitmap bmp_thumb = ThumbnailUtils.createVideoThumbnail(videoFile, MediaStore.Images.Thumbnails.MICRO_KIND);
+    public String makeThumb(final String videoFile, final String thumbnailFile) {
+        System.out.println("videoFile::::: " + videoFile);
+        Bitmap bmp_thumb = ThumbnailUtils.createVideoThumbnail(videoFile, MediaStore.Images.Thumbnails.MICRO_KIND);
         if (bmp_thumb == null) {
             return null;
         }
@@ -50,24 +58,20 @@ public class IconService {
     }
 
     public void writeImgFile(final File imgFile, final Bitmap bmp_thumb) {
-        Thread th = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    imgFile.createNewFile();
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    bmp_thumb.compress(Bitmap.CompressFormat.PNG, 100, bos);
-                    byte[] bmp_byte = bos.toByteArray();
-                    FileOutputStream fos = new FileOutputStream(imgFile);
-                    fos.write(bmp_byte);
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        th.start();
+
+        try {
+            imgFile.createNewFile();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bmp_thumb.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            byte[] bmp_byte = bos.toByteArray();
+            FileOutputStream fos = new FileOutputStream(imgFile);
+            fos.write(bmp_byte);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
 }
