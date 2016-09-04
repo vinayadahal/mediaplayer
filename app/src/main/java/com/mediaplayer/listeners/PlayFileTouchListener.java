@@ -4,11 +4,14 @@ package com.mediaplayer.listeners;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.mediaplayer.components.Effects;
 import com.mediaplayer.services.MathService;
 import com.mediaplayer.services.MediaControl;
 import com.mediaplayer.variables.CommonArgs;
 
 public class PlayFileTouchListener implements View.OnTouchListener {
+
+    public Boolean isViewOn = false, skipTimer = false;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -16,24 +19,20 @@ public class PlayFileTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN:
                 if (!checkTitleControlVisibility()) {
                     CommonArgs.title_control.setVisibility(View.VISIBLE);
-                    CommonArgs.isViewOn = true;
+                    isViewOn = true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (checkTitleControlVisibility()) {
-                    CommonArgs.title_control.setVisibility(View.VISIBLE);
+                if (checkTitleControlVisibility() && !isViewOn) {
+                    new Effects().fadeIn(CommonArgs.title_control);
                     updateProgressBar();
+                    skipTimer = false;
+                } else if (!checkTitleControlVisibility()) {
+                    hideTitleControlNormal();
+                    skipTimer = true;
                 }
-                if (!checkTitleControlVisibility() && CommonArgs.isViewOn) {
-                    CommonArgs.title_control.setVisibility(View.GONE);
-                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
-                    CommonArgs.handler.removeCallbacks(CommonArgs.runnable); // stops running runnable
-                    CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable);
-                    CommonArgs.isViewOn = true;
-                }
-                if (!CommonArgs.isViewOn) {
-                    CommonArgs.hideTitleControl();
-                    CommonArgs.isViewOn = false;
+                if (!skipTimer) {
+                    hideTitleControl();
                 }
                 break;
         }
@@ -78,4 +77,30 @@ public class PlayFileTouchListener implements View.OnTouchListener {
             return false;
         }
     }
+
+    public void hideTitleControlNormal() {
+        new Effects().fadeOut(CommonArgs.title_control);
+        new MediaControl().removeNotificationText(CommonArgs.notification_txt);
+        CommonArgs.handler.removeCallbacks(CommonArgs.runnable); // stops running runnable
+        CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable); // prevents currently running hideTitleControl
+        isViewOn = false;
+    }
+
+    public void hideTitleControl() {
+        CommonArgs.title_control_runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!isViewOn) {
+                    new Effects().fadeOut(CommonArgs.title_control);
+                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
+                    CommonArgs.handler.removeCallbacks(CommonArgs.runnable); // stops running runnable
+                } else {
+                    isViewOn = false;
+                }
+                skipTimer = false;
+            }
+        };
+        CommonArgs.title_control_handler.postDelayed(CommonArgs.title_control_runnable, 3000);
+    }
+
 }

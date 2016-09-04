@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.services.MediaControl;
 
 public class CommonArgs {
@@ -25,23 +26,7 @@ public class CommonArgs {
     public static AudioManager audioManager;
     public static Context playFileCtx;
     public static Runnable title_control_runnable, runnable;
-    public static Boolean isViewOn = false;
+    //    public static Boolean isViewOn = false;
     public static Handler handler = new Handler(), title_control_handler = new Handler();
 
-    public static void hideTitleControl() {
-        title_control_runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!isViewOn) {
-                    CommonArgs.title_control.setVisibility(View.GONE);
-                    new MediaControl().removeNotificationText(CommonArgs.notification_txt);
-                    System.out.println("runnable is running ");
-                    handler.removeCallbacks(runnable); // stops running runnable
-                } else {
-                    isViewOn = false;
-                }
-            }
-        };
-        title_control_handler.postDelayed(title_control_runnable, 3000);
-    }
 }

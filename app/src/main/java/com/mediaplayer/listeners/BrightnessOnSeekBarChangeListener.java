@@ -18,6 +18,7 @@ public class BrightnessOnSeekBarChangeListener implements SeekBar.OnSeekBarChang
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        autoFade(CommonArgs.rl_volume_seekbar);
         float Progress = (float) progress / 10;
         lp.screenBrightness = Progress;
         if (progress > 0) {

@@ -19,6 +19,6 @@ public class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeList
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         CommonArgs.mediaPlayer.seekTo(seekBar.getProgress());
-        CommonArgs.hideTitleControl();
+        new PlayFileTouchListener().hideTitleControl();
     }
 }

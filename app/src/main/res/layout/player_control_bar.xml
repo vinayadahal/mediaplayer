@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_weight=".20"
+            android:layout_weight=".25"
             android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="3dp"
             android:paddingTop="5dp"
             android:textColor="#fff" />
 
@@ -41,10 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_weight=".20"
+            android:layout_weight=".25"
             android:gravity="right"
             android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
+            android:paddingRight="3dp"
             android:paddingTop="5dp"
             android:textColor="#fff" />
 

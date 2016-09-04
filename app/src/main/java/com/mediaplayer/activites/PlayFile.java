@@ -17,6 +17,7 @@ import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.components.Effects;
+import com.mediaplayer.components.SeekBarVisibility;
 import com.mediaplayer.listeners.BrightnessOnSeekBarChangeListener;
 import com.mediaplayer.listeners.VideoOnCompletionListener;
 import com.mediaplayer.listeners.VideoOnPreparedListener;
@@ -160,19 +161,6 @@ public class PlayFile extends AppCompatActivity {
         new MediaControl().setFullscreen(fullscreenBtn, originalBtn);
     }
 
-    public void showVolumeSeekbar(View view) {
-        if (CommonArgs.rl_volume_seekbar.getVisibility() == View.GONE) {
-            CommonArgs.rl_volume_seekbar.setVisibility(View.VISIBLE);
-            CommonArgs.volumeSeekBar.setProgress(CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));//sets current volume to seekbar
-            CommonArgs.volumeSeekBar.setOnSeekBarChangeListener(new VolumeOnSeekBarChangeListener());
-//            objBrightnessVolumeService.volumeSeekBarChange();
-        } else if (CommonArgs.rl_volume_seekbar.getVisibility() == View.VISIBLE) {
-            new Effects().fadeOut(CommonArgs.rl_volume_seekbar);
-        }
-//        objBrightnessVolumeService.isViewOn = true;
-//        objBrightnessVolumeService.autoFade(CommonArgs.rl_volume_seekbar);
-    }
-
     public void changeOrientationPortrait(View view) {
         portraitBtn.setVisibility(View.GONE);
         landscapeBtn.setVisibility(View.VISIBLE);
@@ -185,16 +173,12 @@ public class PlayFile extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
+    public void showVolumeSeekbar(View view) {
+        new SeekBarVisibility().showVolumeSeekbar();
+    }
+
     public void setBrightness(View view) {
-        if (CommonArgs.rl_brightness_seekbar.getVisibility() == View.GONE) {
-            CommonArgs.rl_brightness_seekbar.setVisibility(View.VISIBLE);
-            CommonArgs.brightnessSeekBar.setOnSeekBarChangeListener(new BrightnessOnSeekBarChangeListener());
-//            objBrightnessVolumeService.setBrightness(this);
-        } else if (CommonArgs.rl_brightness_seekbar.getVisibility() == View.VISIBLE) {
-            new Effects().fadeOut(CommonArgs.rl_brightness_seekbar);
-        }
-//        objBrightnessVolumeService.isViewOn = true;
-//        objBrightnessVolumeService.autoFade(CommonArgs.rl_brightness_seekbar);
+        new SeekBarVisibility().showBrightnessSeekBar();
     }
 
 }
