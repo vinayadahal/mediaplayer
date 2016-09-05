@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.mediaplayer.components.Effects;
 import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.services.MediaControl;
 
@@ -26,7 +27,18 @@ public class CommonArgs {
     public static AudioManager audioManager;
     public static Context playFileCtx;
     public static Runnable title_control_runnable, runnable;
-    //    public static Boolean isViewOn = false;
     public static Handler handler = new Handler(), title_control_handler = new Handler();
+
+    public static void autoFade(final RelativeLayout relativeLayout, final Boolean isViewOn) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isViewOn) {
+                    new Effects().fadeOut(relativeLayout);
+                }
+            }
+        };
+        new Handler().postDelayed(runnable, 3000);
+    }
 
 }

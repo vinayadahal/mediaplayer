@@ -11,10 +11,12 @@ import com.mediaplayer.variables.CommonArgs;
 public class VolumeOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
 
     Boolean isViewOn = false;
+    int Progress;
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        new MediaControl().setVolume(progress);
+        Progress = progress;
+        new MediaControl().setVolume(Progress);
         isViewOn = false;
     }
 
@@ -25,19 +27,9 @@ public class VolumeOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeLis
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        new MediaControl().setVolume(Progress);
         isViewOn = true;
-        autoFade(CommonArgs.rl_volume_seekbar);
+        CommonArgs.autoFade(CommonArgs.rl_volume_seekbar, isViewOn);
     }
 
-    public void autoFade(final RelativeLayout relativeLayout) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (isViewOn) {
-                    new Effects().fadeOut(relativeLayout);
-                }
-            }
-        };
-        new Handler().postDelayed(runnable, 3000);
-    }
 }

@@ -21,7 +21,7 @@ public class BrightnessOnSeekBarChangeListener implements SeekBar.OnSeekBarChang
         autoFade(CommonArgs.rl_volume_seekbar);
         float Progress = (float) progress / 10;
         lp.screenBrightness = Progress;
-        if (progress > 0) {
+        if (Progress > 0) {
             playFile.getWindow().setAttributes(lp);
         }
         isViewOn = false;
@@ -29,11 +29,11 @@ public class BrightnessOnSeekBarChangeListener implements SeekBar.OnSeekBarChang
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        playFile.getWindow().setAttributes(lp);
         autoFade(CommonArgs.rl_brightness_seekbar);
         isViewOn = true;
     }

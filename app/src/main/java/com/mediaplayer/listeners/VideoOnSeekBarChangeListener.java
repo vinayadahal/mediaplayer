@@ -3,7 +3,6 @@ package com.mediaplayer.listeners;
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.mediaplayer.components.Effects;
 import com.mediaplayer.services.MathService;
 import com.mediaplayer.variables.CommonArgs;
 

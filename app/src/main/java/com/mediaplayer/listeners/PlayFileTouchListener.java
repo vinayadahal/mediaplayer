@@ -50,8 +50,7 @@ public class PlayFileTouchListener implements View.OnTouchListener {
                         return;
                     }
                     final long current = CommonArgs.videoView.getCurrentPosition();
-                    int currentTimeInSec = (int) current;
-                    CommonArgs.seekBar.setProgress(currentTimeInSec);
+                    CommonArgs.seekBar.setProgress((int) current);
                     CommonArgs.handler.post(new Runnable() {
                         public void run() {
                             CommonArgs.currentTimeTxt.setText(new MathService().timeFormatter(current));

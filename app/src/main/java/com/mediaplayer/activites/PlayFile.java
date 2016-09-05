@@ -16,14 +16,12 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
-import com.mediaplayer.components.Effects;
 import com.mediaplayer.components.SeekBarVisibility;
-import com.mediaplayer.listeners.BrightnessOnSeekBarChangeListener;
+import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.listeners.VideoOnCompletionListener;
 import com.mediaplayer.listeners.VideoOnPreparedListener;
-import com.mediaplayer.listeners.VolumeOnSeekBarChangeListener;
+import com.mediaplayer.services.FileService;
 import com.mediaplayer.services.MediaControl;
-import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
@@ -118,6 +116,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.title_control.setVisibility(View.GONE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
         CommonArgs.videoView.start();
+//        resumeFrom(filename);
         CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
         CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
         CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
@@ -181,4 +180,15 @@ public class PlayFile extends AppCompatActivity {
         new SeekBarVisibility().showBrightnessSeekBar();
     }
 
+    public void resumeFrom(String filename) {
+        FileService objFileService = new FileService();
+        if (objFileService.readFile("ResumeFromFile") == null) {
+            objFileService.writeFile(filename + ">" + 0, "ResumeFromFile"); // content will be like videoFilename>time
+            return;
+        }
+        objFileService.writeFile(filename + ">" + 0, "ResumeFromFile"); // content will be like videoFilename>time
+        StringBuilder text = objFileService.readFile("ResumeFromFile");
+        String[] splittedText = text.toString().split(">");
+
+    }
 }
