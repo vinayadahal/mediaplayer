@@ -43,7 +43,6 @@ public class PlayFileTouchListener implements View.OnTouchListener {
         CommonArgs.runnable = new Runnable() {
             public void run() {
                 System.out.println("Seekbar runnable running");
-                CommonArgs.seekBar.setProgress(0);
                 CommonArgs.seekBar.setMax((int) CommonArgs.duration);
                 if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration && !checkTitleControlVisibility()) {
                     if (!CommonArgs.videoView.isPlaying()) {

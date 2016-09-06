@@ -33,6 +33,7 @@ public class PlayFile extends AppCompatActivity {
     private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, portraitBtn, landscapeBtn;
     List<String> allVideoPath = null;
     String filePath = null; // or other values
+    Boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class PlayFile extends AppCompatActivity {
     public void initGlobalVariable() {
         CommonArgs.title_control = (RelativeLayout) findViewById(R.id.title_control);
         CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
+        CommonArgs.seekBar.setProgress(0);
         CommonArgs.currentTimeTxt = (TextView) findViewById(R.id.current_time);
         CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
         CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
@@ -134,13 +136,18 @@ public class PlayFile extends AppCompatActivity {
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
         CommonArgs.mediaPlayer.pause();
+        isPaused = true;
     }
 
     public void playVideo(View view) {
         playBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.VISIBLE);
-        new PlayBackResume().resumePlayBackAuto(filePath);
+        CommonArgs.handler.postDelayed(CommonArgs.runnable, 10);
+        if (!isPaused) {
+            new PlayBackResume().resumePlayBackAuto(filePath);
+        }
         CommonArgs.mediaPlayer.start();
+        isPaused = false;
     }
 
     public void previous(View view) {
