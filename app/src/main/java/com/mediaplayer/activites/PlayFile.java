@@ -1,26 +1,33 @@
 package com.mediaplayer.activites;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.components.PlayBackResume;
+import com.mediaplayer.components.PopUpDialog;
 import com.mediaplayer.components.SeekBarVisibility;
 import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.listeners.VideoOnCompletionListener;
 import com.mediaplayer.listeners.VideoOnPreparedListener;
 import com.mediaplayer.services.FileService;
+import com.mediaplayer.services.MathService;
 import com.mediaplayer.services.MediaControl;
 import com.mediaplayer.variables.CommonArgs;
 
@@ -33,6 +40,7 @@ public class PlayFile extends AppCompatActivity {
     private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, portraitBtn, landscapeBtn;
     List<String> allVideoPath = null;
     String filePath = null; // or other values
+    Boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +61,7 @@ public class PlayFile extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
             CommonArgs.mediaPlayer.stop(); // stops video playback
             finish();
         }
@@ -65,12 +74,21 @@ public class PlayFile extends AppCompatActivity {
         super.onDestroy();
     }
 
-//    @Override
-//    public void onPause() {
+    @Override
+    public void onPause() {
+        new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
 //        CommonArgs.mediaPlayer.pause();
-//        playBtn.setVisibility(View.VISIBLE);
-//        pauseBtn.setVisibility(View.GONE);
-//        super.onPause();
+//        isPaused = true;
+        playBtn.setVisibility(View.VISIBLE);
+        pauseBtn.setVisibility(View.GONE);
+        super.onPause();
+    }
+//
+//    @Override
+//    public void onResume() {
+//        if (isPaused)
+//            CommonArgs.mediaPlayer.start();
+//        super.onResume();
 //    }
 
     public void closeActivity(View view) {
@@ -116,7 +134,6 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.title_control.setVisibility(View.GONE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
         CommonArgs.videoView.start();
-//        resumeFrom(filename);
         CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
         CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
         CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
@@ -126,6 +143,7 @@ public class PlayFile extends AppCompatActivity {
         VideoOnCompletionListener objVideoOnCompletionListener = new VideoOnCompletionListener();
         objVideoOnCompletionListener.ctx = this;
         CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
+        new PlayBackResume().resumeFrom(filename);
     }
 
     public void pauseVideo(View view) {
@@ -178,17 +196,5 @@ public class PlayFile extends AppCompatActivity {
 
     public void setBrightness(View view) {
         new SeekBarVisibility().showBrightnessSeekBar();
-    }
-
-    public void resumeFrom(String filename) {
-        FileService objFileService = new FileService();
-        if (objFileService.readFile("ResumeFromFile") == null) {
-            objFileService.writeFile(filename + ">" + 0, "ResumeFromFile"); // content will be like videoFilename>time
-            return;
-        }
-        objFileService.writeFile(filename + ">" + 0, "ResumeFromFile"); // content will be like videoFilename>time
-        StringBuilder text = objFileService.readFile("ResumeFromFile");
-        String[] splittedText = text.toString().split(">");
-
     }
 }
