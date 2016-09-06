@@ -1,33 +1,26 @@
 package com.mediaplayer.activites;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.components.PlayBackResume;
-import com.mediaplayer.components.PopUpDialog;
 import com.mediaplayer.components.SeekBarVisibility;
 import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.listeners.VideoOnCompletionListener;
 import com.mediaplayer.listeners.VideoOnPreparedListener;
-import com.mediaplayer.services.FileService;
-import com.mediaplayer.services.MathService;
 import com.mediaplayer.services.MediaControl;
 import com.mediaplayer.variables.CommonArgs;
 
@@ -40,7 +33,6 @@ public class PlayFile extends AppCompatActivity {
     private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, portraitBtn, landscapeBtn;
     List<String> allVideoPath = null;
     String filePath = null; // or other values
-    Boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +69,10 @@ public class PlayFile extends AppCompatActivity {
     @Override
     public void onPause() {
         new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
-//        CommonArgs.mediaPlayer.pause();
-//        isPaused = true;
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
         super.onPause();
     }
-//
-//    @Override
-//    public void onResume() {
-//        if (isPaused)
-//            CommonArgs.mediaPlayer.start();
-//        super.onResume();
-//    }
 
     public void closeActivity(View view) {
         CommonArgs.mediaPlayer.stop();
@@ -142,6 +125,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.videoView.setOnPreparedListener(objVideoOnPreparedListener);
         VideoOnCompletionListener objVideoOnCompletionListener = new VideoOnCompletionListener();
         objVideoOnCompletionListener.ctx = this;
+        objVideoOnCompletionListener.filePath = filename;
         CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
         new PlayBackResume().resumeFrom(filename);
     }
@@ -155,6 +139,7 @@ public class PlayFile extends AppCompatActivity {
     public void playVideo(View view) {
         playBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.VISIBLE);
+        new PlayBackResume().resumePlayBackAuto(filePath);
         CommonArgs.mediaPlayer.start();
     }
 

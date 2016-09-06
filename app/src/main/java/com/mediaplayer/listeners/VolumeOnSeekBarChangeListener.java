@@ -1,10 +1,7 @@
 package com.mediaplayer.listeners;
 
-import android.os.Handler;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
-import com.mediaplayer.components.Effects;
 import com.mediaplayer.services.MediaControl;
 import com.mediaplayer.variables.CommonArgs;
 
