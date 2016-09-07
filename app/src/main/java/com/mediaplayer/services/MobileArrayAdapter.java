@@ -25,7 +25,6 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
     private final List<String> thumb;
     private final List<Long> time;
     private final List<Long> filesize;
-    private Handler handler = new android.os.Handler();
 
     public MobileArrayAdapter(Context context, List<String> videos, List<String> thumb, List<Long> time, List<Long> filesize) {
         super(context, R.layout.thumb_list, videos);

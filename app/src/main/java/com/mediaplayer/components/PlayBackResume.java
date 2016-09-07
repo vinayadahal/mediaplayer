@@ -11,18 +11,23 @@ import java.io.File;
 public class PlayBackResume {
 
     public void resumeFrom(String filePath) {
-        FileService objFileService = new FileService();
-        String filename = new File(filePath).getName() + ".txt";
+        final FileService objFileService = new FileService();
+        final String filename = new File(filePath).getName() + ".txt";
         final StringBuilder text = objFileService.readFile(filename);
         if (text == null) {
-            objFileService.writeFile("0", filename); // content will be like time(in msec)
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    objFileService.writeFile("0", filename); // content will be like time(in msec)
+                }
+            }, 2000);
             return;
         }
         if (!text.equals("0")) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (CommonArgs.mediaPlayer.getDuration() != Integer.parseInt(text.toString().trim()))
+                    if (CommonArgs.duration != Integer.parseInt(text.toString().trim()))
                         new PopUpDialog().showCustomAlertDialog(text);
                 }
             }, 500);
