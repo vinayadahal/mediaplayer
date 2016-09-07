@@ -14,6 +14,18 @@ import java.util.List;
 
 public class PlayBackResume {
 
+    public String getVideoDuration(String filename) {
+        String[] columns = {MediaStore.Video.VideoColumns.DURATION};
+        String[] whereVal = {filename};
+        Cursor cursor = CommonArgs.playFileCtx.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, MediaStore.MediaColumns.DATA + "=?" + "", whereVal, null);
+        String strDuration = null;
+        if (cursor.moveToFirst()) {
+            strDuration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+        }
+        cursor.close();
+        return strDuration;
+    }
+
     public void resumeFrom(final String filePath) {
         final FileService objFileService = new FileService();
         final String filename = new File(filePath).getName() + ".txt";
@@ -60,19 +72,6 @@ public class PlayBackResume {
         }
         if (CommonArgs.mediaPlayer != null)
             CommonArgs.mediaPlayer.seekTo(Integer.parseInt(text.toString().trim()));
-    }
-
-
-    public String getVideoDuration(String filename) {
-        String[] columns = {MediaStore.Video.VideoColumns.DURATION};
-        String[] whereVal = {filename};
-        Cursor cursor = CommonArgs.playFileCtx.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, MediaStore.MediaColumns.DATA + "=?" + "", whereVal, null);
-        String strDuration = null;
-        if (cursor.moveToFirst()) {
-            strDuration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
-        }
-        cursor.close();
-        return strDuration;
     }
 
 }

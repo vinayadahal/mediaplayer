@@ -1,7 +1,5 @@
 package com.mediaplayer.services;
 
-import android.content.Context;
-
 import com.mediaplayer.variables.CommonArgs;
 
 import java.io.BufferedReader;

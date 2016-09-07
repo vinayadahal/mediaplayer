@@ -1,9 +1,8 @@
 package com.mediaplayer.activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -19,9 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.services.CleanUpService;
 import com.mediaplayer.services.IconService;
 import com.mediaplayer.services.MobileArrayAdapter;
-import com.mediaplayer.variables.CommonArgs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Long> fileSize = new ArrayList<>();
     private Toolbar toolbar;
     private MobileArrayAdapter objMobileArrayAdapter;
-
+    private Context ctx = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         createVideoList(getVideoFiles(), getVideoThumbnail(), getVideoDuration(), fileSize);
+        cleanUp();
     }
 
     @Override
@@ -140,5 +140,17 @@ public class MainActivity extends AppCompatActivity {
                 objMobileArrayAdapter.notifyDataSetChanged();
             }
         }, 5000);
+    }
+
+    public void cleanUp() {
+        Thread th = new Thread() {
+            @Override
+            public void run() {
+                CleanUpService objCleanUpService = new CleanUpService();
+                objCleanUpService.deleteTempPlayBack(getVideoFiles(), ctx);
+                objCleanUpService.deleteThumbnail(getVideoFiles());
+            }
+        };
+        th.start();
     }
 }

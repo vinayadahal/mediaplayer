@@ -17,7 +17,6 @@ import java.io.IOException;
 public class IconService {
 
     public Context ctx;
-    private Bitmap bmp_thumb;
 
     public String checkThumb(final String videoFile) {
         File fileFolder = new File(videoFile);
