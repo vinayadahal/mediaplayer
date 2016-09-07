@@ -52,6 +52,12 @@ public class PlayFile extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        new PlayBackResume().resumeFrom(filePath);
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
@@ -118,10 +124,6 @@ public class PlayFile extends AppCompatActivity {
         vidTitle.setText("Now Playing: " + new File(filename).getName());
         CommonArgs.title_control.setVisibility(View.GONE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
-        CommonArgs.videoView.start();
-        CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
-        CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
-        CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
         VideoOnPreparedListener objVideoOnPreparedListener = new VideoOnPreparedListener();
         objVideoOnPreparedListener.totalTime = (TextView) findViewById(R.id.total_time);
         CommonArgs.videoView.setOnPreparedListener(objVideoOnPreparedListener);
@@ -129,7 +131,10 @@ public class PlayFile extends AppCompatActivity {
         objVideoOnCompletionListener.ctx = this;
         objVideoOnCompletionListener.filePath = filename;
         CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
-        new PlayBackResume().resumeFrom(filename);
+        CommonArgs.videoView.start();
+        CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
+        CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
+        CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
     }
 
     public void pauseVideo(View view) {

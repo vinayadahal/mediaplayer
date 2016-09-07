@@ -12,8 +12,9 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        CommonArgs.duration = mp.getDuration();
         CommonArgs.mediaPlayer = mp; // used to pause video
+        System.out.println("duration before onPrepared:::: " + CommonArgs.duration);
+        CommonArgs.duration = mp.getDuration();
         totalTime.setText(new MathService().timeFormatter(CommonArgs.duration));
         CommonArgs.seekBar.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
     }

@@ -1,16 +1,20 @@
 package com.mediaplayer.components;
 
 
+import android.database.Cursor;
 import android.os.Handler;
+import android.provider.MediaStore;
 
 import com.mediaplayer.services.FileService;
 import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayBackResume {
 
-    public void resumeFrom(String filePath) {
+    public void resumeFrom(final String filePath) {
         final FileService objFileService = new FileService();
         final String filename = new File(filePath).getName() + ".txt";
         final StringBuilder text = objFileService.readFile(filename);
@@ -27,7 +31,9 @@ public class PlayBackResume {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (CommonArgs.duration != Integer.parseInt(text.toString().trim()))
+                    System.out.println("video Duration:::: " + getVideoDuration(filePath));
+                    System.out.println("From File::::: " + text);
+                    if (!getVideoDuration(filePath).equals(text.toString().trim()) && getVideoDuration(filePath) != null)
                         new PopUpDialog().showCustomAlertDialog(text);
                 }
             }, 500);
@@ -55,4 +61,18 @@ public class PlayBackResume {
         if (CommonArgs.mediaPlayer != null)
             CommonArgs.mediaPlayer.seekTo(Integer.parseInt(text.toString().trim()));
     }
+
+
+    public String getVideoDuration(String filename) {
+        String[] columns = {MediaStore.Video.VideoColumns.DURATION};
+        String[] whereVal = {filename};
+        Cursor cursor = CommonArgs.playFileCtx.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, MediaStore.MediaColumns.DATA + "=?" + "", whereVal, null);
+        String strDuration = null;
+        if (cursor.moveToFirst()) {
+            strDuration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.VideoColumns.DURATION));
+        }
+        cursor.close();
+        return strDuration;
+    }
+
 }
