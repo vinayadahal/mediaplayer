@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
 import java.io.FileInputStream;

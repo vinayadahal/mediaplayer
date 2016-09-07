@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <item
-        android:id="@+id/action_go_btn"
+        android:id="@+id/refresh_btn"
         android:layout_gravity="left"
         android:icon="@drawable/refresh_btn"
         android:title=""
         android:visible="true"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 </menu>

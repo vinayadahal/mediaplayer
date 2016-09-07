@@ -2,9 +2,16 @@ package com.mediaplayer.activites;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -14,18 +21,25 @@ import android.widget.ListView;
 import com.mediaplayer.R;
 import com.mediaplayer.services.IconService;
 import com.mediaplayer.services.MobileArrayAdapter;
+import com.mediaplayer.variables.CommonArgs;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<Long> fileSize = new ArrayList<>();
+    private List<Long> fileSize = new ArrayList<>();
+    private Toolbar toolbar;
+    private MobileArrayAdapter objMobileArrayAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);// for showing menu item
+        setSupportActionBar(toolbar);// for showing menu item
+        getSupportActionBar().setTitle(null); // for showing menu item
         ImageButton backImgBtn = (ImageButton) findViewById(R.id.back_btn);
         backImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +48,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         createVideoList(getVideoFiles(), getVideoThumbnail(), getVideoDuration(), fileSize);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) { // should be define to attach menu item to action/toolbar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_item_activity, menu);
+        MenuItem refreshBtn = menu.findItem(R.id.refresh_btn);
+        refreshBtn.setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { // for handling menu item click
+        switch (item.getItemId()) {
+            case R.id.refresh_btn:
+                System.out.println("refresh clicked");
+                refreshIcons();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public List<String> getVideoFiles() {
@@ -80,8 +113,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createVideoList(final List<String> videoFiles, final List<String> videoThumbnail, final List<Long> duration, final List<Long> FileSize) {
+        objMobileArrayAdapter = new MobileArrayAdapter(this, videoFiles, videoThumbnail, duration, FileSize);
         ListView listView = new ListView(this);
-        listView.setAdapter(new MobileArrayAdapter(this, videoFiles, videoThumbnail, duration, FileSize));
+        listView.setAdapter(objMobileArrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -96,6 +130,15 @@ public class MainActivity extends AppCompatActivity {
         });
         LinearLayout lnrlayout = (LinearLayout) findViewById(R.id.lnrLayout);
         lnrlayout.addView(listView);
+        refreshIcons();
     }
 
+    public void refreshIcons() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                objMobileArrayAdapter.notifyDataSetChanged();
+            }
+        }, 5000);
+    }
 }

@@ -14,6 +14,7 @@ import android.widget.VideoView;
 import com.mediaplayer.components.Effects;
 import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.services.MediaControl;
+import com.mediaplayer.services.MobileArrayAdapter;
 
 public class CommonArgs {
 
