@@ -30,20 +30,27 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
 
     public void showSub() {
-        SrtParser objSrtParser = new SrtParser();
-        while (CommonArgs.mediaPlayer.getCurrentPosition() != CommonArgs.duration && CommonArgs.mediaPlayer.isPlaying()) {
-            String time = objSrtParser.srtTimeFormatter(CommonArgs.mediaPlayer.getCurrentPosition());
-            final String line = objSrtParser.parse(objSrtParser.loadSrt("/storage/sdcard0/Videos/---PSY - GENTLEMAN M-_V - YouTube.srt"), time);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (line != null) {
-                        CommonArgs.subArea.setText(line);
-                    } else {
-                        CommonArgs.subArea.setText("");
-                    }
+        final SrtParser objSrtParser = new SrtParser();
+        Runnable runnable = new Runnable() {
+            public void run() {
+                System.out.println("ShowSubtitle:::::::::::");
+                if (CommonArgs.mediaPlayer.isPlaying()) {
+                    String time = objSrtParser.srtTimeFormatter(CommonArgs.mediaPlayer.getCurrentPosition());
+                    final String line = objSrtParser.parse(objSrtParser.loadSrt("/storage/sdcard0/Videos/---PSY - GENTLEMAN M-_V - YouTube.srt"), time);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (line != null) {
+                                CommonArgs.subArea.setText(line);
+                            } else if (line == null) {
+                                CommonArgs.subArea.setText("");
+                            }
+                        }
+                    });
+                    handler.postDelayed(this, 700);
                 }
-            });
-        }
+            }
+        };
+        handler.post(runnable);
     }
 }
