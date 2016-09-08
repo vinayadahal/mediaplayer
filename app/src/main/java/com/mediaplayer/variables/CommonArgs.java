@@ -23,7 +23,7 @@ public class CommonArgs {
     public static SeekBar seekBar, volumeSeekBar, brightnessSeekBar;
     public static VideoView videoView;
     public static long duration;
-    public static TextView currentTimeTxt;
+    public static TextView currentTimeTxt,subArea;
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
     public static Context playFileCtx;

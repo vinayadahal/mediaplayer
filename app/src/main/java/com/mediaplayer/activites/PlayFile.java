@@ -22,6 +22,7 @@ import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.listeners.VideoOnCompletionListener;
 import com.mediaplayer.listeners.VideoOnPreparedListener;
 import com.mediaplayer.services.MediaControl;
+import com.mediaplayer.services.SrtParser;
 import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
@@ -87,6 +88,7 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void initGlobalVariable() {
+        CommonArgs.subArea = (TextView) findViewById(R.id.subArea);
         CommonArgs.title_control = (RelativeLayout) findViewById(R.id.title_control);
         CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
         CommonArgs.seekBar.setProgress(0);
