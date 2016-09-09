@@ -14,7 +14,7 @@ public class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeList
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (showTimer) {
             CommonArgs.notification_txt.setVisibility(View.VISIBLE);
-            CommonArgs.notification_txt.setText(new MathService().timeFormatter(progress));
+            CommonArgs.notification_txt.setText(MathService.timeFormatter(progress));
         }
     }
 

@@ -104,6 +104,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.brightnessSeekBar = (SeekBar) findViewById(R.id.brightness_seekbar);
         CommonArgs.brightnessSeekBar.setMax(10);
         CommonArgs.playFileCtx = this;
+        CommonArgs.currentVideoPath = filePath;
     }
 
     public void initLocalVariable() {
@@ -131,7 +132,6 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.videoView.setOnPreparedListener(objVideoOnPreparedListener);
         VideoOnCompletionListener objVideoOnCompletionListener = new VideoOnCompletionListener();
         objVideoOnCompletionListener.ctx = this;
-        objVideoOnCompletionListener.filePath = filename;
         CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
         CommonArgs.videoView.start();
         CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
@@ -190,10 +190,10 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void showVolumeSeekbar(View view) {
-        new SeekBarVisibility().showVolumeSeekbar();
+        SeekBarVisibility.showVolumeSeekbar();
     }
 
     public void setBrightness(View view) {
-        new SeekBarVisibility().showBrightnessSeekBar();
+        SeekBarVisibility.showBrightnessSeekBar();
     }
 }

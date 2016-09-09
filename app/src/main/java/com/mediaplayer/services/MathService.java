@@ -4,7 +4,7 @@ public class MathService {
 
     private float sumx, sumy;
 
-    public String convertFileSize(long bytes) {
+    public static String convertFileSize(long bytes) {
         double kilobytes = (double) Math.round((bytes / 1024) * 100) / 100;
         double megabytes = (double) Math.round((kilobytes / 1024) * 100) / 100;
         double gigabytes = (double) Math.round((megabytes / 1024) * 100) / 100;
@@ -20,7 +20,7 @@ public class MathService {
         return bytes + " Bytes";
     }
 
-    public String timeFormatter(long duration) {
+    public static String timeFormatter(long duration) {
         long second = (duration / 1000) % 60;
         long minute = (duration / (1000 * 60)) % 60;
         long hour = (duration / (1000 * 60 * 60)) % 24;

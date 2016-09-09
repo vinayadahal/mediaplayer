@@ -146,9 +146,8 @@ public class MainActivity extends AppCompatActivity {
         Thread th = new Thread() {
             @Override
             public void run() {
-                CleanUpService objCleanUpService = new CleanUpService();
-                objCleanUpService.deleteTempPlayBack(getVideoFiles(), ctx);
-                objCleanUpService.deleteThumbnail(getVideoFiles());
+                CleanUpService.deleteTempPlayBack(getVideoFiles(), ctx);
+                CleanUpService.deleteThumbnail(getVideoFiles());
             }
         };
         th.start();

@@ -42,6 +42,8 @@ public class PlayFileTouchListener implements View.OnTouchListener {
     public void updateProgressBar() {
         CommonArgs.runnable = new Runnable() {
             public void run() {
+                Thread thread= Thread.currentThread();
+                thread.setPriority(Thread.MIN_PRIORITY);
                 System.out.println("Seekbar runnable running");
                 CommonArgs.seekBar.setMax((int) CommonArgs.duration);
                 if (CommonArgs.seekBar.getProgress() <= (int) CommonArgs.duration && !checkTitleControlVisibility()) {
@@ -52,7 +54,7 @@ public class PlayFileTouchListener implements View.OnTouchListener {
                     CommonArgs.seekBar.setProgress((int) current);
                     CommonArgs.handler.post(new Runnable() {
                         public void run() {
-                            CommonArgs.currentTimeTxt.setText(new MathService().timeFormatter(current));
+                            CommonArgs.currentTimeTxt.setText(MathService.timeFormatter(current));
                         }
                     });
                 }

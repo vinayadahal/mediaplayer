@@ -23,12 +23,14 @@ public class CommonArgs {
     public static SeekBar seekBar, volumeSeekBar, brightnessSeekBar;
     public static VideoView videoView;
     public static long duration;
-    public static TextView currentTimeTxt,subArea;
+    public static TextView currentTimeTxt, subArea;
     public static MediaPlayer mediaPlayer;
     public static AudioManager audioManager;
     public static Context playFileCtx;
     public static Runnable title_control_runnable, runnable;
     public static Handler handler = new Handler(), title_control_handler = new Handler();
+    public static String currentVideoPath;
+    public static int parsedAryNumber;
 
     public static void autoFade(final RelativeLayout relativeLayout, final Boolean isViewOn) {
         Runnable runnable = new Runnable() {

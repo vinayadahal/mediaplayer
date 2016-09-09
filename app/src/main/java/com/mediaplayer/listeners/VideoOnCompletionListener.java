@@ -14,7 +14,6 @@ import java.io.File;
 public class VideoOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
     public Context ctx;
-    public String filePath;
 
     @Override
     public void onCompletion(MediaPlayer mp) {

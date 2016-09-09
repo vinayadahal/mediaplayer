@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CleanUpService {
 
-    public void deleteTempPlayBack(List<String> videoPath, Context ctx) {
+    public static void deleteTempPlayBack(List<String> videoPath, Context ctx) {
         List<String> filesToDelete = new ArrayList<>();
         File internalFile[] = ctx.getApplicationContext().getFilesDir().listFiles();
         for (int i = 0; i < internalFile.length; i++) {
@@ -41,7 +41,7 @@ public class CleanUpService {
         }
     }
 
-    public void deleteThumbnail(List<String> videoPath) {
+    public static void deleteThumbnail(List<String> videoPath) {
         List<String> filesToDelete = new ArrayList<>();
         File imageFile[] = new File(Config.baseThumbPath + "/.dthumb").listFiles();
         for (int i = 0; i < imageFile.length; i++) {

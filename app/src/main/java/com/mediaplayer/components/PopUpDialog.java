@@ -23,7 +23,7 @@ public class PopUpDialog {
     public void showAlertDialog(final StringBuilder text) {
         AlertDialog.Builder objAlertDialogBuilder = new AlertDialog.Builder(CommonArgs.playFileCtx, 000);
         objAlertDialogBuilder.setTitle("Resume Playback");
-        objAlertDialogBuilder.setMessage("Resume playback from " + new MathService().timeFormatter(Long.parseLong(text.toString().trim())) + "?");
+        objAlertDialogBuilder.setMessage("Resume playback from " + MathService.timeFormatter(Long.parseLong(text.toString().trim())) + "?");
         objAlertDialogBuilder.setIcon(R.drawable.seek_to_time);
         objAlertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -35,7 +35,7 @@ public class PopUpDialog {
 
     public void initCustomPopUp(View choice_pop_up, final PopupWindow pw, final StringBuilder text) {
         TextView resumeText = (TextView) choice_pop_up.findViewById(R.id.resume_text);
-        resumeText.setText("Do you want to resume playback from " + new MathService().timeFormatter(Long.parseLong(text.toString().trim())) + "?");
+        resumeText.setText("Do you want to resume playback from " + MathService.timeFormatter(Long.parseLong(text.toString().trim())) + "?");
 
         Button call_btn = (Button) choice_pop_up.findViewById(R.id.popup_call_btn);
         call_btn.setTransformationMethod(null);

@@ -3,7 +3,6 @@ package com.mediaplayer.services;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mediaplayer.R;
-import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,8 +42,8 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
         TextView time_text = (TextView) rowView.findViewById(R.id.time_text);
         TextView text_file_size = (TextView) rowView.findViewById(R.id.text_file_size);
         textView.setText(new File(videos.get(position)).getName());
-        time_text.setText(new MathService().timeFormatter(time.get(position)));
-        text_file_size.setText(new MathService().convertFileSize(filesize.get(position)));
+        time_text.setText(MathService.timeFormatter(time.get(position)));
+        text_file_size.setText( MathService.convertFileSize(filesize.get(position)));
         loadImageInThread(position, imageView);
         return rowView;
     }

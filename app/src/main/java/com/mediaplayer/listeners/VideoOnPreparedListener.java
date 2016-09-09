@@ -1,12 +1,19 @@
 package com.mediaplayer.listeners;
 
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.mediaplayer.services.MathService;
 import com.mediaplayer.services.SrtParser;
 import com.mediaplayer.variables.CommonArgs;
+
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.lang.reflect.Field;
 
 public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
@@ -18,7 +25,7 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
         CommonArgs.mediaPlayer = mp; // used to pause video
         System.out.println("duration before onPrepared:::: " + CommonArgs.duration);
         CommonArgs.duration = mp.getDuration();
-        totalTime.setText(new MathService().timeFormatter(CommonArgs.duration));
+        totalTime.setText(MathService.timeFormatter(CommonArgs.duration));
         CommonArgs.seekBar.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
         Thread th = new Thread() {
             public void run() {
@@ -26,17 +33,23 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
             }
         };
         th.start();
+        th.setPriority(Thread.MIN_PRIORITY);
     }
 
 
     public void showSub() {
+        final String srtFile = new FilenameUtils().removeExtension(CommonArgs.currentVideoPath) + ".srt";
+        if (!new File(srtFile).exists()) {
+            return;
+        }
         final SrtParser objSrtParser = new SrtParser();
         Runnable runnable = new Runnable() {
             public void run() {
-                System.out.println("ShowSubtitle:::::::::::");
+                Thread th = Thread.currentThread();
+                th.setPriority(Thread.MIN_PRIORITY);
                 if (CommonArgs.mediaPlayer.isPlaying()) {
                     String time = objSrtParser.srtTimeFormatter(CommonArgs.mediaPlayer.getCurrentPosition());
-                    final String line = objSrtParser.parse(objSrtParser.loadSrt("/storage/sdcard0/Videos/---PSY - GENTLEMAN M-_V - YouTube.srt"), time);
+                    final String line = objSrtParser.parse(objSrtParser.loadSrt(srtFile), time);
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -47,7 +60,7 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
                             }
                         }
                     });
-                    handler.postDelayed(this, 700);
+                    handler.postDelayed(this, 500);
                 }
             }
         };

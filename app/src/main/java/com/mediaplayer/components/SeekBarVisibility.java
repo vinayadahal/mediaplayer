@@ -10,9 +10,9 @@ import com.mediaplayer.variables.CommonArgs;
 
 public class SeekBarVisibility {
 
-    Boolean isViewOn = false, normalFade = false;
+    static Boolean  isViewOn = false, normalFade = false;
 
-    public void showVolumeSeekbar() {
+    public static void showVolumeSeekbar() {
         if (CommonArgs.rl_volume_seekbar.getVisibility() == View.GONE) {
             if (CommonArgs.rl_brightness_seekbar.getVisibility() == View.VISIBLE)
                 new Effects().fadeOut(CommonArgs.rl_brightness_seekbar);
@@ -28,7 +28,7 @@ public class SeekBarVisibility {
             CommonArgs.autoFade(CommonArgs.rl_volume_seekbar, isViewOn);
     }
 
-    public void showBrightnessSeekBar() {
+    public static void showBrightnessSeekBar() {
         if (CommonArgs.rl_brightness_seekbar.getVisibility() == View.GONE) {
             if (CommonArgs.rl_volume_seekbar.getVisibility() == View.VISIBLE)
                 CommonArgs.autoFade(CommonArgs.rl_volume_seekbar, true);
