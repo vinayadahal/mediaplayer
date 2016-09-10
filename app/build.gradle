@@ -26,5 +26,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+//    compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
 //    compile 'org.jcodec:jcodec-android:0.1.9'
 }

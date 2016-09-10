@@ -43,8 +43,6 @@ public class PlayBackResume {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("video Duration:::: " + getVideoDuration(filePath));
-                    System.out.println("From File::::: " + text);
                     if (!getVideoDuration(filePath).equals(text.toString().trim()) && getVideoDuration(filePath) != null)
                         new PopUpDialog().showCustomAlertDialog(text);
                 }

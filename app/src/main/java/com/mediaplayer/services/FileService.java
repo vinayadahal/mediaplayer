@@ -13,7 +13,6 @@ public class FileService {
     StringBuilder text = new StringBuilder();
 
     public StringBuilder readFile(String filename) {
-        System.out.println("Reading File::::::");
         File file = new File(CommonArgs.playFileCtx.getApplicationContext().getFilesDir() + "/" + filename);
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -31,7 +30,6 @@ public class FileService {
     }
 
     public boolean writeFile(String data, String filename) {
-        System.out.println("Writing File::::");
         FileOutputStream outputStream;
         try {
             outputStream = CommonArgs.playFileCtx.openFileOutput(filename, CommonArgs.playFileCtx.MODE_PRIVATE);

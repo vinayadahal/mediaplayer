@@ -7,16 +7,17 @@
 
     <TextView
         android:id="@+id/subArea"
-        android:layout_width="300dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        android:shadowColor="@android:color/black"
+        android:fontFamily="sans-serif"
+        android:padding="5dp"
+        android:shadowColor="#000"
         android:shadowDx="3"
-        android:shadowDy="2"
+        android:shadowDy="0"
         android:shadowRadius="1"
         android:textAlignment="center"
-        android:textColor="#FFF"
+        android:textColor="#ffffff"
         android:textSize="20dp"
         android:textStyle="bold" />
 

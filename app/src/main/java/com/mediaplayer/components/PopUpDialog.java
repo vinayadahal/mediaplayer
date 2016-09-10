@@ -34,9 +34,9 @@ public class PopUpDialog {
     }
 
     public void initCustomPopUp(View choice_pop_up, final PopupWindow pw, final StringBuilder text) {
+        pw.dismiss();
         TextView resumeText = (TextView) choice_pop_up.findViewById(R.id.resume_text);
         resumeText.setText("Do you want to resume playback from " + MathService.timeFormatter(Long.parseLong(text.toString().trim())) + "?");
-
         Button call_btn = (Button) choice_pop_up.findViewById(R.id.popup_call_btn);
         call_btn.setTransformationMethod(null);
         call_btn.setOnClickListener(new View.OnClickListener() {

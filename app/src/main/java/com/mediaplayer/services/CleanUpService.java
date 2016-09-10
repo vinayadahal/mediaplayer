@@ -16,11 +16,9 @@ public class CleanUpService {
         File internalFile[] = ctx.getApplicationContext().getFilesDir().listFiles();
         for (int i = 0; i < internalFile.length; i++) {
             String internalFileName = internalFile[i].getName();
-            System.out.println("internal FILE::: " + internalFileName);
             Boolean fileFound = false;
             for (int j = 0; j < videoPath.size(); j++) {
                 String videoFile = new File(videoPath.get(j)).getName() + ".txt";
-                System.out.println("Video FILE:::: " + videoFile);
                 if (internalFileName.equals(videoFile)) {
                     fileFound = true;
                     break;
@@ -46,11 +44,9 @@ public class CleanUpService {
         File imageFile[] = new File(Config.baseThumbPath + "/.dthumb").listFiles();
         for (int i = 0; i < imageFile.length; i++) {
             String thumbFileName = imageFile[i].getName();
-            System.out.println("Thumb FILE::: " + thumbFileName);
             Boolean fileFound = false;
             for (int j = 0; j < videoPath.size(); j++) {
                 String videoFile = new File(videoPath.get(j)).getName() + ".bmp";
-                System.out.println("Video FILE:::: " + videoFile);
                 if (thumbFileName.equals(videoFile)) {
                     fileFound = true;
                     break;

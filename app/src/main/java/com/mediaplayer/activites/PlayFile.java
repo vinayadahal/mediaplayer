@@ -72,7 +72,6 @@ public class PlayFile extends AppCompatActivity {
     @Override
     public void onDestroy() {
         CommonArgs.mediaPlayer.release(); // releases associated resources
-        CommonArgs.mediaPlayer.reset(); // resets mediaplayer
         super.onDestroy();
     }
 
