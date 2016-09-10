@@ -7,12 +7,17 @@
 
     <TextView
         android:id="@+id/subArea"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:padding="10dp"
-        android:text="TEST"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="3"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:textAlignment="center"
         android:textColor="#FFF"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

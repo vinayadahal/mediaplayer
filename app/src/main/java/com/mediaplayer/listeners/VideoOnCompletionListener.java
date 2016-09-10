@@ -18,6 +18,7 @@ public class VideoOnCompletionListener implements MediaPlayer.OnCompletionListen
     @Override
     public void onCompletion(MediaPlayer mp) {
         ((Activity) ctx).finish();
+        CommonArgs.isPlaying=false;
     }
 
 }

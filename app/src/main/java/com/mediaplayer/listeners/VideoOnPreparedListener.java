@@ -1,10 +1,8 @@
 package com.mediaplayer.listeners;
 
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Handler;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.mediaplayer.services.MathService;
 import com.mediaplayer.services.SrtParser;
@@ -13,7 +11,6 @@ import com.mediaplayer.variables.CommonArgs;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.lang.reflect.Field;
 
 public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
@@ -27,6 +24,8 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
         CommonArgs.duration = mp.getDuration();
         totalTime.setText(MathService.timeFormatter(CommonArgs.duration));
         CommonArgs.seekBar.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
+//        CommonArgs.parsedAryNumber = 0;
+        CommonArgs.isPlaying = true;
         Thread th = new Thread() {
             public void run() {
                 showSub();
@@ -39,17 +38,19 @@ public class VideoOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
     public void showSub() {
         final String srtFile = new FilenameUtils().removeExtension(CommonArgs.currentVideoPath) + ".srt";
+        System.out.println("mdplayer------- " + CommonArgs.mediaPlayer);
         if (!new File(srtFile).exists()) {
             return;
         }
         final SrtParser objSrtParser = new SrtParser();
+        final StringBuilder text = objSrtParser.loadSrt(srtFile);
         Runnable runnable = new Runnable() {
             public void run() {
-                Thread th = Thread.currentThread();
-                th.setPriority(Thread.MIN_PRIORITY);
-                if (CommonArgs.mediaPlayer.isPlaying()) {
+                if (CommonArgs.isPlaying) {
+                    Thread th = Thread.currentThread();
+                    th.setPriority(Thread.MIN_PRIORITY);
                     String time = objSrtParser.srtTimeFormatter(CommonArgs.mediaPlayer.getCurrentPosition());
-                    final String line = objSrtParser.parse(objSrtParser.loadSrt(srtFile), time);
+                    final String line = objSrtParser.parse(text, time);
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

@@ -63,6 +63,7 @@ public class PlayFile extends AppCompatActivity {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
             CommonArgs.mediaPlayer.stop(); // stops video playback
+            CommonArgs.isPlaying = false;
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -71,11 +72,13 @@ public class PlayFile extends AppCompatActivity {
     @Override
     public void onDestroy() {
         CommonArgs.mediaPlayer.release(); // releases associated resources
+        CommonArgs.mediaPlayer.reset(); // resets mediaplayer
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
+        CommonArgs.isPlaying = false;
         new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
