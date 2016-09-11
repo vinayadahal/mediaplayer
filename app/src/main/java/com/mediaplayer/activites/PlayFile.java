@@ -1,39 +1,29 @@
 package com.mediaplayer.activites;
 
-import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.mediaplayer.R;
 import com.mediaplayer.components.PlayBackResume;
-import com.mediaplayer.components.SeekBarVisibility;
+import com.mediaplayer.components.PlayFileComponentInit;
 import com.mediaplayer.listeners.PlayFileTouchListener;
 import com.mediaplayer.listeners.VideoOnCompletionListener;
 import com.mediaplayer.listeners.VideoOnPreparedListener;
-import com.mediaplayer.services.MediaControl;
-import com.mediaplayer.services.SrtParser;
 import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
-import java.util.List;
-
 
 public class PlayFile extends AppCompatActivity {
 
-    private ImageButton playBtn, pauseBtn, originalBtn, fullscreenBtn, portraitBtn, landscapeBtn;
-    List<String> allVideoPath = null;
-    String filePath = null; // or other values
+    private ImageButton playBtn, pauseBtn;
     Boolean isPaused = false;
 
     @Override
@@ -41,27 +31,39 @@ public class PlayFile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hides notification bar
         setContentView(R.layout.activity_play_file);
+        Toolbar play_file_toolbar = (Toolbar) findViewById(R.id.player_toolbar);// for showing menu item
+        setSupportActionBar(play_file_toolbar);// for showing menu item
+        getSupportActionBar().setTitle(null); // for showing menu item
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            filePath = bundle.getString("fileName");
-            allVideoPath = bundle.getStringArrayList("allVideoPath");
+            CommonArgs.currentVideoPath = bundle.getString("fileName");
+            CommonArgs.allVideoPath = bundle.getStringArrayList("allVideoPath");
         }
-        initGlobalVariable();
-        playFile(filePath);
+        PlayFileComponentInit objPlayFileComponent = new PlayFileComponentInit();
+        CommonArgs.playFileCtx = this;
+        objPlayFileComponent.initPlayFileGlobal();
+        objPlayFileComponent.initPlayFileLocal();
+        playFile(CommonArgs.currentVideoPath);
         initLocalVariable();
-        setInitPlayerView();
+        playBtn.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.play_file_menu, menu);//Menu Resource, Menu
+        return true;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        new PlayBackResume().resumeFrom(filePath);
+        new PlayBackResume().resumeFrom(CommonArgs.currentVideoPath);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
+            new PlayBackResume().setResumePoint(CommonArgs.currentVideoPath, CommonArgs.videoView.getCurrentPosition());
             CommonArgs.mediaPlayer.stop(); // stops video playback
             CommonArgs.isPlaying = false;
             finish();
@@ -78,7 +80,7 @@ public class PlayFile extends AppCompatActivity {
     @Override
     public void onPause() {
         CommonArgs.isPlaying = false;
-        new PlayBackResume().setResumePoint(filePath, CommonArgs.videoView.getCurrentPosition());
+        new PlayBackResume().setResumePoint(CommonArgs.currentVideoPath, CommonArgs.videoView.getCurrentPosition());
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
         super.onPause();
@@ -89,39 +91,9 @@ public class PlayFile extends AppCompatActivity {
         finish();
     }
 
-    public void initGlobalVariable() {
-        CommonArgs.subArea = (TextView) findViewById(R.id.subArea);
-        CommonArgs.title_control = (RelativeLayout) findViewById(R.id.title_control);
-        CommonArgs.seekBar = (SeekBar) findViewById(R.id.vid_seekbar);
-        CommonArgs.seekBar.setProgress(0);
-        CommonArgs.currentTimeTxt = (TextView) findViewById(R.id.current_time);
-        CommonArgs.notification_txt = (TextView) findViewById(R.id.notification_txt);
-        CommonArgs.rl_play_file = (RelativeLayout) findViewById(R.id.play_file_relative_layout);
-        CommonArgs.videoView = (VideoView) findViewById(R.id.videoView);
-        CommonArgs.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        CommonArgs.rl_volume_seekbar = (RelativeLayout) findViewById(R.id.rl_volume_seekbar);
-        CommonArgs.volumeSeekBar = (SeekBar) findViewById(R.id.volume_seekbar);
-        CommonArgs.volumeSeekBar.setMax(15);
-        CommonArgs.rl_brightness_seekbar = (RelativeLayout) findViewById(R.id.rl_brightness_seekbar);
-        CommonArgs.brightnessSeekBar = (SeekBar) findViewById(R.id.brightness_seekbar);
-        CommonArgs.brightnessSeekBar.setMax(10);
-        CommonArgs.playFileCtx = this;
-        CommonArgs.currentVideoPath = filePath;
-    }
-
     public void initLocalVariable() {
         playBtn = (ImageButton) findViewById(R.id.play_btn);
         pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
-        originalBtn = (ImageButton) findViewById(R.id.original_btn);
-        fullscreenBtn = (ImageButton) findViewById(R.id.fullscreen_btn);
-        portraitBtn = (ImageButton) findViewById(R.id.portrait_btn);
-        landscapeBtn = (ImageButton) findViewById(R.id.landscape_btn);
-    }
-
-    public void setInitPlayerView() {
-        playBtn.setVisibility(View.GONE);
-        fullscreenBtn.setVisibility(View.GONE);
-        landscapeBtn.setVisibility(View.GONE);
     }
 
     public void playFile(String filename) {
@@ -142,6 +114,7 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void pauseVideo(View view) {
+        CommonArgs.isPlaying = false;
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
         CommonArgs.mediaPlayer.pause();
@@ -149,53 +122,16 @@ public class PlayFile extends AppCompatActivity {
     }
 
     public void playVideo(View view) {
+        CommonArgs.isPlaying = true;
         playBtn.setVisibility(View.GONE);
         pauseBtn.setVisibility(View.VISIBLE);
         CommonArgs.handler.postDelayed(CommonArgs.runnable, 10);
+        CommonArgs.handler.postDelayed(CommonArgs.subtitle_runnable, 10);
         if (!isPaused) {
-            new PlayBackResume().resumePlayBackAuto(filePath);
+            new PlayBackResume().resumePlayBackAuto(CommonArgs.currentVideoPath);
         }
         CommonArgs.mediaPlayer.start();
         isPaused = false;
     }
 
-    public void previous(View view) {
-        int nextFile = new MediaControl().previousBtnAction(allVideoPath, filePath);
-        playFile(allVideoPath.get(nextFile)); // playing new file
-        filePath = allVideoPath.get(nextFile); // recording current playing file for future use
-    }
-
-    public void next(View view) {
-        int nextFile = new MediaControl().nextBtnAction(allVideoPath, filePath); // gets next file array's index
-        playFile(allVideoPath.get(nextFile)); // playing new file
-        filePath = allVideoPath.get(nextFile); // recording current playing file for future use
-    }
-
-    public void originalSize(View view) {
-        new MediaControl().setOriginalSize(fullscreenBtn, originalBtn);
-    }
-
-    public void fullScreenSize(View view) {
-        new MediaControl().setFullscreen(fullscreenBtn, originalBtn);
-    }
-
-    public void changeOrientationPortrait(View view) {
-        portraitBtn.setVisibility(View.GONE);
-        landscapeBtn.setVisibility(View.VISIBLE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-
-    public void changeOrientationLandscape(View view) {
-        landscapeBtn.setVisibility(View.GONE);
-        portraitBtn.setVisibility(View.VISIBLE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    }
-
-    public void showVolumeSeekbar(View view) {
-        SeekBarVisibility.showVolumeSeekbar();
-    }
-
-    public void setBrightness(View view) {
-        SeekBarVisibility.showBrightnessSeekBar();
-    }
 }

@@ -22,7 +22,7 @@ public class SubtitleDisplay {
         final SrtParser objSrtParser = new SrtParser();
         final StringBuilder text = objSrtParser.loadSrt(srtFile);
         objSrtParser.parse(text);
-        Runnable runnable = new Runnable() {
+        CommonArgs.subtitle_runnable = new Runnable() {
             public void run() {
                 if (CommonArgs.isPlaying) {
                     Thread th = Thread.currentThread();
@@ -44,7 +44,7 @@ public class SubtitleDisplay {
                 }
             }
         };
-        CommonArgs.handler.post(runnable);
+        CommonArgs.handler.post(CommonArgs.subtitle_runnable);
     }
 
     public void styleText(String line) {
@@ -55,13 +55,13 @@ public class SubtitleDisplay {
             removeColor();
             defaultText();
         } else if (line.startsWith("<font") && line.endsWith("</font>")) {
-            String colorAttrib = line.substring(line.indexOf("#"), line.lastIndexOf("\"")); // test phase
-            CommonArgs.subArea.setTextColor(Color.parseColor(colorAttrib));
+            String colorAttrib = line.replaceAll(".*\"#|\".*", ""); // replaces everything before, including and between "# & "
+            CommonArgs.subArea.setTextColor(Color.parseColor("#" + colorAttrib));
+            defaultText();
         } else {
             removeStyles();
             defaultText();
         }
-
     }
 
     public void defaultText() {
@@ -79,7 +79,8 @@ public class SubtitleDisplay {
     }
 
     public String removeTags(String line) {
-        return line.replaceAll("<i>|</i>|<u>|</u>|<b>|</b>", "");
+//        return line.replaceAll("<i>|</i>|<u>|</u>|<b>|</b>|<font\\s*>|</font>", "");
+        return line.replaceAll("<[^>]*>", "");
     }
 
 }

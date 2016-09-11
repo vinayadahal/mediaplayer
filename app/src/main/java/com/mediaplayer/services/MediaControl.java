@@ -47,6 +47,7 @@ public class MediaControl {
     }
 
     public void setFullscreen(ImageButton fullBtn, ImageButton oriBtn) {
+        System.out.println("Setting Full Screen:::::: ");
         RelativeLayout.LayoutParams videoViewLayoutParams = (RelativeLayout.LayoutParams) CommonArgs.videoView.getLayoutParams();
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 1);

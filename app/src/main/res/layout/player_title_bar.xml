@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/player_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:background="#80000000"
-    android:orientation="horizontal">
+    android:elevation="4dp"
+    android:orientation="horizontal"
+    android:theme="@style/GalaxyZooThemeToolbarDarkOverflow"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    app:popupTheme="@style/MenuListPopUp">
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
-        android:layout_centerVertical="true"
         android:background="@drawable/btn_styler_playback"
         android:onClick="closeActivity"
         android:src="@drawable/back_btn"
         android:tint="@android:color/white" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/vid_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:layout_marginLeft="?attr/actionBarSize"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="?attr/actionBarSize"
         android:ellipsize="end"
-        android:padding="10dp"
         android:singleLine="true"
         android:textColor="@color/colorBackground" />
 
-    <ImageButton
-        android:layout_width="?attr/actionBarSize"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/btn_styler_playback"
-        android:src="@drawable/menu_btn" />
-
-</RelativeLayout>
+</android.support.v7.widget.Toolbar>

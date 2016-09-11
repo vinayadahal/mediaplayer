@@ -8,4 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="GalaxyZooThemeToolbarDarkOverflow" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">#FFF</item>
+        <item name="actionMenuTextColor">#FFF</item>
+        <item name="android:textColorSecondary">#FFF</item>
+    </style>
+
+    <style name="MenuListPopUp" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">#FFF</item>
+        <item name="actionMenuTextColor">#FFF</item>
+        <item name="android:textColorSecondary">#FFF</item>
+    </style>
+
+
 </resources>

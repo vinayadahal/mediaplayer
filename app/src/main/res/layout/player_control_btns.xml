@@ -14,7 +14,6 @@
         android:layout_gravity="center"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="changeOrientationPortrait"
         android:src="@drawable/portrait_btn" />
 
     <ImageButton
@@ -25,7 +24,6 @@
         android:layout_gravity="center"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="changeOrientationLandscape"
         android:src="@drawable/landscape_btn" />
 
     <ImageButton
@@ -36,8 +34,9 @@
         android:layout_toLeftOf="@+id/landscape_btn"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="setBrightness"
         android:src="@drawable/brightness_medium_btn" />
+
+    <!--android:onClick="setBrightness"-->
 
     <ImageButton
         android:id="@+id/previous_btn"
@@ -47,7 +46,6 @@
         android:layout_toLeftOf="@+id/landscape_btn"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="previous"
         android:src="@drawable/previous_btn" />
 
     <ImageButton
@@ -77,7 +75,6 @@
         android:layout_gravity="bottom"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="next"
         android:src="@drawable/next_btn" />
 
     <ImageButton
@@ -97,7 +94,6 @@
         android:layout_gravity="bottom"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="fullScreenSize"
         android:src="@drawable/fullscreen" />
 
     <ImageButton
@@ -107,7 +103,6 @@
         android:layout_gravity="bottom"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:onClick="originalSize"
         android:src="@drawable/original_size" />
 
 </LinearLayout>
