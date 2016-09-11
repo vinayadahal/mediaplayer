@@ -31,7 +31,6 @@ public class CommonArgs {
     public static Handler handler = new Handler(), title_control_handler = new Handler();
     public static String currentVideoPath;
     public static Boolean isPlaying;
-    public static int parsedAryNumber;
 
     public static void autoFade(final RelativeLayout relativeLayout, final Boolean isViewOn) {
         Runnable runnable = new Runnable() {

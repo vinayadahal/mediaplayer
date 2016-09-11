@@ -30,4 +30,11 @@
         android:singleLine="true"
         android:textColor="@color/colorBackground" />
 
+    <ImageButton
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/btn_styler_playback"
+        android:src="@drawable/menu_btn" />
+
 </RelativeLayout>
