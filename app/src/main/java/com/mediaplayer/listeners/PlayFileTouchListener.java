@@ -27,6 +27,9 @@ public class PlayFileTouchListener implements View.OnTouchListener {
                     new Effects().fadeIn(CommonArgs.title_control);
                     updateProgressBar();
                     skipTimer = false;
+                    if (!CommonArgs.mediaPlayer.isPlaying()) {
+                        skipTimer = true; // setting true to make view visible during pause.
+                    }
                 } else if (!checkTitleControlVisibility()) {
                     hideTitleControlNormal();
                     skipTimer = true;
@@ -42,7 +45,7 @@ public class PlayFileTouchListener implements View.OnTouchListener {
     public void updateProgressBar() {
         CommonArgs.runnable = new Runnable() {
             public void run() {
-                Thread thread= Thread.currentThread();
+                Thread thread = Thread.currentThread();
                 thread.setPriority(Thread.MIN_PRIORITY);
                 System.out.println("Seekbar runnable running");
                 CommonArgs.seekBar.setMax((int) CommonArgs.duration);

@@ -36,6 +36,7 @@ public class BtnOnClickListener implements View.OnClickListener {
                 SeekBarVisibility.showBrightnessSeekBar();
                 break;
             case R.id.previous_btn:
+                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable); // removing callback to show view during next and prev
                 String videoPath = CommonArgs.currentVideoPath;
                 int currentPos = CommonArgs.videoView.getCurrentPosition();
                 new PlayBackResume().setResumePoint(videoPath, currentPos);
@@ -43,8 +44,10 @@ public class BtnOnClickListener implements View.OnClickListener {
                 int nxtFile = new MediaControl().previousBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath);
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nxtFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nxtFile); // recording current playing file for future use
+                new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.next_btn:
+                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable);// removing callback to show view during next and prev
                 String vidPath = CommonArgs.currentVideoPath;
                 int currentPosition = CommonArgs.videoView.getCurrentPosition();
                 new PlayBackResume().setResumePoint(vidPath, currentPosition);
@@ -52,6 +55,7 @@ public class BtnOnClickListener implements View.OnClickListener {
                 int nextFile = new MediaControl().nextBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath); // gets next file array's index
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nextFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nextFile); // recording current playing file for future use
+                new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.volume_btn:
                 SeekBarVisibility.showVolumeSeekbar();

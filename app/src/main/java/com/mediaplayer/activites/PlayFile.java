@@ -105,7 +105,6 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.videoView.start();
         CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
         new Handler().postDelayed(new Runnable() {
-            @Override
             public void run() {
                 new PlayBackResume().resumeFrom(CommonArgs.currentVideoPath);
             }
@@ -117,6 +116,7 @@ public class PlayFile extends AppCompatActivity {
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
         CommonArgs.mediaPlayer.pause();
+        CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable); //showing view during pause
         isPaused = true;
     }
 
@@ -130,6 +130,7 @@ public class PlayFile extends AppCompatActivity {
             new PlayBackResume().resumePlayBackAuto(CommonArgs.currentVideoPath);
         }
         CommonArgs.mediaPlayer.start();
+        new PlayFileTouchListener().hideTitleControl(); // hiding after 3 seconds of playback
         isPaused = false;
     }
 
