@@ -28,16 +28,10 @@ public class PlayFileComponentInit {
         CommonArgs.rl_play_file = (RelativeLayout) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.play_file_relative_layout);
         CommonArgs.videoView = (VideoView) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.videoView);
         CommonArgs.audioManager = (AudioManager) CommonArgs.playFileCtx.getSystemService(Context.AUDIO_SERVICE);
-        CommonArgs.rl_volume_seekbar = (RelativeLayout) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.rl_volume_seekbar);
-        CommonArgs.volumeSeekBar = (SeekBar) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.volume_seekbar);
-        CommonArgs.rl_brightness_seekbar = (RelativeLayout) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.rl_brightness_seekbar);
-        CommonArgs.brightnessSeekBar = (SeekBar) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.brightness_seekbar);
         setGlobalVariable();
     }
 
     public void setGlobalVariable() {
-        CommonArgs.volumeSeekBar.setMax(15);
-        CommonArgs.brightnessSeekBar.setMax(10);
         CommonArgs.seekBar.setProgress(0);
     }
 

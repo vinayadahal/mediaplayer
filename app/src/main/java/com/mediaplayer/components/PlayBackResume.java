@@ -44,7 +44,7 @@ public class PlayBackResume {
                 @Override
                 public void run() {
                     if (!getVideoDuration(filePath).equals(text.toString().trim()) && getVideoDuration(filePath) != null)
-                        new PopUpDialog().showCustomAlertDialog(text);
+                        new PopUpDialog().showResumeDialog(text);
                 }
             }, 500);
         }

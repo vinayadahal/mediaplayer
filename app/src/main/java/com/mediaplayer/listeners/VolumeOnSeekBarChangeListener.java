@@ -26,7 +26,7 @@ public class VolumeOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeLis
     public void onStopTrackingTouch(SeekBar seekBar) {
         new MediaControl().setVolume(Progress);
         isViewOn = true;
-        CommonArgs.autoFade(CommonArgs.rl_volume_seekbar, isViewOn);
+//        CommonArgs.autoFade(CommonArgs.rl_volume_seekbar, isViewOn);
     }
 
 }

@@ -2,53 +2,54 @@ package com.mediaplayer.components;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AlertDialog;
+import android.media.AudioManager;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.activites.PlayFile;
+import com.mediaplayer.listeners.BrightnessOnSeekBarChangeListener;
+import com.mediaplayer.listeners.PopUpOnTouchListener;
+import com.mediaplayer.listeners.VolumeOnSeekBarChangeListener;
 import com.mediaplayer.services.MathService;
 import com.mediaplayer.variables.CommonArgs;
 
 public class PopUpDialog {
 
-    public void showAlertDialog(final StringBuilder text) {
-        AlertDialog.Builder objAlertDialogBuilder = new AlertDialog.Builder(CommonArgs.playFileCtx, 000);
-        objAlertDialogBuilder.setTitle("Resume Playback");
-        objAlertDialogBuilder.setMessage("Resume playback from " + MathService.timeFormatter(Long.parseLong(text.toString().trim())) + "?");
-        objAlertDialogBuilder.setIcon(R.drawable.seek_to_time);
-        objAlertDialogBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                CommonArgs.mediaPlayer.seekTo(Integer.parseInt(text.toString().trim()));
-            }
-        });
-        objAlertDialogBuilder.setNegativeButton(android.R.string.no, null).show();
-    }
+    private LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    private LayoutInflater inflater = (LayoutInflater) CommonArgs.playFileCtx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private PopupWindow pw_resume, pw_volume, pw_brightness;
+    private PopUpOnTouchListener objPopUpOnTouchListener = new PopUpOnTouchListener();
+    private PlayFile playFile = (PlayFile) CommonArgs.playFileCtx;
 
-    public void initCustomPopUp(View choice_pop_up, final PopupWindow pw, final StringBuilder text) {
-        pw.dismiss();
-        TextView resumeText = (TextView) choice_pop_up.findViewById(R.id.resume_text);
+    public void initCustomPopUp(View popup, final PopupWindow pw, final StringBuilder text) {
+        RelativeLayout popup_resume = (RelativeLayout) popup.findViewById(R.id.popup_resume);
+        popup_resume.setOnTouchListener(objPopUpOnTouchListener);
+        TextView resumeText = (TextView) popup.findViewById(R.id.resume_text);
         resumeText.setText("Do you want to resume playback from " + MathService.timeFormatter(Long.parseLong(text.toString().trim())) + "?");
-        Button call_btn = (Button) choice_pop_up.findViewById(R.id.popup_call_btn);
-        call_btn.setTransformationMethod(null);
-        call_btn.setOnClickListener(new View.OnClickListener() {
+        Button resumeBtn = (Button) popup.findViewById(R.id.popup_call_btn);
+        resumeBtn.setTransformationMethod(null);
+        resumeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonArgs.mediaPlayer.seekTo(Integer.parseInt(text.toString().trim()));
                 pw.dismiss();
             }
         });
-        Button sms_btn = (Button) choice_pop_up.findViewById(R.id.popup_sms_btn);
-        sms_btn.setTransformationMethod(null);
-        sms_btn.setOnClickListener(new View.OnClickListener() {
+        Button cancelBtn = (Button) popup.findViewById(R.id.popup_sms_btn);
+        cancelBtn.setTransformationMethod(null);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pw.dismiss();
@@ -56,12 +57,45 @@ public class PopUpDialog {
         });
     }
 
-    public void showCustomAlertDialog(final StringBuilder text) {
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        LayoutInflater inflater = (LayoutInflater) CommonArgs.playFileCtx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View choice_pop_up = inflater.inflate(R.layout.pop_up_layout, null, true);
-        final PopupWindow pw = new PopupWindow(choice_pop_up, llp.width, llp.height, true);
-        initCustomPopUp(choice_pop_up, pw, text); // initialize popup components
+    public void showResumeDialog(final StringBuilder text) {
+        View popup = inflater.inflate(R.layout.pop_up_resume, null, true);
+        pw_resume = new PopupWindow(popup, llp.width, llp.height, true);
+        objPopUpOnTouchListener.pw = pw_resume;
+        initCustomPopUp(popup, pw_resume, text); // initialize popup components
+        popupShowAt(pw_resume);
+    }
+
+    public void showVolumeDialog() {
+        View popup = inflater.inflate(R.layout.pop_up_volume, null, true);
+        SeekBar volumeSeekBar = (SeekBar) popup.findViewById(R.id.volume_seekbar);
+        volumeSeekBar.setMax(15);
+        volumeSeekBar.setProgress(CommonArgs.audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));//sets current volume to seekbar
+        volumeSeekBar.setOnSeekBarChangeListener(new VolumeOnSeekBarChangeListener());
+        RelativeLayout popup_volume = (RelativeLayout) popup.findViewById(R.id.popup_volume);
+        pw_volume = new PopupWindow(popup, llp.width, llp.height, true);
+        objPopUpOnTouchListener.pw = pw_volume;
+        popup_volume.setOnTouchListener(objPopUpOnTouchListener);
+        popupShowAt(pw_volume);
+    }
+
+    public void showBrightnessDialog() {
+        View popup = inflater.inflate(R.layout.pop_up_brightness, null, true);
+        SeekBar brightnessSeekBar = (SeekBar) popup.findViewById(R.id.brightness_seekbar);
+        brightnessSeekBar.setMax(10);
+        WindowManager.LayoutParams lp = playFile.getWindow().getAttributes(); // brightness issue.
+        if (lp.screenBrightness > 0) {
+            System.out.println("Current lp:::" + (int) lp.screenBrightness * 10);
+            brightnessSeekBar.setProgress((int) lp.screenBrightness * 10);
+        }
+        brightnessSeekBar.setOnSeekBarChangeListener(new BrightnessOnSeekBarChangeListener());
+        RelativeLayout popup_brightness = (RelativeLayout) popup.findViewById(R.id.popup_brightness);
+        pw_brightness = new PopupWindow(popup, llp.width, llp.height, true);
+        objPopUpOnTouchListener.pw = pw_brightness;
+        popup_brightness.setOnTouchListener(objPopUpOnTouchListener);
+        popupShowAt(pw_brightness);
+    }
+
+    public void popupShowAt(PopupWindow pw) {
         pw.setBackgroundDrawable(new ColorDrawable()); //helped me to hide popup
         pw.setOutsideTouchable(true);
         pw.setTouchable(true);

@@ -18,9 +18,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <include layout="@layout/volume_seek_bar" />
 
-    <include layout="@layout/brightness_seek_bar" />
+    <!--<include layout="@layout/pop_up_brightness" />-->
 
     <include layout="@layout/subtitle_layout" />
 

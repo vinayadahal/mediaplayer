@@ -108,8 +108,8 @@ public class PlayFile extends AppCompatActivity {
         objVideoOnCompletionListener.ctx = this;
         CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
         CommonArgs.videoView.start();
-        CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
-        CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
+//        CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
+//        CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
         CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
     }
 
