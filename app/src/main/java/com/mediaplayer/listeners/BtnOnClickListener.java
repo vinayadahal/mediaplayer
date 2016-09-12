@@ -2,14 +2,13 @@ package com.mediaplayer.listeners;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.mediaplayer.R;
 import com.mediaplayer.activites.PlayFile;
 import com.mediaplayer.components.PlayBackResume;
-import com.mediaplayer.components.SeekBarVisibility;
+import com.mediaplayer.components.PopUpDialog;
 import com.mediaplayer.services.MediaControl;
 import com.mediaplayer.variables.CommonArgs;
 
@@ -33,7 +32,7 @@ public class BtnOnClickListener implements View.OnClickListener {
                 ((Activity) CommonArgs.playFileCtx).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
             case R.id.brightness:
-                SeekBarVisibility.showBrightnessSeekBar();
+                new PopUpDialog().showBrightnessDialog();
                 break;
             case R.id.previous_btn:
                 CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable); // removing callback to show view during next and prev
@@ -44,7 +43,6 @@ public class BtnOnClickListener implements View.OnClickListener {
                 int nxtFile = new MediaControl().previousBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath);
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nxtFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nxtFile); // recording current playing file for future use
-//                CommonArgs.seekBar.setProgress(0);//setting progress to 0
                 CommonArgs.handler.postDelayed(CommonArgs.runnable, 500); // updating progress bar after pressing next/prev button
                 new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
@@ -57,12 +55,11 @@ public class BtnOnClickListener implements View.OnClickListener {
                 int nextFile = new MediaControl().nextBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath); // gets next file array's index
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nextFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nextFile); // recording current playing file for future use
-//                CommonArgs.seekBar.setProgress(0);//setting progress to 0
                 CommonArgs.handler.postDelayed(CommonArgs.runnable, 500); // updating progress bar after pressing next/prev button
                 new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.volume_btn:
-                SeekBarVisibility.showVolumeSeekbar();
+                new PopUpDialog().showVolumeDialog();
                 break;
             case R.id.fullscreen_btn:
                 objMediaControl.setFullscreen(fullscreen_btn, original_btn);

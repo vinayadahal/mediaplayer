@@ -61,10 +61,10 @@ public class PlayFileComponentInit {
         ImageButton originalBtn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.original_btn);
         objBtnOnClickListener.original_btn = originalBtn;
         originalBtn.setOnClickListener(objBtnOnClickListener);
+        originalBtn.setVisibility(View.GONE); //sets init design
         ImageButton fullscreenBtn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.fullscreen_btn);
         objBtnOnClickListener.fullscreen_btn = fullscreenBtn;
         fullscreenBtn.setOnClickListener(objBtnOnClickListener);
-        fullscreenBtn.setVisibility(View.GONE); //sets init design
     }
 
     public void setScreenOrientation() {
