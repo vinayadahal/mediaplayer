@@ -33,6 +33,7 @@ public class PlayFileComponentInit {
 
     public void setGlobalVariable() {
         CommonArgs.seekBar.setProgress(0);
+        CommonArgs.title_control.setVisibility(View.GONE);
     }
 
     public void initPlayFileLocal() {

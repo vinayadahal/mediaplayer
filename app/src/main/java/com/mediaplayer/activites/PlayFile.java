@@ -25,7 +25,10 @@ import java.io.File;
 public class PlayFile extends AppCompatActivity {
 
     private ImageButton playBtn, pauseBtn;
-    Boolean isPaused = false;
+    private VideoOnPreparedListener objVideoOnPreparedListener = new VideoOnPreparedListener();
+    private VideoOnCompletionListener objVideoOnCompletionListener = new VideoOnCompletionListener();
+    private PlayFileTouchListener objPlayFileTouchListener = new PlayFileTouchListener();
+    private Boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.playFileCtx = this;
         objPlayFileComponent.initPlayFileGlobal();
         objPlayFileComponent.initPlayFileLocal();
+        initListeners();
         playFile(CommonArgs.currentVideoPath);
         initLocalVariable();
         playBtn.setVisibility(View.GONE);
@@ -91,19 +95,19 @@ public class PlayFile extends AppCompatActivity {
         pauseBtn = (ImageButton) findViewById(R.id.pause_btn);
     }
 
+    public void initListeners() {
+        objVideoOnPreparedListener.totalTime = (TextView) findViewById(R.id.total_time);
+        CommonArgs.videoView.setOnPreparedListener(objVideoOnPreparedListener);
+        objVideoOnCompletionListener.ctx = this;
+        CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
+        CommonArgs.rl_play_file.setOnTouchListener(objPlayFileTouchListener);
+    }
+
     public void playFile(String filename) {
         TextView vidTitle = (TextView) findViewById(R.id.vid_title);
         vidTitle.setText("Now Playing: " + new File(filename).getName());
-        CommonArgs.title_control.setVisibility(View.GONE);
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
-        VideoOnPreparedListener objVideoOnPreparedListener = new VideoOnPreparedListener();
-        objVideoOnPreparedListener.totalTime = (TextView) findViewById(R.id.total_time);
-        CommonArgs.videoView.setOnPreparedListener(objVideoOnPreparedListener);
-        VideoOnCompletionListener objVideoOnCompletionListener = new VideoOnCompletionListener();
-        objVideoOnCompletionListener.ctx = this;
-        CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
         CommonArgs.videoView.start();
-        CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 new PlayBackResume().resumeFrom(CommonArgs.currentVideoPath);

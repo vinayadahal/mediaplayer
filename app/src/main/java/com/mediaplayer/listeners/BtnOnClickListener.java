@@ -44,6 +44,8 @@ public class BtnOnClickListener implements View.OnClickListener {
                 int nxtFile = new MediaControl().previousBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath);
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nxtFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nxtFile); // recording current playing file for future use
+//                CommonArgs.seekBar.setProgress(0);//setting progress to 0
+                CommonArgs.handler.postDelayed(CommonArgs.runnable, 500); // updating progress bar after pressing next/prev button
                 new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.next_btn:
@@ -55,6 +57,8 @@ public class BtnOnClickListener implements View.OnClickListener {
                 int nextFile = new MediaControl().nextBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath); // gets next file array's index
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nextFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nextFile); // recording current playing file for future use
+//                CommonArgs.seekBar.setProgress(0);//setting progress to 0
+                CommonArgs.handler.postDelayed(CommonArgs.runnable, 500); // updating progress bar after pressing next/prev button
                 new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.volume_btn:
