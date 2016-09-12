@@ -2,6 +2,7 @@ package com.mediaplayer.activites;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -55,12 +56,6 @@ public class PlayFile extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        new PlayBackResume().resumeFrom(CommonArgs.currentVideoPath);
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             new PlayBackResume().setResumePoint(CommonArgs.currentVideoPath, CommonArgs.videoView.getCurrentPosition());
@@ -108,9 +103,13 @@ public class PlayFile extends AppCompatActivity {
         objVideoOnCompletionListener.ctx = this;
         CommonArgs.videoView.setOnCompletionListener(objVideoOnCompletionListener);
         CommonArgs.videoView.start();
-//        CommonArgs.rl_volume_seekbar.setVisibility(View.GONE);
-//        CommonArgs.rl_brightness_seekbar.setVisibility(View.GONE);
         CommonArgs.rl_play_file.setOnTouchListener(new PlayFileTouchListener());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new PlayBackResume().resumeFrom(CommonArgs.currentVideoPath);
+            }
+        }, 100);
     }
 
     public void pauseVideo(View view) {

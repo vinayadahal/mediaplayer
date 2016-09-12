@@ -4,7 +4,6 @@ package com.mediaplayer.components;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

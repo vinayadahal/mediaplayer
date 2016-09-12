@@ -17,6 +17,14 @@ public class SubtitleDisplay {
     public void showSub() {
         final String srtFile = new FilenameUtils().removeExtension(CommonArgs.currentVideoPath) + ".srt";
         if (!new File(srtFile).exists()) {
+            CommonArgs.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (CommonArgs.subArea.getText() != "") {
+                        CommonArgs.subArea.setText("");
+                    }
+                }
+            });
             return;
         }
         final SrtParser objSrtParser = new SrtParser();

@@ -8,10 +8,9 @@
     android:background="#80000000"
     android:elevation="4dp"
     android:orientation="horizontal"
-    android:theme="@style/GalaxyZooThemeToolbarDarkOverflow"
+    android:theme="@style/MenuListPopUp"
     app:contentInsetLeft="0dp"
-    app:contentInsetStart="0dp"
-    app:popupTheme="@style/MenuListPopUp">
+    app:contentInsetStart="0dp">
 
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="?attr/actionBarSize"

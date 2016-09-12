@@ -51,14 +51,14 @@ public class PlayBackResume {
     }
 
     public void setResumePoint(final String filePath, final int timeInMs) {
-        new Handler().postDelayed(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 FileService objFileService = new FileService();
                 String filename = new File(filePath).getName() + ".txt";
                 objFileService.writeFile(Integer.toString(timeInMs), filename); // content will be like time(in msec)
             }
-        }, 1000);
+        });
     }
 
     public void resumePlayBackAuto(String filePath) {

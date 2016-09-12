@@ -36,17 +36,19 @@ public class BtnOnClickListener implements View.OnClickListener {
                 SeekBarVisibility.showBrightnessSeekBar();
                 break;
             case R.id.previous_btn:
+                String videoPath = CommonArgs.currentVideoPath;
+                int currentPos = CommonArgs.videoView.getCurrentPosition();
+                new PlayBackResume().setResumePoint(videoPath, currentPos);
                 CommonArgs.isPlaying = false;
-                new PlayBackResume().setResumePoint(CommonArgs.currentVideoPath, CommonArgs.videoView.getCurrentPosition());
-                CommonArgs.mediaPlayer.stop(); // stops video playback
                 int nxtFile = new MediaControl().previousBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath);
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nxtFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nxtFile); // recording current playing file for future use
                 break;
             case R.id.next_btn:
+                String vidPath = CommonArgs.currentVideoPath;
+                int currentPosition = CommonArgs.videoView.getCurrentPosition();
+                new PlayBackResume().setResumePoint(vidPath, currentPosition);
                 CommonArgs.isPlaying = false;
-                new PlayBackResume().setResumePoint(CommonArgs.currentVideoPath, CommonArgs.videoView.getCurrentPosition());
-                CommonArgs.mediaPlayer.stop(); // stops video playback
                 int nextFile = new MediaControl().nextBtnAction(CommonArgs.allVideoPath, CommonArgs.currentVideoPath); // gets next file array's index
                 ((PlayFile) CommonArgs.playFileCtx).playFile(CommonArgs.allVideoPath.get(nextFile)); // playing new file
                 CommonArgs.currentVideoPath = CommonArgs.allVideoPath.get(nextFile); // recording current playing file for future use
