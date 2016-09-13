@@ -8,14 +8,12 @@ import android.graphics.Typeface;
 import com.mediaplayer.services.SrtParser;
 import com.mediaplayer.variables.CommonArgs;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 
 public class SubtitleDisplay {
 
     public void showSub() {
-        final String srtFile = new FilenameUtils().removeExtension(CommonArgs.currentVideoPath) + ".srt";
+        final String srtFile = CommonArgs.currentVideoPath.substring(0, CommonArgs.currentVideoPath.lastIndexOf(".")) + ".srt";
         if (!new File(srtFile).exists()) {
             CommonArgs.handler.post(new Runnable() {
                 @Override
