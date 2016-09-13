@@ -27,7 +27,9 @@ public class BrightnessOnSeekBarChangeListener implements SeekBar.OnSeekBarChang
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        playFile.getWindow().setAttributes(lp);
+        if (lp.screenBrightness < 0) {
+            playFile.getWindow().setAttributes(lp);
+        }
     }
 
 }
