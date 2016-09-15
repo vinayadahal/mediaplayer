@@ -6,6 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,8 +55,8 @@ public class SrtParser {
                         if (subtitleArray[(i + j) - 1].contains("\n") && !subtitleArray[(i + j) - 1].contains("-->")) {
                             sb.append(subtitleArray[i + j]);
                         } else {
+                            sb.append("<br/>");
                             sb.append(subtitleArray[i + j]);
-                            sb.append("\n");
                         }
                     }
                     if (subtitleArray.length - 2 == i) {
@@ -85,6 +90,4 @@ public class SrtParser {
         }
         return subtitle;
     }
-
-
 }

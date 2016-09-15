@@ -83,8 +83,7 @@ public class PopUpDialog {
         brightnessSeekBar.setMax(10);
         WindowManager.LayoutParams lp = playFile.getWindow().getAttributes(); // brightness issue.
         if (lp.screenBrightness > 0) {
-            System.out.println("Current lp:::" + (int) lp.screenBrightness * 10);
-            brightnessSeekBar.setProgress((int) lp.screenBrightness * 10);
+            brightnessSeekBar.setProgress((int) (lp.screenBrightness * 10));
         }
         brightnessSeekBar.setOnSeekBarChangeListener(new BrightnessOnSeekBarChangeListener());
         RelativeLayout popup_brightness = (RelativeLayout) popup.findViewById(R.id.popup_brightness);

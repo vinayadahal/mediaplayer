@@ -1,9 +1,8 @@
 package com.mediaplayer.components;
 
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
+import android.text.Html;
+import android.widget.TextView;
 
 import com.mediaplayer.services.SrtParser;
 import com.mediaplayer.variables.CommonArgs;
@@ -39,8 +38,7 @@ public class SubtitleDisplay {
                         @Override
                         public void run() {
                             if (line != null && line != "") {
-                                styleText(line);
-                                CommonArgs.subArea.setText(removeTags(line));
+                                CommonArgs.subArea.setText(Html.fromHtml(line), TextView.BufferType.NORMAL);
                             } else if (line == "") {
                                 CommonArgs.subArea.setText("");
                             }
@@ -52,41 +50,4 @@ public class SubtitleDisplay {
         };
         CommonArgs.handler.post(CommonArgs.subtitle_runnable);
     }
-
-    public void styleText(String line) {
-        if (line.startsWith("<i>") && line.endsWith("</i>")) {
-            CommonArgs.subArea.setTypeface(CommonArgs.subArea.getTypeface(), Typeface.BOLD_ITALIC);
-        } else if (line.startsWith("<u>") && line.endsWith("</u>")) {
-            CommonArgs.subArea.setPaintFlags(CommonArgs.subArea.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            removeColor();
-            defaultText();
-        } else if (line.startsWith("<font") && line.endsWith("</font>")) {
-            String colorAttrib = line.replaceAll(".*\"#|\".*", ""); // replaces everything before, including and between "# & "
-            CommonArgs.subArea.setTextColor(Color.parseColor("#" + colorAttrib));
-            defaultText();
-        } else {
-            removeStyles();
-            defaultText();
-        }
-    }
-
-    public void defaultText() {
-        CommonArgs.subArea.setTypeface(CommonArgs.subArea.getTypeface(), Typeface.BOLD);
-        CommonArgs.subArea.setPaintFlags(CommonArgs.subArea.getPaintFlags() | Paint.ANTI_ALIAS_FLAG); // makes text smooth
-    }
-
-    public void removeStyles() {
-        CommonArgs.subArea.setPaintFlags(0);
-        removeColor();
-    }
-
-    public void removeColor() {
-        CommonArgs.subArea.setTextColor(Color.WHITE); // sets default text color white
-    }
-
-    public String removeTags(String line) {
-//        return line.replaceAll("<i>|</i>|<u>|</u>|<b>|</b>|<font\\s*>|</font>", "");
-        return line.replaceAll("<[^>]*>", "");
-    }
-
 }
