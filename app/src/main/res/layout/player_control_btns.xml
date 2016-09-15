@@ -7,24 +7,14 @@
     android:orientation="horizontal">
 
     <ImageButton
-        android:id="@+id/portrait_btn"
+        android:id="@+id/screen_rotation"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center"
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
-        android:src="@drawable/portrait_btn" />
-
-    <ImageButton
-        android:id="@+id/landscape_btn"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="center"
-        android:layout_weight=".20"
-        android:background="@drawable/btn_styler_playback"
-        android:src="@drawable/landscape_btn" />
+        android:src="@drawable/screen_rotation" />
 
     <ImageButton
         android:id="@+id/brightness"
@@ -35,8 +25,6 @@
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
         android:src="@drawable/brightness_medium_btn" />
-
-    <!--android:onClick="setBrightness"-->
 
     <ImageButton
         android:id="@+id/previous_btn"
@@ -104,5 +92,14 @@
         android:layout_weight=".20"
         android:background="@drawable/btn_styler_playback"
         android:src="@drawable/original_size" />
+
+    <ImageButton
+        android:id="@+id/adjust_btn"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        android:layout_weight=".20"
+        android:background="@drawable/btn_styler_playback"
+        android:src="@drawable/adjust_to_screen" />
 
 </LinearLayout>

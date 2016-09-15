@@ -15,21 +15,20 @@ import com.mediaplayer.variables.CommonArgs;
 
 public class BtnOnClickListener implements View.OnClickListener {
 
-    public ImageButton fullscreen_btn, portrait_btn, original_btn, landscape_btn;
+    public ImageButton screen_rotation_btn, original_btn, adjust_btn, fullscreen_btn;
 
     @Override
     public void onClick(View v) {
         MediaControl objMediaControl = new MediaControl();
         switch (v.getId()) {
-            case R.id.portrait_btn:
-                portrait_btn.setVisibility(View.GONE);
-                landscape_btn.setVisibility(View.VISIBLE);
-                ((Activity) CommonArgs.playFileCtx).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                break;
-            case R.id.landscape_btn:
-                landscape_btn.setVisibility(View.GONE);
-                portrait_btn.setVisibility(View.VISIBLE);
-                ((Activity) CommonArgs.playFileCtx).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            case R.id.screen_rotation:
+                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable); // removing callback to show view during next and prev
+                if (((Activity) CommonArgs.playFileCtx).getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                    ((Activity) CommonArgs.playFileCtx).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else {
+                    ((Activity) CommonArgs.playFileCtx).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+                new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.brightness:
                 new PopUpDialog().showBrightnessDialog();
@@ -62,10 +61,19 @@ public class BtnOnClickListener implements View.OnClickListener {
                 new PopUpDialog().showVolumeDialog();
                 break;
             case R.id.fullscreen_btn:
-                objMediaControl.setFullscreen(fullscreen_btn, original_btn);
+                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable);// removing callback to show view during next and prev
+                objMediaControl.setFullscreen(fullscreen_btn, adjust_btn);
+                new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
+                break;
+            case R.id.adjust_btn:
+                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable);// removing callback to show view during next and prev
+                objMediaControl.setAdjustscreen(adjust_btn, original_btn);
+                new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
             case R.id.original_btn:
+                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable);// removing callback to show view during next and prev
                 objMediaControl.setOriginalSize(fullscreen_btn, original_btn);
+                new PlayFileTouchListener().hideTitleControl(); // hiding view after 3 sec
                 break;
         }
 

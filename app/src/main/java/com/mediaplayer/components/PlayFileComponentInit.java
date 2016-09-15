@@ -62,19 +62,19 @@ public class PlayFileComponentInit {
         objBtnOnClickListener.original_btn = originalBtn;
         originalBtn.setOnClickListener(objBtnOnClickListener);
         originalBtn.setVisibility(View.GONE); //sets init design
+        ImageButton adjustBtn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.adjust_btn);
+        objBtnOnClickListener.adjust_btn = adjustBtn;
+        adjustBtn.setOnClickListener(objBtnOnClickListener);
+        adjustBtn.setVisibility(View.GONE); //sets init design
         ImageButton fullscreenBtn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.fullscreen_btn);
         objBtnOnClickListener.fullscreen_btn = fullscreenBtn;
         fullscreenBtn.setOnClickListener(objBtnOnClickListener);
     }
 
     public void setScreenOrientation() {
-        ImageButton portraitBtn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.portrait_btn);
-        objBtnOnClickListener.portrait_btn = portraitBtn;
-        portraitBtn.setOnClickListener(objBtnOnClickListener);
-        ImageButton landscapeBtn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.landscape_btn);
-        objBtnOnClickListener.landscape_btn = landscapeBtn;
-        landscapeBtn.setOnClickListener(objBtnOnClickListener);
-        landscapeBtn.setVisibility(View.GONE); //sets init design
+        ImageButton screen_rotation_btn = (ImageButton) ((Activity) CommonArgs.playFileCtx).findViewById(R.id.screen_rotation);
+        objBtnOnClickListener.screen_rotation_btn = screen_rotation_btn;
+        screen_rotation_btn.setOnClickListener(objBtnOnClickListener);
     }
 
 }

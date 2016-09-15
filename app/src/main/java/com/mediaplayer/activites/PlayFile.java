@@ -47,8 +47,8 @@ public class PlayFile extends AppCompatActivity {
         CommonArgs.playFileCtx = this;
         objPlayFileComponent.initPlayFileGlobal();
         objPlayFileComponent.initPlayFileLocal();
-        initListeners();
         playFile(CommonArgs.currentVideoPath);
+        initListeners();
         initLocalVariable();
         playBtn.setVisibility(View.GONE);
     }
@@ -107,7 +107,6 @@ public class PlayFile extends AppCompatActivity {
         TextView vidTitle = (TextView) findViewById(R.id.vid_title);
         vidTitle.setText("Now Playing: " + new File(filename).getName());
         CommonArgs.videoView.setVideoURI(Uri.parse(filename));
-        CommonArgs.videoView.start();
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 new PlayBackResume().resumeFrom(CommonArgs.currentVideoPath);
