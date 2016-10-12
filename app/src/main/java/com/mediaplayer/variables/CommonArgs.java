@@ -35,5 +35,6 @@ public class CommonArgs {
     public static String currentVideoPath;
     public static Boolean isPlaying;
     public static List<String> allVideoPath = null;
+    public static Boolean setBackgroundOnResume = false;
 
 }

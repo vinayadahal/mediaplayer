@@ -32,6 +32,7 @@ public class PlayFile extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        CommonArgs.isPlaying = true;
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //hides notification bar
         setContentView(R.layout.activity_play_file);
@@ -83,6 +84,16 @@ public class PlayFile extends AppCompatActivity {
         playBtn.setVisibility(View.VISIBLE);
         pauseBtn.setVisibility(View.GONE);
         super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (!CommonArgs.isPlaying) {
+            CommonArgs.setBackgroundOnResume = true;
+            playBtn.setVisibility(View.GONE);
+            pauseBtn.setVisibility(View.VISIBLE);
+        }
+        super.onResume();
     }
 
     public void closeActivity(View view) {
