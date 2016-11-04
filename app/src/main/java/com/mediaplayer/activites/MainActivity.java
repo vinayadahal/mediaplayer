@@ -18,10 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.components.MessageAlert;
 import com.mediaplayer.services.CleanUpService;
 import com.mediaplayer.services.IconService;
 import com.mediaplayer.services.MobileArrayAdapter;
+import com.mediaplayer.variables.CommonArgs;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,12 +123,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String fileName = videoFiles.get(position);
-                Intent intent = new Intent(MainActivity.this, PlayFile.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("fileName", fileName); // value for another activities
-                bundle.putStringArrayList("allVideoPath", (ArrayList<String>) videoFiles);
-                intent.putExtras(bundle); // bundle saved as extras
-                startActivity(intent);
+                if (checkFileExists(fileName)) { // checks if file exists or not before starting PlayFile activity.
+                    Intent intent = new Intent(MainActivity.this, PlayFile.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("fileName", fileName); // value for another activities
+                    bundle.putStringArrayList("allVideoPath", (ArrayList<String>) videoFiles);
+                    intent.putExtras(bundle); // bundle saved as extras
+                    startActivity(intent);
+                } else {
+                    new MessageAlert().showToast("Can't play this file", ctx);
+                }
             }
         });
         LinearLayout lnrlayout = (LinearLayout) findViewById(R.id.lnrLayout);
@@ -151,5 +158,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         th.start();
+    }
+
+    public boolean checkFileExists(String fileName) {
+        File videofile = new File(fileName);
+        if (videofile.exists()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -28,6 +28,7 @@
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_toRightOf="@id/icon_area"
+            android:splitTrack="false"
             android:progressDrawable="@drawable/seek_bar_styler"
             android:thumb="@drawable/seek_bar_thumb_style" />
 

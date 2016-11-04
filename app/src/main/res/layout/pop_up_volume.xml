@@ -29,6 +29,7 @@
             android:layout_centerHorizontal="true"
             android:layout_toRightOf="@id/icon_area"
             android:progressDrawable="@drawable/seek_bar_styler"
+            android:splitTrack="false"
             android:thumb="@drawable/seek_bar_thumb_style" />
 
     </RelativeLayout>

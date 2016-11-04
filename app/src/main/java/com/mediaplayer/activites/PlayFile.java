@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mediaplayer.R;
+import com.mediaplayer.components.MessageAlert;
 import com.mediaplayer.components.PlayBackResume;
 import com.mediaplayer.components.PlayFileComponentInit;
 import com.mediaplayer.listeners.PlayFileTouchListener;
