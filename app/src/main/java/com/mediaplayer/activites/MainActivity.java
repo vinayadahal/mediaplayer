@@ -3,7 +3,10 @@ package com.mediaplayer.activites;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private MobileArrayAdapter objMobileArrayAdapter;
     private Context ctx = this;
+    private int flag_list_created = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.refresh_btn:
                 System.out.println("refresh clicked");
                 refreshIcons();
+                MediaScannerConnection.scanFile(MainActivity.this,
+                        new String[]{Environment.getExternalStorageDirectory().toString()}, null,
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                System.out.println("Scan Complete: " + path);
+                                System.out.println("Loading Video Files: ");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cleanUp();
+                                        createVideoList(getVideoFiles(), getVideoThumbnail(), getVideoDuration(), fileSize);
+                                    }
+                                }); // force reload of video file list
+                            }
+                        }); // refreshes file list
         }
         return super.onOptionsItemSelected(item);
     }
@@ -137,6 +156,12 @@ public class MainActivity extends AppCompatActivity {
         });
         LinearLayout lnrlayout = (LinearLayout) findViewById(R.id.lnrLayout);
         lnrlayout.addView(listView);
+        if (flag_list_created == 0) {
+            flag_list_created = 1;
+        } else {
+            lnrlayout.removeAllViews();
+            lnrlayout.addView(listView);
+        }
         refreshIcons();
     }
 
