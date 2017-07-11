@@ -5,10 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorText">#000</color>
     <color name="colorBackground">#fff</color>
-    <color name="colorDivider">#ccc</color>
     <color name="colorPlayBackNormal">#00000000</color>
     <color name="colorPlayBackPressed">#70cccccc</color>
-    <color name="menuIconItem">#fff</color>
-    <color name="menuBackground">#90000000</color>
 
 </resources>
