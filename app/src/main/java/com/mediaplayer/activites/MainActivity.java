@@ -1,7 +1,10 @@
 package com.mediaplayer.activites;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -9,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,13 +30,14 @@ import com.mediaplayer.components.MessageAlert;
 import com.mediaplayer.services.CleanUpService;
 import com.mediaplayer.services.IconService;
 import com.mediaplayer.services.MobileArrayAdapter;
-import com.mediaplayer.variables.CommonArgs;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     private List<Long> fileSize = new ArrayList<>();
     private Toolbar toolbar;
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getPermission(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.action_bar);// for showing menu item
@@ -191,6 +198,20 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void getPermission(Context context){
+        String StorageReadPermission=Manifest.permission.READ_EXTERNAL_STORAGE;
+        String StorageWritePermission=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        int PermissionGranted= PackageManager.PERMISSION_GRANTED;
+        if (ContextCompat.checkSelfPermission(context, StorageReadPermission )!=PermissionGranted) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{StorageReadPermission}, 1);
+        }
+        if (ContextCompat.checkSelfPermission(context, StorageWritePermission )!=PermissionGranted) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{StorageWritePermission}, 1);
         }
     }
 }

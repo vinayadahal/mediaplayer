@@ -42,6 +42,10 @@ public class CleanUpService {
     public static void deleteThumbnail(List<String> videoPath) {
         List<String> filesToDelete = new ArrayList<>();
         File imageFile[] = new File(Config.baseThumbPath + "/.dthumb").listFiles();
+        if (imageFile==null){
+            System.out.println("Found no list of items...");
+            return;
+        }
         for (int i = 0; i < imageFile.length; i++) {
             String thumbFileName = imageFile[i].getName();
             Boolean fileFound = false;
