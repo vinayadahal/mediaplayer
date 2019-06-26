@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Subtitles" />
+    <item android:title=""
+        android:id="@+id/subtitles"
+        android:layout_gravity="left"
+        android:visible="true"
+        app:showAsAction="collapseActionView"/>
 
 </menu>

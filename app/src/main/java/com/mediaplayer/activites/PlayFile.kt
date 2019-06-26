@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.KeyEvent
-import android.view.Menu
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.ImageButton
 import android.widget.TextView
 
@@ -30,6 +27,7 @@ class PlayFile : AppCompatActivity() {
     private val objVideoOnCompletionListener = VideoOnCompletionListener()
     private val objPlayFileTouchListener = PlayFileTouchListener()
     private var isPaused: Boolean? = false
+    private var subtitleBtn: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         CommonArgs.isPlaying = true
@@ -56,6 +54,9 @@ class PlayFile : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.play_file_menu, menu)//Menu Resource, Menu
+        subtitleBtn = menu.findItem(R.id.subtitles)
+        subtitleBtn!!.isVisible = true
+        subtitleBtn!!.title = "Subtitle Off"
         return true
     }
 
@@ -137,6 +138,18 @@ class PlayFile : AppCompatActivity() {
         CommonArgs.mediaPlayer!!.start()
         PlayFileTouchListener().hideTitleControl() // hiding after 3 seconds of playback
         isPaused = false
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.subtitles -> {
+                CommonArgs.handler.removeCallbacks(CommonArgs.subtitleRunnable)
+                println("subtitle should be disabled")
+                CommonArgs.subArea!!.text = ""
+                subtitleBtn!!.title = "Subtitle On"
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }
