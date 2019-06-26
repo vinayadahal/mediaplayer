@@ -27,10 +27,10 @@ class VideoOnPreparedListener : MediaPlayer.OnPreparedListener {
         }
         th.start()
         th.priority = Thread.MIN_PRIORITY
-        showResumeImage(mp)
+        showResumeImage()
     }
 
-    fun showResumeImage(mp: MediaPlayer) {
+    private fun showResumeImage() {
         if (CommonArgs.setBackgroundOnResume!!) {
             PlayBackResume().resumePlayBackAuto(CommonArgs.currentVideoPath)
             CommonArgs.setBackgroundOnResume = false

@@ -29,6 +29,6 @@
         android:layout_marginRight="?attr/actionBarSize"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="@color/colorBackground" />
+        android:textColor="@color/colorBackground"/>
 
 </android.support.v7.widget.Toolbar>

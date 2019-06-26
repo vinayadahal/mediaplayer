@@ -8,17 +8,17 @@ import com.mediaplayer.variables.CommonArgs
 
 
 class VideoOnSeekBarChangeListener : SeekBar.OnSeekBarChangeListener {
-    var showTimer: Boolean? = false
+    private var showTimer: Boolean? = false
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        if (showTimer!!) {
+        if (this.showTimer!!) {
             CommonArgs.notification_txt!!.visibility = View.VISIBLE
             CommonArgs.notification_txt!!.text = MathService.timeFormatter(progress.toLong())
         }
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar) {
-        CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable)
+        CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable)
         showTimer = true
     }
 

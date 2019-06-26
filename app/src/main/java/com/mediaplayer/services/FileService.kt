@@ -20,13 +20,13 @@ class FileService {
 
     fun writeFile(data: String, filename: String): Boolean {
         val dest = File(CommonArgs.playFileCtx!!.applicationContext.filesDir.toString() + "/" +filename)
-        try {
+        return try {
             PrintWriter(dest).use { out -> out.println(data) }
-            return true
+            true
         } catch (e: Exception) {
             println("Exception writing playback file::::::")
             println(e)
-            return false
+            false
         }
     }
 

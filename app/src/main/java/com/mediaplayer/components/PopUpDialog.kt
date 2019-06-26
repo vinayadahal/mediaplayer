@@ -27,21 +27,21 @@ class PopUpDialog {
 
     private val llp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     private val inflater = CommonArgs.playFileCtx!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    private var pw_resume: PopupWindow? = null
-    private var pw_volume: PopupWindow? = null
-    private var pw_brightness: PopupWindow? = null
+    private var pwResume: PopupWindow? = null
+    private var pwVolume: PopupWindow? = null
+    private var pwBrightness: PopupWindow? = null
     private val objPopUpOnTouchListener = PopUpOnTouchListener()
     private val playFile = CommonArgs.playFileCtx as PlayFile
 
-    fun initCustomPopUp(popup: View, pw: PopupWindow, text: String) {
-        val popup_resume = popup.findViewById<View>(R.id.popup_resume) as RelativeLayout
-        popup_resume.setOnTouchListener(objPopUpOnTouchListener)
+    private fun initCustomPopUp(popup: View, pw: PopupWindow, text: String) {
+        val popupResume = popup.findViewById<View>(R.id.popup_resume) as RelativeLayout
+        popupResume.setOnTouchListener(objPopUpOnTouchListener)
         val resumeText = popup.findViewById<View>(R.id.resume_text) as TextView
         resumeText.text = "Do you want to resume playback from " + MathService.timeFormatter(java.lang.Long.parseLong(text.toString().trim { it <= ' ' })) + "?"
         val resumeBtn = popup.findViewById<View>(R.id.popup_call_btn) as Button
         resumeBtn.transformationMethod = null
         resumeBtn.setOnClickListener {
-            CommonArgs.mediaPlayer!!.seekTo(Integer.parseInt(text.trim { it <= ' ' }.toString()))
+            CommonArgs.mediaPlayer!!.seekTo(Integer.parseInt(text.trim()))
             pw.dismiss()
         }
         val cancelBtn = popup.findViewById<View>(R.id.popup_sms_btn) as Button
@@ -51,10 +51,10 @@ class PopUpDialog {
 
     fun showResumeDialog(text: String) {
         val popup = inflater.inflate(R.layout.pop_up_resume, null, true)
-        pw_resume = PopupWindow(popup, llp.width, llp.height, true)
-        objPopUpOnTouchListener.pw = pw_resume
-        initCustomPopUp(popup, pw_resume!!, text) // initialize popup components
-        popupShowAt(pw_resume!!)
+        pwResume = PopupWindow(popup, llp.width, llp.height, true)
+        objPopUpOnTouchListener.pw = pwResume
+        initCustomPopUp(popup, pwResume!!, text) // initialize popup components
+        popupShowAt(pwResume!!)
     }
 
     fun showVolumeDialog() {
@@ -63,11 +63,11 @@ class PopUpDialog {
         volumeSeekBar.max = 15
         volumeSeekBar.progress = CommonArgs.audioManager!!.getStreamVolume(AudioManager.STREAM_MUSIC)//sets current volume to seekbar
         volumeSeekBar.setOnSeekBarChangeListener(VolumeOnSeekBarChangeListener())
-        val popup_volume = popup.findViewById<View>(R.id.popup_volume) as RelativeLayout
-        pw_volume = PopupWindow(popup, llp.width, llp.height, true)
-        objPopUpOnTouchListener.pw = pw_volume
-        popup_volume.setOnTouchListener(objPopUpOnTouchListener)
-        popupShowAt(pw_volume!!)
+        val popupVolume = popup.findViewById<View>(R.id.popup_volume) as RelativeLayout
+        pwVolume = PopupWindow(popup, llp.width, llp.height, true)
+        objPopUpOnTouchListener.pw = pwVolume
+        popupVolume.setOnTouchListener(objPopUpOnTouchListener)
+        popupShowAt(pwVolume!!)
     }
 
     fun showBrightnessDialog() {
@@ -79,18 +79,18 @@ class PopUpDialog {
             brightnessSeekBar.progress = (lp.screenBrightness * 10).toInt()
         }
         brightnessSeekBar.setOnSeekBarChangeListener(BrightnessOnSeekBarChangeListener())
-        val popup_brightness = popup.findViewById<View>(R.id.popup_brightness) as RelativeLayout
-        pw_brightness = PopupWindow(popup, llp.width, llp.height, true)
-        objPopUpOnTouchListener.pw = pw_brightness
-        popup_brightness.setOnTouchListener(objPopUpOnTouchListener)
-        popupShowAt(pw_brightness!!)
+        val popupBrightness = popup.findViewById<View>(R.id.popup_brightness) as RelativeLayout
+        pwBrightness = PopupWindow(popup, llp.width, llp.height, true)
+        objPopUpOnTouchListener.pw = pwBrightness
+        popupBrightness.setOnTouchListener(objPopUpOnTouchListener)
+        popupShowAt(pwBrightness!!)
     }
 
-    fun popupShowAt(pw: PopupWindow) {
+    private fun popupShowAt(pw: PopupWindow) {
         pw.setBackgroundDrawable(ColorDrawable()) //helped me to hide popup
         pw.isOutsideTouchable = true
         pw.isTouchable = true
-        pw.showAtLocation(CommonArgs.rl_play_file, Gravity.CENTER, 0, 0)
+        pw.showAtLocation(CommonArgs.rlPlayFile, Gravity.CENTER, 0, 0)
     }
 
 }

@@ -14,17 +14,16 @@ import com.mediaplayer.variables.CommonArgs
 
 
 class BtnOnClickListener : View.OnClickListener {
-
-    var screen_rotation_btn: ImageButton? = null
-    var original_btn: ImageButton? = null
-    var adjust_btn: ImageButton? = null
-    var fullscreen_btn: ImageButton? = null
+    var screenRotationBtn: ImageButton? = null
+    var originalBtn: ImageButton? = null
+    var adjustBtn: ImageButton? = null
+    var fullscreenBtn: ImageButton? = null
 
     override fun onClick(v: View) {
         val objMediaControl = MediaControl()
         when (v.id) {
             R.id.screen_rotation -> {
-                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable) // removing callback to show view during next and prev
+                CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable) // removing callback to show view during next and prev
                 if ((CommonArgs.playFileCtx as Activity).requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                     (CommonArgs.playFileCtx as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 } else {
@@ -34,7 +33,7 @@ class BtnOnClickListener : View.OnClickListener {
             }
             R.id.brightness -> PopUpDialog().showBrightnessDialog()
             R.id.previous_btn -> {
-                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable) // removing callback to show view during next and prev
+                CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable) // removing callback to show view during next and prev
                 val videoPath = CommonArgs.currentVideoPath
                 val currentPos = CommonArgs.videoView!!.currentPosition
                 PlayBackResume().setResumePoint(videoPath, currentPos)
@@ -46,7 +45,7 @@ class BtnOnClickListener : View.OnClickListener {
                 PlayFileTouchListener().hideTitleControl() // hiding view after 3 sec
             }
             R.id.next_btn -> {
-                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable)// removing callback to show view during next and prev
+                CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable)// removing callback to show view during next and prev
                 val vidPath = CommonArgs.currentVideoPath
                 val currentPosition = CommonArgs.videoView!!.currentPosition
                 PlayBackResume().setResumePoint(vidPath, currentPosition)
@@ -59,18 +58,18 @@ class BtnOnClickListener : View.OnClickListener {
             }
             R.id.volume_btn -> PopUpDialog().showVolumeDialog()
             R.id.fullscreen_btn -> {
-                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable)// removing callback to show view during next and prev
-                objMediaControl.setFullscreen(fullscreen_btn, adjust_btn)
+                CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable)// removing callback to show view during next and prev
+                objMediaControl.setFullscreen(fullscreenBtn, adjustBtn)
                 PlayFileTouchListener().hideTitleControl() // hiding view after 3 sec
             }
             R.id.adjust_btn -> {
-                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable)// removing callback to show view during next and prev
-                objMediaControl.setAdjustscreen(adjust_btn, original_btn)
+                CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable)// removing callback to show view during next and prev
+                objMediaControl.setAdjustscreen(adjustBtn, originalBtn)
                 PlayFileTouchListener().hideTitleControl() // hiding view after 3 sec
             }
             R.id.original_btn -> {
-                CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable)// removing callback to show view during next and prev
-                objMediaControl.setOriginalSize(fullscreen_btn, original_btn)
+                CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable)// removing callback to show view during next and prev
+                objMediaControl.setOriginalSize(fullscreenBtn, originalBtn)
                 PlayFileTouchListener().hideTitleControl() // hiding view after 3 sec
             }
         }

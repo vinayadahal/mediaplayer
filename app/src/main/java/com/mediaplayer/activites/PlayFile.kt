@@ -36,8 +36,8 @@ class PlayFile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN) //hides notification bar
         setContentView(R.layout.activity_play_file)
-        val play_file_toolbar = findViewById<View>(R.id.player_toolbar) as Toolbar// for showing menu item
-        setSupportActionBar(play_file_toolbar)// for showing menu item
+        val playFileToolbar = findViewById<View>(R.id.player_toolbar) as Toolbar// for showing menu item
+        setSupportActionBar(playFileToolbar)// for showing menu item
         supportActionBar!!.title = null // for showing menu item
         val bundle = intent.extras
         if (bundle != null) {
@@ -91,22 +91,22 @@ class PlayFile : AppCompatActivity() {
         super.onResume()
     }
 
-    fun closeActivity(view: View) {
+    fun closeActivity() {
         CommonArgs.mediaPlayer!!.stop()
         finish()
     }
 
-    fun initLocalVariable() {
+    private fun initLocalVariable() {
         playBtn = findViewById<View>(R.id.play_btn) as ImageButton
         pauseBtn = findViewById<View>(R.id.pause_btn) as ImageButton
     }
 
-    fun initListeners() {
+    private fun initListeners() {
         objVideoOnPreparedListener.totalTime = findViewById<View>(R.id.total_time) as TextView
         CommonArgs.videoView!!.setOnPreparedListener(objVideoOnPreparedListener)
         objVideoOnCompletionListener.ctx = this
         CommonArgs.videoView!!.setOnCompletionListener(objVideoOnCompletionListener)
-        CommonArgs.rl_play_file!!.setOnTouchListener(objPlayFileTouchListener)
+        CommonArgs.rlPlayFile!!.setOnTouchListener(objPlayFileTouchListener)
     }
 
     fun playFile(filename: String?) {
@@ -116,22 +116,22 @@ class PlayFile : AppCompatActivity() {
         Handler().postDelayed({ PlayBackResume().resumeFrom(CommonArgs.currentVideoPath) }, 100)
     }
 
-    fun pauseVideo(view: View) {
+    fun pauseVideo() {
         CommonArgs.isPlaying = false
         playBtn!!.visibility = View.VISIBLE
         pauseBtn!!.visibility = View.GONE
         CommonArgs.mediaPlayer!!.pause()
-        CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable) //showing view during pause
+        CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable) //showing view during pause
         isPaused = true
     }
 
-    fun playVideo(view: View) {
+    fun playVideo() {
         CommonArgs.isPlaying = true
         playBtn!!.visibility = View.GONE
         pauseBtn!!.visibility = View.VISIBLE
         CommonArgs.handler.postDelayed(CommonArgs.runnable, 10)
-        CommonArgs.handler.postDelayed(CommonArgs.subtitle_runnable, 10)
-        if ((!isPaused!!)!!) {
+        CommonArgs.handler.postDelayed(CommonArgs.subtitleRunnable, 10)
+        if ((!isPaused!!)) {
             PlayBackResume().resumePlayBackAuto(CommonArgs.currentVideoPath)
         }
         CommonArgs.mediaPlayer!!.start()

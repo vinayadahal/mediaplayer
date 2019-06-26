@@ -43,25 +43,25 @@ class IconService {
 
     fun makeThumb(videoFile: String, thumbnailFile: String): String? {
         println("videoFile::::: $videoFile")
-        val bmp_thumb = ThumbnailUtils.createVideoThumbnail(videoFile, MediaStore.Images.Thumbnails.MICRO_KIND)
+        val bmpThumb = ThumbnailUtils.createVideoThumbnail(videoFile, MediaStore.Images.Thumbnails.MICRO_KIND)
                 ?: return null
         if (!File(thumbnailFile).exists()) {
             val thumbLocation = File(thumbnailFile)
             val thumbFile = File(thumbLocation.parent, thumbLocation.name)
-            writeImgFile(thumbFile, bmp_thumb)
+            writeImgFile(thumbFile, bmpThumb)
         }
         return thumbnailFile
     }
 
-    fun writeImgFile(imgFile: File, bmp_thumb: Bitmap) {
+    private fun writeImgFile(imgFile: File, bmp_thumb: Bitmap) {
 
         try {
             imgFile.createNewFile()
             val bos = ByteArrayOutputStream()
             bmp_thumb.compress(Bitmap.CompressFormat.PNG, 100, bos)
-            val bmp_byte = bos.toByteArray()
+            val bmpByte = bos.toByteArray()
             val fos = FileOutputStream(imgFile)
-            fos.write(bmp_byte)
+            fos.write(bmpByte)
             fos.flush()
             fos.close()
         } catch (e: IOException) {

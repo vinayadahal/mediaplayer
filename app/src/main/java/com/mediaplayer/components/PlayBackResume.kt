@@ -11,7 +11,7 @@ import java.io.File
 
 class PlayBackResume {
 
-    fun getVideoDuration(filename: String?): String? {
+    private fun getVideoDuration(filename: String?): String? {
         val columns = arrayOf(MediaStore.Video.VideoColumns.DURATION)
         val whereVal = arrayOf(filename)
         val cursor = CommonArgs.playFileCtx!!.contentResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, MediaStore.MediaColumns.DATA + "=?" + "", whereVal, null)
@@ -54,7 +54,7 @@ class PlayBackResume {
         val filename = File(filePath).name + ".txt"
         val text = objFileService.readFile(filename) ?: return
         if (CommonArgs.mediaPlayer != null)
-            CommonArgs.mediaPlayer!!.seekTo(Integer.parseInt(text.toString().trim { it <= ' ' }))
+            CommonArgs.mediaPlayer!!.seekTo(Integer.parseInt(text.trim()))
     }
 
 }

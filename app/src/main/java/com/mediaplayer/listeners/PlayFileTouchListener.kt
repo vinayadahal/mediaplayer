@@ -1,6 +1,7 @@
 package com.mediaplayer.listeners
 
 
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 
@@ -11,28 +12,29 @@ import com.mediaplayer.variables.CommonArgs
 
 class PlayFileTouchListener : View.OnTouchListener {
 
-    var isViewOn: Boolean? = false
-    var skipTimer: Boolean? = false
+    private var isViewOn: Boolean? = false
+    private var skipTimer: Boolean? = false
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> if ((!checkTitleControlVisibility()!!)!!) {
-                CommonArgs.title_control!!.visibility = View.VISIBLE
+            MotionEvent.ACTION_DOWN -> if ((!checkTitleControlVisibility()!!)) {
+                CommonArgs.titleControl!!.visibility = View.VISIBLE
                 isViewOn = true
             }
             MotionEvent.ACTION_UP -> {
-                if (checkTitleControlVisibility()!! && (!isViewOn!!)!!) {
-                    Effects().fadeIn(CommonArgs.title_control)
+                if (checkTitleControlVisibility()!! && (!isViewOn!!)) {
+                    Effects().fadeIn(CommonArgs.titleControl)
                     updateProgressBar()
                     skipTimer = false
                     if (!CommonArgs.mediaPlayer!!.isPlaying) {
                         skipTimer = true // setting true to make view visible during pause.
                     }
-                } else if ((!checkTitleControlVisibility()!!)!!) {
+                } else if ((!checkTitleControlVisibility()!!)) {
                     hideTitleControlNormal()
                     skipTimer = true
                 }
-                if ((!skipTimer!!)!!) {
+                if ((!skipTimer!!)) {
                     hideTitleControl()
                 }
             }
@@ -40,14 +42,14 @@ class PlayFileTouchListener : View.OnTouchListener {
         return true
     }
 
-    fun updateProgressBar() {
+    private fun updateProgressBar() {
         CommonArgs.runnable = object : Runnable {
             override fun run() {
                 val thread = Thread.currentThread()
                 thread.priority = Thread.MIN_PRIORITY
                 println("Seekbar runnable running")
                 CommonArgs.seekBar!!.max = CommonArgs.duration.toInt()
-                if (CommonArgs.seekBar!!.progress <= CommonArgs.duration.toInt() && (!checkTitleControlVisibility()!!)!!) {
+                if (CommonArgs.seekBar!!.progress <= CommonArgs.duration.toInt() && (!checkTitleControlVisibility()!!)) {
                     if (!CommonArgs.videoView!!.isPlaying) {
                         return
                     }
@@ -68,21 +70,21 @@ class PlayFileTouchListener : View.OnTouchListener {
     }
 
     fun checkTitleControlVisibility(): Boolean? {
-        return (CommonArgs.title_control!!.visibility != View.VISIBLE)
+        return (CommonArgs.titleControl!!.visibility != View.VISIBLE)
     }
 
-    fun hideTitleControlNormal() {
-        Effects().fadeOut(CommonArgs.title_control)
+    private fun hideTitleControlNormal() {
+        Effects().fadeOut(CommonArgs.titleControl)
         MediaControl().removeNotificationText(CommonArgs.notification_txt)
         CommonArgs.handler.removeCallbacks(CommonArgs.runnable) // stops running runnable
-        CommonArgs.title_control_handler.removeCallbacks(CommonArgs.title_control_runnable) // prevents currently running hideTitleControl
+        CommonArgs.titleControlHandler.removeCallbacks(CommonArgs.titleControlRunnable) // prevents currently running hideTitleControl
         isViewOn = false
     }
 
     fun hideTitleControl() {
-        CommonArgs.title_control_runnable = Runnable {
-            if ((!isViewOn!!)!!) {
-                Effects().fadeOut(CommonArgs.title_control)
+        CommonArgs.titleControlRunnable = Runnable {
+            if ((!isViewOn!!)) {
+                Effects().fadeOut(CommonArgs.titleControl)
                 MediaControl().removeNotificationText(CommonArgs.notification_txt)
                 CommonArgs.handler.removeCallbacks(CommonArgs.runnable) // stops running runnable
             } else {
@@ -90,7 +92,7 @@ class PlayFileTouchListener : View.OnTouchListener {
             }
             skipTimer = false
         }
-        CommonArgs.title_control_handler.postDelayed(CommonArgs.title_control_runnable, 3000)
+        CommonArgs.titleControlHandler.postDelayed(CommonArgs.titleControlRunnable, 3000)
     }
 
 }

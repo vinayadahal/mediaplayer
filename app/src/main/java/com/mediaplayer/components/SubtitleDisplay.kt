@@ -26,7 +26,7 @@ class SubtitleDisplay {
         val objSrtParser = SrtParser()
         val text = objSrtParser.loadSrt(srtFile)
         objSrtParser.parse(text)
-        CommonArgs.subtitle_runnable = object : Runnable {
+        CommonArgs.subtitleRunnable = object : Runnable {
             @RequiresApi(Build.VERSION_CODES.N)
             override fun run() {
                 if (CommonArgs.isPlaying!!) {
@@ -45,6 +45,6 @@ class SubtitleDisplay {
                 }
             }
         }
-        CommonArgs.handler.post(CommonArgs.subtitle_runnable)
+        CommonArgs.handler.post(CommonArgs.subtitleRunnable)
     }
 }

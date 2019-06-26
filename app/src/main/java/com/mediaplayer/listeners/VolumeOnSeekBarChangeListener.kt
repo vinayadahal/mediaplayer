@@ -7,12 +7,12 @@ import com.mediaplayer.variables.CommonArgs
 
 class VolumeOnSeekBarChangeListener : SeekBar.OnSeekBarChangeListener {
 
-    internal var isViewOn: Boolean? = false
-    internal var Progress: Int = 0
+    private var isViewOn: Boolean? = false
+    private var progress: Int = 0
 
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        Progress = progress
-        MediaControl().setVolume(Progress)
+        this.progress = progress
+        MediaControl().setVolume(progress)
         isViewOn = false
     }
 
@@ -21,7 +21,7 @@ class VolumeOnSeekBarChangeListener : SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
-        MediaControl().setVolume(Progress)
+        MediaControl().setVolume(this.progress)
         isViewOn = true
         //        CommonArgs.autoFade(CommonArgs.rl_volume_seekbar, isViewOn);
     }

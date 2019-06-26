@@ -23,7 +23,7 @@ object CleanUpService {
                     break
                 }
             }
-            if ((!fileFound!!)!!) {
+            if ((!fileFound!!)) {
                 filesToDelete.add(internalFileName)
             }
         }
@@ -55,7 +55,7 @@ object CleanUpService {
                     break
                 }
             }
-            if ((!fileFound!!)!!) {
+            if ((!fileFound!!)) {
                 filesToDelete.add(thumbFileName)
             }
         }

@@ -13,7 +13,7 @@ class Effects {
         fadeIn.interpolator = AccelerateInterpolator()
         fadeIn.duration = 200
         layout!!.startAnimation(fadeIn)
-        layout!!.visibility = View.VISIBLE
+        layout.visibility = View.VISIBLE
     }
 
     fun fadeOut(layout: RelativeLayout?) {

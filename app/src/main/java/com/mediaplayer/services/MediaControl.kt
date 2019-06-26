@@ -1,7 +1,9 @@
 package com.mediaplayer.services
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.media.AudioManager
+import android.util.DisplayMetrics
 import android.view.View
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -24,9 +26,8 @@ class MediaControl {
 
     fun previousBtnAction(allVideoPath: List<String>?, filePath: String?): Int {
         var nextFile = allVideoPath!!.indexOf(filePath) - 1 //current file - 1
-        if (nextFile < 0) {
-            nextFile = allVideoPath.size - 1 // setting final value as next file so that player support  backward loop
-        }
+        // setting final value as next file so that player support  backward loop
+        if (nextFile < 0) nextFile = allVideoPath.size - 1
         CommonArgs.mediaPlayer!!.stop() // stopping before next video play
         return nextFile
     }
@@ -35,7 +36,7 @@ class MediaControl {
         CommonArgs.audioManager!!.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
     }
 
-    fun resetView() {
+   private fun resetView() {
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0)
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0)
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0)
@@ -43,6 +44,7 @@ class MediaControl {
         CommonArgs.videoView!!.layoutParams = videoViewLayoutParams
     }
 
+    @SuppressLint("SetTextI18n")
     fun setOriginalSize(fullBtn: ImageButton?, oriBtn: ImageButton?) {
         resetView()
         val videoWidth = CommonArgs.mediaPlayer!!.videoWidth
@@ -55,6 +57,7 @@ class MediaControl {
         CommonArgs.notification_txt!!.text = "ORIGINAL"
     }
 
+    @SuppressLint("SetTextI18n")
     fun setFullscreen(fullBtn: ImageButton?, fitToScreen: ImageButton?) {
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1)
         videoViewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 1)
@@ -67,13 +70,18 @@ class MediaControl {
     }
 
 
+    @SuppressLint("SetTextI18n")
     fun setAdjustscreen(adjustBtn: ImageButton?, oriBtn: ImageButton?) {
         resetView()
         val videoWidth = CommonArgs.mediaPlayer!!.videoWidth
         val videoHeight = CommonArgs.mediaPlayer!!.videoHeight
         val videoProportion = videoWidth.toFloat() / videoHeight.toFloat()
-        val screenWidth = (CommonArgs.playFileCtx as Activity).windowManager.defaultDisplay.width
-        val screenHeight = (CommonArgs.playFileCtx as Activity).windowManager.defaultDisplay.height
+//        val screenWidth = (CommonArgs.playFileCtx as Activity).windowManager.defaultDisplay.width
+//        val screenHeight = (CommonArgs.playFileCtx as Activity).windowManager.defaultDisplay.height
+        val displayMetrics = DisplayMetrics()
+        (CommonArgs.playFileCtx as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
         val screenProportion = screenWidth.toFloat() / screenHeight.toFloat()
         if (videoProportion > screenProportion) {
             videoViewLayoutParams.width = screenWidth
@@ -90,7 +98,7 @@ class MediaControl {
 
     fun removeNotificationText(notification_txt: TextView?) {
         if (notification_txt!!.text != "") {
-            notification_txt!!.text = ""
+            notification_txt.text = ""
         }
     }
 }
